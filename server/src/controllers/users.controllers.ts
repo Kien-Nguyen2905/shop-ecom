@@ -21,5 +21,9 @@ export const verifyEmailController = async (
 }
 export const loginController = async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
   const result = await userServices.login(req.body)
-  return res.status(200).json({ message: USERS_MESSAGES.LOGIN_SUCCEEDS, result })
+  return res.status(200).json({ message: USERS_MESSAGES.LOGIN_SUCCEED, result })
+}
+export const logoutController = async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+  await userServices.logout(req.body.refresh_token)
+  return res.status(200).json({ message: USERS_MESSAGES.LOGOUT_SUCCEED })
 }

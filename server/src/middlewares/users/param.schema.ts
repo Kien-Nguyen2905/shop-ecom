@@ -114,3 +114,49 @@ export const emailLoginSchema: ParamSchema = {
   },
   trim: true
 }
+export const accessTokenSchema: ParamSchema = {
+  custom: {
+    options: async (value: string) => {
+      const access_token = (value || '').split(' ')[1]
+      if (!access_token) {
+        throw new ErrorWithStatus({
+          message: USERS_MESSAGES.ACCESS_TOKEN_REQUIRED,
+          status: HTTP_STATUS.UNAUTHORIZED
+        })
+      }
+      try {
+        await verifyToken({
+          token: access_token,
+          secretOrPublicKey: env.JWT_SECRET_ACCESS_TOKEN as string
+        })
+      } catch (error) {
+        throw new ErrorWithStatus({
+          message: (error as JsonWebTokenError).message,
+          status: HTTP_STATUS.UNAUTHORIZED
+        })
+      }
+      return true
+    }
+  }
+}
+export const refreshTokenSchema: ParamSchema = {
+  notEmpty: {
+    errorMessage: USERS_MESSAGES.REFRESH_TOKEN_REQUIRED
+  },
+  custom: {
+    options: async (value: string) => {
+      try {
+        await verifyToken({
+          token: value,
+          secretOrPublicKey: env.JWT_SECRET_REFRESH_TOKEN as string
+        })
+      } catch (error) {
+        throw new ErrorWithStatus({
+          message: (error as JsonWebTokenError).message,
+          status: HTTP_STATUS.UNAUTHORIZED
+        })
+      }
+      return true
+    }
+  }
+}

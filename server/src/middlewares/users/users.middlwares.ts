@@ -1,11 +1,13 @@
 import { checkSchema } from 'express-validator'
 import {
+  accessTokenSchema,
   confirmPasswordSchema,
   emailLoginSchema,
   emailSchema,
   emailTokenSchema,
   fullNameSchema,
-  passwordSchema
+  passwordSchema,
+  refreshTokenSchema
 } from '~/middlewares/users/param.schema'
 import { validate } from '~/utils/validate'
 
@@ -33,6 +35,22 @@ export const loginValidator = validate(
     {
       email: emailLoginSchema,
       password: passwordSchema
+    },
+    ['body']
+  )
+)
+export const accessTokenValidator = validate(
+  checkSchema(
+    {
+      Authorization: accessTokenSchema
+    },
+    ['headers']
+  )
+)
+export const refreshTokenValidator = validate(
+  checkSchema(
+    {
+      refresh_token: refreshTokenSchema
     },
     ['body']
   )

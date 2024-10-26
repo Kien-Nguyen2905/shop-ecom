@@ -108,6 +108,16 @@ class UserServices {
       refresh_token
     }
   }
+  async logout(refresh_token: string) {
+    const refreshTokenExist = await databaseService.tokens.findOne({ refresh_token })
+    if (!refreshTokenExist) {
+      throw new Error(USERS_MESSAGES.REFRESH_TOKEN_NOTFOUND)
+    }
+    const result = await databaseService.tokens.deleteOne({ refresh_token })
+    if (!result.acknowledged) {
+      throw new Error(USERS_MESSAGES.LOGOUT_UNSUCCEED)
+    }
+  }
 }
 const userServices = new UserServices()
 export default userServices
