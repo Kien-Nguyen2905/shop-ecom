@@ -1,11 +1,15 @@
-import { config } from 'dotenv'
 import express from 'express'
-import databaseService from '~/services/database.services'
-config()
+import { env } from 'process'
+import { defaultErrorHandler } from '~/middlewares/error.middlewares'
+import userRoute from '~/routes/users.routes'
+import databaseService from '~/services/database/database.services'
 const app = express()
-const port = process.env.PORT || 8080
-app.use(express.json())
+const port = env.PORT || 8080
 databaseService.connect()
+app.use(express.json())
+app.use(`${env.API_VERSION}/users`, userRoute)
+
+app.use(defaultErrorHandler)
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`App listening on port ${port}`)
 })
