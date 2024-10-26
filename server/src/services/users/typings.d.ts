@@ -7,6 +7,10 @@ export type TRegisterReqBody = {
   password: string
   confirm_password: string
 }
+export type TLoginReqBody = {
+  email: string
+  password: string
+}
 export type TDecodeEmailToken = Omit<TRegisterReqBody, 'confirm_password'>
 export interface IAccessToken {
   user_id: ObjectId

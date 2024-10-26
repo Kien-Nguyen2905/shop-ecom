@@ -105,3 +105,12 @@ export const emailTokenSchema: ParamSchema = {
     }
   }
 }
+export const emailLoginSchema: ParamSchema = {
+  notEmpty: {
+    errorMessage: USERS_MESSAGES.EMAIL_REQUIRED
+  },
+  isEmail: {
+    errorMessage: USERS_MESSAGES.EMAIL_INVALID
+  },
+  trim: true
+}

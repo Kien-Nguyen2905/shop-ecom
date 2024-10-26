@@ -1,10 +1,18 @@
 import { ObjectId } from 'mongodb'
 import { env } from '~/configs/environment'
 import { ROLE } from '~/constants/enum'
+import { USERS_MESSAGES } from '~/constants/message'
 import Token from '~/models/schemas/tokens/tokens.schemas'
 import User from '~/models/schemas/users/users.schemas'
 import databaseService from '~/services/database/database.services'
-import { IAccessToken, IRefreshToken, TDecodeEmailToken, TRegisterReqBody } from '~/services/users/typings'
+import {
+  IAccessToken,
+  IRefreshToken,
+  ITokenVerify,
+  TDecodeEmailToken,
+  TLoginReqBody,
+  TRegisterReqBody
+} from '~/services/users/typings'
 import { hashPassword } from '~/utils/crypto'
 import { signToken, verifyToken } from '~/utils/jwt'
 
@@ -78,6 +86,27 @@ class UserServices {
   async checkEmailExist(email: string) {
     const user = await databaseService.users.findOne({ email })
     return Boolean(user)
+  }
+  async login(payload: TLoginReqBody) {
+    const { email, password } = payload
+    const user = await databaseService.users.findOne({
+      email,
+      password: hashPassword(password)
+    })
+    if (user === null) {
+      throw new Error(USERS_MESSAGES.EMAIL_OR_PASSWORD_INCORRECT)
+    }
+
+    const [access_token, refresh_token] = await this.signAPairToken({
+      user_id: user?._id,
+      role: user?.role!
+    })
+
+    await databaseService.tokens.insertOne(new Token({ user_id: user?._id, refresh_token: refresh_token }))
+    return {
+      access_token,
+      refresh_token
+    }
   }
 }
 const userServices = new UserServices()

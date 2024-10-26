@@ -1,6 +1,7 @@
 import { checkSchema } from 'express-validator'
 import {
   confirmPasswordSchema,
+  emailLoginSchema,
   emailSchema,
   emailTokenSchema,
   fullNameSchema,
@@ -23,6 +24,15 @@ export const verifyEmailValidator = validate(
       email: emailSchema,
       password: passwordSchema,
       confirm_password: confirmPasswordSchema
+    },
+    ['body']
+  )
+)
+export const loginValidator = validate(
+  checkSchema(
+    {
+      email: emailLoginSchema,
+      password: passwordSchema
     },
     ['body']
   )
