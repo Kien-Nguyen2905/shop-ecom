@@ -1,8 +1,8 @@
-export enum EUserVerify {
-  Unverified,
-  Verified
-}
 export enum ROLE {
   Admin,
   User
+}
+export enum EVerification {
+  ForgotPassword,
+  Email
 }

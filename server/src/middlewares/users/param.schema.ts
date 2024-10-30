@@ -24,7 +24,7 @@ export const fullNameSchema: ParamSchema = {
     errorMessage: USERS_MESSAGES.NAME_LENGTH
   }
 }
-export const emailSchema: ParamSchema = {
+export const emailVerifySchema: ParamSchema = {
   notEmpty: {
     errorMessage: USERS_MESSAGES.EMAIL_REQUIRED
   },
@@ -105,7 +105,7 @@ export const emailTokenSchema: ParamSchema = {
     }
   }
 }
-export const emailLoginSchema: ParamSchema = {
+export const emailSchema: ParamSchema = {
   notEmpty: {
     errorMessage: USERS_MESSAGES.EMAIL_REQUIRED
   },
@@ -114,6 +114,7 @@ export const emailLoginSchema: ParamSchema = {
   },
   trim: true
 }
+
 export const accessTokenSchema: ParamSchema = {
   custom: {
     options: async (value: string) => {
@@ -158,5 +159,10 @@ export const refreshTokenSchema: ParamSchema = {
       }
       return true
     }
+  }
+}
+export const passwordTokenSchema: ParamSchema = {
+  notEmpty: {
+    errorMessage: USERS_MESSAGES.PASSWORD_TOKEN_REQUIRED
   }
 }

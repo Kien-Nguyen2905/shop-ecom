@@ -33,3 +33,14 @@ export const verifyToken = <T>({ token, secretOrPublicKey }: { token: string; se
     })
   })
 }
+export const decodeToken = <T>({ token }: { token: string }): Promise<T | null> => {
+  return new Promise<T | null>((resolve, reject) => {
+    const decoded = jwt.decode(token)
+
+    if (!decoded) {
+      return reject(new Error('Invalid token'))
+    }
+
+    resolve(decoded as T)
+  })
+}

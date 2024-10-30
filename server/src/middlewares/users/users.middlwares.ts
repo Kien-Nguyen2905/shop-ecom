@@ -2,15 +2,28 @@ import { checkSchema } from 'express-validator'
 import {
   accessTokenSchema,
   confirmPasswordSchema,
-  emailLoginSchema,
   emailSchema,
+  emailVerifySchema,
   emailTokenSchema,
   fullNameSchema,
   passwordSchema,
-  refreshTokenSchema
+  refreshTokenSchema,
+  passwordTokenSchema
 } from '~/middlewares/users/param.schema'
 import { validate } from '~/utils/validate'
 
+export const verifyEmailValidator = validate(
+  checkSchema(
+    {
+      full_name: fullNameSchema,
+      email: emailVerifySchema,
+      password: passwordSchema,
+      confirm_password: confirmPasswordSchema
+    },
+    ['body']
+  )
+)
+export const reSendVerifyValidator = validate(checkSchema({}, ['body']))
 export const registerValidator = validate(
   checkSchema(
     {
@@ -19,21 +32,10 @@ export const registerValidator = validate(
     ['body']
   )
 )
-export const verifyEmailValidator = validate(
-  checkSchema(
-    {
-      full_name: fullNameSchema,
-      email: emailSchema,
-      password: passwordSchema,
-      confirm_password: confirmPasswordSchema
-    },
-    ['body']
-  )
-)
 export const loginValidator = validate(
   checkSchema(
     {
-      email: emailLoginSchema,
+      email: emailSchema,
       password: passwordSchema
     },
     ['body']
@@ -51,6 +53,24 @@ export const refreshTokenValidator = validate(
   checkSchema(
     {
       refresh_token: refreshTokenSchema
+    },
+    ['body']
+  )
+)
+export const forgotPasswordValidator = validate(
+  checkSchema(
+    {
+      email: emailSchema
+    },
+    ['body']
+  )
+)
+export const resetPasswordValidator = validate(
+  checkSchema(
+    {
+      password: passwordSchema,
+      confirm_password: confirmPasswordSchema,
+      password_token: passwordTokenSchema
     },
     ['body']
   )

@@ -6,6 +6,7 @@ export const USERS_MESSAGES = {
   EMAIL_ALREADY_EXISTS: 'Email already exists',
   EMAIL_REQUIRED: 'Email is required',
   EMAIL_INVALID: 'Email is invalid',
+  EMAIL_NOT_EXIST: 'Email not exist',
   EMAIL_OR_PASSWORD_INCORRECT: 'Email or password is incorrect',
   PASSWORD_REQUIRED: 'Password is required',
   PASSWORD_STRING: 'Password must be a string',
@@ -26,5 +27,15 @@ export const USERS_MESSAGES = {
   LOGOUT_UNSUCCEED: 'Logout unsuccessfully',
   ACCESS_TOKEN_REQUIRED: 'Access token is required',
   REFRESH_TOKEN_REQUIRED: 'Refresh token is required',
-  REFRESH_TOKEN_NOTFOUND: 'Refresh token not found'
+  REFRESH_TOKEN_NOTFOUND: 'Refresh token not found',
+  SEND_FORGOT_SUCCED: 'Send forgot password successfully',
+  RESEND_FORGOT_SUCCED: 'Resend forgot password successfully',
+  VERIFY_FORGOT_SUCCED: 'Verify forgot password token successfully',
+  PASSWORD_TOKEN_REQUIRED: 'Password token is required',
+  RESET_PASSWORD_SUCCED: 'Reset password successfully'
+}
+export const POPULAR_ERROR = {
+  INTERNAL_SERVER_ERROR: 'Internal Server Error',
+  USER_NOT_FOUND: 'User not found',
+  NOT_FOUND: 'Not found'
 }
