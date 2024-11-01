@@ -1,6 +1,12 @@
 import { ObjectId } from 'mongodb'
 import { ROLE, Verify } from '~/constants/enum'
 
+export type TTokenPayload = {
+  user_id: string
+  role: ROLE
+  exp: number
+  iat: number
+}
 export type TVerifyReqBody = {
   full_name: string
   email: string
@@ -28,6 +34,13 @@ export type TResetPasswordReqBody = {
   password: string
   confirm_password: string
   password_token: string
+}
+export type TRefreshTokenPayload = {
+  user_id: string
+  role: ROLE
+  exp: number
+  iat?: number
+  refresh_token: strig
 }
 export interface IAccessToken {
   user_id: ObjectId

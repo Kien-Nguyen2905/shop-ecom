@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { USERS_MESSAGES } from '~/constants/message'
 import { CREATED, SuccessResponse } from '~/models/success/success.response'
+import { TTokenPayload } from '~/services/users/typings'
 import userServices from '~/services/users/users.services'
 export const verifyEmailController = async (
   req: Request<ParamsDictionary, any, any>,
@@ -39,7 +40,6 @@ export const loginController = async (req: Request<ParamsDictionary, any, any>, 
   }).send(res)
 }
 export const logoutController = async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-  await userServices.logout(req.body.refresh_token)
   return new SuccessResponse({
     message: USERS_MESSAGES.LOGOUT_SUCCEED,
     data: await userServices.logout(req.body.refresh_token)
@@ -73,5 +73,26 @@ export const resetPasswordController = async (
   return new SuccessResponse({
     message: USERS_MESSAGES.RESET_PASSWORD_SUCCED,
     data: await userServices.resetPassword(req.body)
+  }).send(res)
+}
+export const getProfileController = async (
+  req: Request<ParamsDictionary, any, any>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { user_id } = req.decoded_token as TTokenPayload
+  return new SuccessResponse({
+    data: await userServices.getProfile(user_id)
+  }).send(res)
+}
+export const refreshTokenController = async (
+  req: Request<ParamsDictionary, any, any>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { refresh_token } = req.body
+  const { user_id, exp, role } = req.decoded_token as TTokenPayload
+  return new SuccessResponse({
+    data: await userServices.refreshToken({ user_id, refresh_token, exp, role })
   }).send(res)
 }

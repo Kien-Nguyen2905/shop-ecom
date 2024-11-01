@@ -7,7 +7,9 @@ import {
   reSendVerifyController,
   reSendForgotController,
   forgotPasswordController,
-  resetPasswordController
+  resetPasswordController,
+  getProfileController,
+  refreshTokenController
 } from '~/controllers/users.controllers'
 import {
   accessTokenValidator,
@@ -38,5 +40,9 @@ userRoute.post('/forgot-password', forgotPasswordValidator, wrapRequestHandler(f
 userRoute.post('/resend-forgot', forgotPasswordValidator, wrapRequestHandler(reSendForgotController))
 
 userRoute.post('/reset-password', resetPasswordValidator, wrapRequestHandler(resetPasswordController))
+
+userRoute.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(refreshTokenController))
+
+userRoute.get('/profile', accessTokenValidator, wrapRequestHandler(getProfileController))
 
 export default userRoute

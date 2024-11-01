@@ -9,8 +9,10 @@ import {
   IRefreshToken,
   TDecodeEmailToken,
   TLoginReqBody,
+  TRefreshTokenPayload,
   TRegisterReqBody,
   TResetPasswordReqBody,
+  TTokenPayload,
   TVerificationEmail,
   TVerifyForgotReqBody,
   TVerifyReqBody
@@ -301,6 +303,27 @@ class UserServices {
     }
     await databaseService.passwordResets.deleteOne({ password_token })
     return {}
+  }
+  async getProfile(user_id: string) {
+    return (await databaseService.users.findOne({ _id: new ObjectId(user_id) })) || {}
+  }
+  async refreshToken({ exp, user_id, role, refresh_token }: TRefreshTokenPayload) {
+    const [new_access_token, new_refresh_token] = await Promise.all([
+      this.signAccessToken({ user_id: new ObjectId(user_id), role }),
+      this.signRefreshToken({ user_id: new ObjectId(user_id), role, exp })
+    ])
+    await databaseService.tokens.updateOne(
+      { refresh_token },
+      {
+        $set: {
+          refresh_token: new_refresh_token
+        }
+      }
+    )
+    return {
+      access_token: new_access_token,
+      refresh_token: new_refresh_token
+    }
   }
 }
 const userServices = new UserServices()

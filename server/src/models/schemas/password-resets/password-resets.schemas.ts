@@ -1,6 +1,5 @@
 import { ObjectId } from 'mongodb'
 import { TPasswordResetProps } from '~/models/schemas/password-resets/tying'
-import { TVerificationProps } from '~/models/schemas/verifications/tyings'
 
 export default class PasswordReset {
   _id?: ObjectId

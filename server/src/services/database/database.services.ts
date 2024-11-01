@@ -5,6 +5,9 @@ import Token from '~/models/schemas/tokens/tokens.schemas'
 import { env } from '~/configs/environment'
 import Verification from '~/models/schemas/verifications/verifications.schemas'
 import PasswordReset from '~/models/schemas/password-resets/password-resets.schemas'
+import Province from '~/models/schemas/provinces/provinces.schemas'
+import District from '~/models/schemas/districts/districts.schemas'
+import Ward from '~/models/schemas/wards/wards.schemas'
 config()
 
 class DatabaseService {
@@ -37,6 +40,15 @@ class DatabaseService {
   }
   get tokens(): Collection<Token> {
     return this.db.collection(env.TOKENS_COLLECTION as string)
+  }
+  get provinces(): Collection<Province> {
+    return this.db.collection(env.PROVINCE_COLLECTION as string)
+  }
+  get districts(): Collection<District> {
+    return this.db.collection(env.DISTRICT_COLLECTION as string)
+  }
+  get wards(): Collection<Ward> {
+    return this.db.collection(env.WARD_COLLECTION as string)
   }
 }
 

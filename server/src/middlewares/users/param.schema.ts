@@ -1,10 +1,12 @@
+import { Request } from 'express'
 import { ParamSchema } from 'express-validator'
 import { JsonWebTokenError } from 'jsonwebtoken'
 import { env } from '~/configs/environment'
 import { HTTP_STATUS } from '~/constants/httpStatus'
 import { USERS_MESSAGES } from '~/constants/message'
 import { ErrorWithStatus } from '~/models/errors/errors'
-import { TDecodeEmailToken } from '~/services/users/typings'
+import databaseService from '~/services/database/database.services'
+import { TDecodeEmailToken, TTokenPayload } from '~/services/users/typings'
 import userServices from '~/services/users/users.services'
 import { verifyToken } from '~/utils/jwt'
 
@@ -117,7 +119,7 @@ export const emailSchema: ParamSchema = {
 
 export const accessTokenSchema: ParamSchema = {
   custom: {
-    options: async (value: string) => {
+    options: async (value: string, { req }) => {
       const access_token = (value || '').split(' ')[1]
       if (!access_token) {
         throw new ErrorWithStatus({
@@ -126,10 +128,11 @@ export const accessTokenSchema: ParamSchema = {
         })
       }
       try {
-        await verifyToken({
+        const decoded_token = await verifyToken<TTokenPayload>({
           token: access_token,
           secretOrPublicKey: env.JWT_SECRET_ACCESS_TOKEN as string
         })
+        ;(req as Request).decoded_token = decoded_token
       } catch (error) {
         throw new ErrorWithStatus({
           message: (error as JsonWebTokenError).message,
@@ -145,16 +148,23 @@ export const refreshTokenSchema: ParamSchema = {
     errorMessage: USERS_MESSAGES.REFRESH_TOKEN_REQUIRED
   },
   custom: {
-    options: async (value: string) => {
+    options: async (value: string, { req }) => {
       try {
-        await verifyToken({
-          token: value,
-          secretOrPublicKey: env.JWT_SECRET_REFRESH_TOKEN as string
-        })
+        const [decoded_token, refresh_token] = await Promise.all([
+          verifyToken<TTokenPayload>({ token: value, secretOrPublicKey: env.JWT_SECRET_REFRESH_TOKEN as string }),
+          databaseService.tokens.findOne({ refresh_token: value })
+        ])
+        if (!refresh_token) {
+          throw new ErrorWithStatus({
+            message: USERS_MESSAGES.REFRESH_TOKEN_NOTFOUND,
+            status: HTTP_STATUS.NOT_FOUND
+          })
+        }
+        ;(req as Request).decoded_token = decoded_token
       } catch (error) {
         throw new ErrorWithStatus({
           message: (error as JsonWebTokenError).message,
-          status: HTTP_STATUS.UNAUTHORIZED
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR
         })
       }
       return true
