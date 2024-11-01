@@ -4,7 +4,7 @@ import { UserVerify } from '~/constants/enum'
 export type TAddessProps = {
   province?: string
   district?: string
-  village?: string
+  ward?: string
   street_address?: string
 }
 export type TUserProps = {
@@ -16,7 +16,6 @@ export type TUserProps = {
   full_name?: string
   phone?: string
   address?: TAddessProps
-  avatar?: string
   wishlist?: ObjectId
   created_at?: Date
   updated_at?: Date

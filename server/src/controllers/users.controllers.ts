@@ -75,6 +75,17 @@ export const resetPasswordController = async (
     data: await userServices.resetPassword(req.body)
   }).send(res)
 }
+export const refreshTokenController = async (
+  req: Request<ParamsDictionary, any, any>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { refresh_token } = req.body
+  const { user_id, exp, role } = req.decoded_token as TTokenPayload
+  return new SuccessResponse({
+    data: await userServices.refreshToken({ user_id, refresh_token, exp, role })
+  }).send(res)
+}
 export const getProfileController = async (
   req: Request<ParamsDictionary, any, any>,
   res: Response,
@@ -85,14 +96,15 @@ export const getProfileController = async (
     data: await userServices.getProfile(user_id)
   }).send(res)
 }
-export const refreshTokenController = async (
+
+export const updateProfileController = async (
   req: Request<ParamsDictionary, any, any>,
   res: Response,
   next: NextFunction
 ) => {
-  const { refresh_token } = req.body
-  const { user_id, exp, role } = req.decoded_token as TTokenPayload
+  const { user_id } = req.decoded_token as TTokenPayload
+  const { full_name, phone, province, district, ward, street_address } = req.body
   return new SuccessResponse({
-    data: await userServices.refreshToken({ user_id, refresh_token, exp, role })
+    data: await userServices.updateProfile({ user_id, full_name, phone, province, district, ward, street_address })
   }).send(res)
 }

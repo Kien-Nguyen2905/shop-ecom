@@ -8,7 +8,9 @@ import {
   fullNameSchema,
   passwordSchema,
   refreshTokenSchema,
-  passwordTokenSchema
+  passwordTokenSchema,
+  phoneSchema,
+  addressSchema
 } from '~/middlewares/users/param.schema'
 import { validate } from '~/utils/validate'
 
@@ -71,6 +73,16 @@ export const resetPasswordValidator = validate(
       password: passwordSchema,
       confirm_password: confirmPasswordSchema,
       password_token: passwordTokenSchema
+    },
+    ['body']
+  )
+)
+export const updateProfileValidator = validate(
+  checkSchema(
+    {
+      full_name: fullNameSchema,
+      phone: phoneSchema,
+      ...addressSchema
     },
     ['body']
   )

@@ -5,6 +5,7 @@ import { env } from '~/configs/environment'
 import { HTTP_STATUS } from '~/constants/httpStatus'
 import { USERS_MESSAGES } from '~/constants/message'
 import { ErrorWithStatus } from '~/models/errors/errors'
+import { TAddessProps } from '~/models/schemas/users/tyings'
 import databaseService from '~/services/database/database.services'
 import { TDecodeEmailToken, TTokenPayload } from '~/services/users/typings'
 import userServices from '~/services/users/users.services'
@@ -116,7 +117,6 @@ export const emailSchema: ParamSchema = {
   },
   trim: true
 }
-
 export const accessTokenSchema: ParamSchema = {
   custom: {
     options: async (value: string, { req }) => {
@@ -174,5 +174,61 @@ export const refreshTokenSchema: ParamSchema = {
 export const passwordTokenSchema: ParamSchema = {
   notEmpty: {
     errorMessage: USERS_MESSAGES.PASSWORD_TOKEN_REQUIRED
+  }
+}
+export const phoneSchema: ParamSchema = {
+  notEmpty: {
+    errorMessage: USERS_MESSAGES.PHONE_REQUIRED
+  },
+  isString: {
+    errorMessage: USERS_MESSAGES.PHONE_STRING
+  },
+  isMobilePhone: {
+    options: 'any',
+    errorMessage: USERS_MESSAGES.PHONE_INVALID
+  },
+  trim: true,
+  isLength: {
+    options: { min: 10, max: 15 }, // Adjust length as needed for phone numbers
+    errorMessage: USERS_MESSAGES.PHONE_LENGTH
+  }
+}
+// key K has a value of type V.
+export const addressSchema: Record<keyof TAddessProps, ParamSchema> = {
+  province: {
+    notEmpty: {
+      errorMessage: USERS_MESSAGES.PROVINCE_REQUIRED
+    },
+    isString: {
+      errorMessage: USERS_MESSAGES.PROVINCE_STRING
+    },
+    trim: true
+  },
+  district: {
+    notEmpty: {
+      errorMessage: USERS_MESSAGES.DISTRICT_REQUIRED
+    },
+    isString: {
+      errorMessage: USERS_MESSAGES.DISTRICT_STRING
+    },
+    trim: true
+  },
+  ward: {
+    notEmpty: {
+      errorMessage: USERS_MESSAGES.VILLAGE_REQUIRED
+    },
+    isString: {
+      errorMessage: USERS_MESSAGES.VILLAGE_STRING
+    },
+    trim: true
+  },
+  street_address: {
+    notEmpty: {
+      errorMessage: USERS_MESSAGES.STREET_ADDRESS_REQUIRED
+    },
+    isString: {
+      errorMessage: USERS_MESSAGES.STREET_ADDRESS_STRING
+    },
+    trim: true
   }
 }

@@ -9,7 +9,8 @@ import {
   forgotPasswordController,
   resetPasswordController,
   getProfileController,
-  refreshTokenController
+  refreshTokenController,
+  updateProfileController
 } from '~/controllers/users.controllers'
 import {
   accessTokenValidator,
@@ -19,7 +20,8 @@ import {
   verifyEmailValidator,
   reSendVerifyValidator,
   forgotPasswordValidator,
-  resetPasswordValidator
+  resetPasswordValidator,
+  updateProfileValidator
 } from '~/middlewares/users/users.middlwares'
 import { wrapRequestHandler } from '~/utils/handlerError'
 
@@ -44,5 +46,7 @@ userRoute.post('/reset-password', resetPasswordValidator, wrapRequestHandler(res
 userRoute.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(refreshTokenController))
 
 userRoute.get('/profile', accessTokenValidator, wrapRequestHandler(getProfileController))
+
+userRoute.post('/profile', accessTokenValidator, updateProfileValidator, wrapRequestHandler(updateProfileController))
 
 export default userRoute

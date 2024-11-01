@@ -9,10 +9,12 @@ import {
   IRefreshToken,
   TDecodeEmailToken,
   TLoginReqBody,
+  TProfilePayload,
   TRefreshTokenPayload,
   TRegisterReqBody,
   TResetPasswordReqBody,
   TTokenPayload,
+  TUpdateProfilePayload,
   TVerificationEmail,
   TVerifyForgotReqBody,
   TVerifyReqBody
@@ -304,9 +306,7 @@ class UserServices {
     await databaseService.passwordResets.deleteOne({ password_token })
     return {}
   }
-  async getProfile(user_id: string) {
-    return (await databaseService.users.findOne({ _id: new ObjectId(user_id) })) || {}
-  }
+
   async refreshToken({ exp, user_id, role, refresh_token }: TRefreshTokenPayload) {
     const [new_access_token, new_refresh_token] = await Promise.all([
       this.signAccessToken({ user_id: new ObjectId(user_id), role }),
@@ -324,6 +324,33 @@ class UserServices {
       access_token: new_access_token,
       refresh_token: new_refresh_token
     }
+  }
+
+  async getProfile(user_id: string) {
+    const result = await databaseService.users.findOne({ _id: new ObjectId(user_id) })
+    if (!result) {
+      throw new NotFoundError()
+    }
+    const { email, role, full_name, phone, address, wishlist } = result
+    return { email, role, full_name, phone, address, wishlist }
+  }
+  async updateProfile({ user_id, full_name, phone, province, district, ward, street_address }: TUpdateProfilePayload) {
+    const result = await databaseService.users.updateOne(
+      {
+        _id: new ObjectId(user_id)
+      },
+      {
+        $set: {
+          full_name,
+          phone,
+          address: { province, district, ward, street_address }
+        }
+      }
+    )
+    if (!result.acknowledged) {
+      throw new InternalServerError()
+    }
+    return {}
   }
 }
 const userServices = new UserServices()

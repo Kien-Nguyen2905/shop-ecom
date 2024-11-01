@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb'
 import { ROLE, Verify } from '~/constants/enum'
+import { TAddessProps } from '~/models/schemas/users/tyings'
 
 export type TTokenPayload = {
   user_id: string
@@ -42,6 +43,16 @@ export type TRefreshTokenPayload = {
   iat?: number
   refresh_token: strig
 }
+export type TUpdateProfilePayload = {
+  user_id: string
+  full_name?: string
+  phone?: string
+  province?: string
+  district?: string
+  ward?: string
+  street_address?: string
+}
+export type TProfilePayload = {}
 export interface IAccessToken {
   user_id: ObjectId
   role: ROLE

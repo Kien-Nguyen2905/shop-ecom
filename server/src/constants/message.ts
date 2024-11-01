@@ -32,7 +32,23 @@ export const USERS_MESSAGES = {
   RESEND_FORGOT_SUCCED: 'Resend forgot password successfully',
   VERIFY_FORGOT_SUCCED: 'Verify forgot password token successfully',
   PASSWORD_TOKEN_REQUIRED: 'Password token is required',
-  RESET_PASSWORD_SUCCED: 'Reset password successfully'
+  RESET_PASSWORD_SUCCED: 'Reset password successfully',
+  PHONE_REQUIRED: 'Phone number is required.',
+  PHONE_STRING: 'Phone number must be a string.',
+  PHONE_INVALID: 'Phone number is invalid.',
+  PHONE_LENGTH: 'Phone number must be between 10 and 15 characters.',
+
+  PROVINCE_REQUIRED: 'Province is required.',
+  PROVINCE_STRING: 'Province must be a string.',
+
+  DISTRICT_REQUIRED: 'District is required.',
+  DISTRICT_STRING: 'District must be a string.',
+
+  VILLAGE_REQUIRED: 'Village is required.',
+  VILLAGE_STRING: 'Village must be a string.',
+
+  STREET_ADDRESS_REQUIRED: 'Street address is required.',
+  STREET_ADDRESS_STRING: 'Street address must be a string.'
 }
 export const POPULAR_ERROR = {
   INTERNAL_SERVER_ERROR: 'Internal Server Error',

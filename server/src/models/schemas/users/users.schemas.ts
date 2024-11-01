@@ -11,7 +11,6 @@ export default class User {
   full_name?: string
   phone?: string
   address?: TAddessProps
-  avatar?: string
   wishlist?: ObjectId
   created_at?: Date
   updated_at?: Date
@@ -25,7 +24,6 @@ export default class User {
     this.full_name = user.full_name || ''
     this.phone = user.phone || ''
     this.address = user.address || {}
-    this.avatar = user.avatar || ''
     this.wishlist = user.wishlist || undefined
     this.created_at = user.created_at || date
     this.updated_at = user.updated_at || date
