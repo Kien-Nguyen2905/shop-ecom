@@ -2,6 +2,7 @@ import express from 'express'
 import { env } from '~/configs/environment'
 import { defaultErrorHandler } from '~/middlewares/error.middlewares'
 import addressRoute from '~/routes/address.routes'
+import brandRoute from '~/routes/brands.routes'
 import categoryRoute from '~/routes/categories.routes'
 import userRoute from '~/routes/users.routes'
 import databaseService from '~/services/database/database.services'
@@ -12,6 +13,7 @@ app.use(express.json())
 app.use(`${env.API_VERSION}/users`, userRoute)
 app.use(`${env.API_VERSION}/address`, addressRoute)
 app.use(`${env.API_VERSION}/category`, categoryRoute)
+app.use(`${env.API_VERSION}/brand`, brandRoute)
 
 app.use(defaultErrorHandler)
 app.listen(port, () => {

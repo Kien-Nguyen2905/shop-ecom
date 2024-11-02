@@ -1,4 +1,5 @@
 import { HTTP_STATUS } from '~/constants/httpStatus'
+import { POPULAR_MESSAGES } from '~/constants/message'
 import { TSuccessResponseProps } from '~/models/success/type'
 
 export class SuccessResponse {
@@ -7,7 +8,7 @@ export class SuccessResponse {
   data: Record<string, any>
 
   constructor({ message, status = HTTP_STATUS.OK, data = {} }: TSuccessResponseProps) {
-    this.message = message || 'Successfully'
+    this.message = message || POPULAR_MESSAGES.SUCCESS_MESSAGES
     this.status = status
     this.data = data
   }

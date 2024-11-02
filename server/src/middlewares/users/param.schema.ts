@@ -3,7 +3,7 @@ import { ParamSchema } from 'express-validator'
 import { JsonWebTokenError } from 'jsonwebtoken'
 import { env } from '~/configs/environment'
 import { HTTP_STATUS } from '~/constants/httpStatus'
-import { USERS_MESSAGES } from '~/constants/message'
+import { ADDRESS_MESSAGES, USERS_MESSAGES } from '~/constants/message'
 import { ErrorWithStatus } from '~/models/errors/errors'
 import { TAddessProps } from '~/models/schemas/users/type'
 import databaseService from '~/services/database/database.services'
@@ -196,37 +196,37 @@ export const phoneSchema: ParamSchema = {
 export const addressSchema: Record<keyof TAddessProps, ParamSchema> = {
   province: {
     notEmpty: {
-      errorMessage: USERS_MESSAGES.PROVINCE_REQUIRED
+      errorMessage: ADDRESS_MESSAGES.PROVINCE_REQUIRED
     },
     isString: {
-      errorMessage: USERS_MESSAGES.PROVINCE_STRING
+      errorMessage: ADDRESS_MESSAGES.PROVINCE_STRING
     },
     trim: true
   },
   district: {
     notEmpty: {
-      errorMessage: USERS_MESSAGES.DISTRICT_REQUIRED
+      errorMessage: ADDRESS_MESSAGES.DISTRICT_REQUIRED
     },
     isString: {
-      errorMessage: USERS_MESSAGES.DISTRICT_STRING
+      errorMessage: ADDRESS_MESSAGES.DISTRICT_STRING
     },
     trim: true
   },
   ward: {
     notEmpty: {
-      errorMessage: USERS_MESSAGES.VILLAGE_REQUIRED
+      errorMessage: ADDRESS_MESSAGES.WARD_REQUIRED
     },
     isString: {
-      errorMessage: USERS_MESSAGES.VILLAGE_STRING
+      errorMessage: ADDRESS_MESSAGES.WARD_STRING
     },
     trim: true
   },
   street_address: {
     notEmpty: {
-      errorMessage: USERS_MESSAGES.STREET_ADDRESS_REQUIRED
+      errorMessage: ADDRESS_MESSAGES.STREET_ADDRESS_REQUIRED
     },
     isString: {
-      errorMessage: USERS_MESSAGES.STREET_ADDRESS_STRING
+      errorMessage: ADDRESS_MESSAGES.STREET_ADDRESS_STRING
     },
     trim: true
   }

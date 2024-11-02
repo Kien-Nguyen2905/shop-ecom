@@ -1,53 +1,54 @@
 import { NextFunction, Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { CREATED, SuccessResponse } from '~/models/success/success.response'
-import categoryServices from '~/services/category/category.services'
+import brandServices from '~/services/brand/brand.services'
 import { TCategoryPayload } from '~/services/category/type'
 
-export const createCategoryController = async (
+export const createBrandController = async (
   req: Request<ParamsDictionary, any, any>,
   res: Response,
   next: NextFunction
 ) => {
   return new CREATED({
-    data: await categoryServices.createCategory(req.body.name)
+    data: await brandServices.createBrand(req.body.name)
   }).send(res)
 }
 
-export const updateCategoryController = async (
+export const updateBrandController = async (
   req: Request<ParamsDictionary, any, TCategoryPayload>,
   res: Response,
   next: NextFunction
 ) => {
-  await categoryServices.updateCategory({ _id: req.params.id, name: req.body.name })
-  return new SuccessResponse({}).send(res)
+  return new SuccessResponse({
+    data: await brandServices.updateBrand({ _id: req.params.id, name: req.body.name })
+  }).send(res)
 }
 
-export const getCategoryController = async (
+export const getBrandController = async (
   req: Request<ParamsDictionary, any, any>,
   res: Response,
   next: NextFunction
 ) => {
   return new SuccessResponse({
-    data: await categoryServices.getCategory()
+    data: await brandServices.getBrands()
   }).send(res)
 }
 
-export const getCategoryDetailController = async (
+export const getBrandDetailController = async (
   req: Request<ParamsDictionary, any, any>,
   res: Response,
   next: NextFunction
 ) => {
   return new SuccessResponse({
-    data: await categoryServices.getCategoryDetail(req.params.id)
+    data: await brandServices.getBrandDetail(req.params.id)
   }).send(res)
 }
 
-export const deleteCategoryController = async (
+export const deleteBrandController = async (
   req: Request<ParamsDictionary, any, any>,
   res: Response,
   next: NextFunction
 ) => {
-  await categoryServices.deleteCategory(req.params.id)
+  await brandServices.deleteBrand(req.params.id)
   return new SuccessResponse({}).send(res)
 }

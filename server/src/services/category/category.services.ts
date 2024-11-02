@@ -1,24 +1,16 @@
 import { ObjectId } from 'mongodb'
-import { USERS_MESSAGES } from '~/constants/message'
+import { CATEGORY_MESSAGES } from '~/constants/message'
 import { ConflictRequestError, ErrorWithStatus, InternalServerError, NotFoundError } from '~/models/errors/errors'
 import Category from '~/models/schemas/categories/categories.schemas'
 import { TCategoryPayload } from '~/services/category/type'
 import databaseService from '~/services/database/database.services'
 
 class CategoryServices {
-  async checkCategoryExist(name: string) {
-    const category = await databaseService.categories.findOne({ name })
-    return Boolean(category)
-  }
-  async checkCategoryExistById(_id: string) {
-    const category = await databaseService.categories.findOne({ _id: new ObjectId(_id) })
-    return Boolean(category)
-  }
   async createCategory(name: string) {
     const categoryExist = await databaseService.categories.findOne({ name })
     if (categoryExist) {
       throw new ConflictRequestError({
-        message: USERS_MESSAGES.CATEGORY_NAME_EXISTS
+        message: CATEGORY_MESSAGES.CATEGORY_NAME_EXISTS
       })
     }
     const _id = new ObjectId()
@@ -27,7 +19,7 @@ class CategoryServices {
     if (!result.acknowledged) {
       throw new InternalServerError()
     }
-    return {}
+    return category
   }
   async updateCategory({ _id, name }: TCategoryPayload) {
     const categoryId = new ObjectId(_id)
@@ -46,7 +38,6 @@ class CategoryServices {
     if (!result.acknowledged) {
       throw new InternalServerError()
     }
-    return {}
   }
   async getCategory() {
     return await databaseService.categories.find().toArray()
@@ -65,8 +56,10 @@ class CategoryServices {
     if (!category) {
       throw new NotFoundError()
     }
-    await databaseService.categories.deleteOne({ _id: categoryId })
-    return category
+    const result = await databaseService.categories.deleteOne({ _id: categoryId })
+    if (!result.acknowledged) {
+      throw new InternalServerError()
+    }
   }
 }
 const categoryServices = new CategoryServices()

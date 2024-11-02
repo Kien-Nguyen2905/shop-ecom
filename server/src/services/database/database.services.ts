@@ -9,6 +9,7 @@ import Province from '~/models/schemas/provinces/provinces.schemas'
 import District from '~/models/schemas/districts/districts.schemas'
 import Ward from '~/models/schemas/wards/wards.schemas'
 import Category from '~/models/schemas/categories/categories.schemas'
+import Brand from '~/models/schemas/brands/brands.schemas'
 config()
 
 class DatabaseService {
@@ -53,6 +54,9 @@ class DatabaseService {
   }
   get categories(): Collection<Category> {
     return this.db.collection(env.CATEGORY_COLLECTION as string)
+  }
+  get brands(): Collection<Brand> {
+    return this.db.collection(env.BRAND_COLLECTION as string)
   }
 }
 
