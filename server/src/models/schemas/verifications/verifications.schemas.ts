@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb'
-import { TVerificationProps } from '~/models/schemas/verifications/tyings'
+import { TVerificationProps } from '~/models/schemas/verifications/type'
 
 export default class Verification {
   _id?: ObjectId

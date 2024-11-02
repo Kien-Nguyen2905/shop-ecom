@@ -9,16 +9,14 @@ import {
   IRefreshToken,
   TDecodeEmailToken,
   TLoginReqBody,
-  TProfilePayload,
   TRefreshTokenPayload,
   TRegisterReqBody,
   TResetPasswordReqBody,
-  TTokenPayload,
   TUpdateProfilePayload,
   TVerificationEmail,
   TVerifyForgotReqBody,
   TVerifyReqBody
-} from '~/services/users/typings'
+} from '~/services/users/type'
 import { hashPassword } from '~/utils/crypto'
 import { decodeToken, signToken, verifyToken } from '~/utils/jwt'
 import { sendVerification } from '~/utils/sendmail'

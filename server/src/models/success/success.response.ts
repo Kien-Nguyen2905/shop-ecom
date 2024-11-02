@@ -1,27 +1,27 @@
 import { HTTP_STATUS } from '~/constants/httpStatus'
-import { TSuccessResponseProps } from '~/models/success/typings'
+import { TSuccessResponseProps } from '~/models/success/type'
 
 export class SuccessResponse {
   message: string
-  statusCode: number
+  status: number
   data: Record<string, any>
 
-  constructor({ message, statusCode = HTTP_STATUS.OK, data = {} }: TSuccessResponseProps) {
+  constructor({ message, status = HTTP_STATUS.OK, data = {} }: TSuccessResponseProps) {
     this.message = message || 'Successfully'
-    this.statusCode = statusCode
+    this.status = status
     this.data = data
   }
 
   send(respon: any) {
-    return respon.status(this.statusCode).json(this)
+    return respon.status(this.status).json(this)
   }
 }
 
 export class CREATED extends SuccessResponse {
-  constructor({ message, statusCode = HTTP_STATUS.CREATED, data }: TSuccessResponseProps) {
+  constructor({ message, status = HTTP_STATUS.CREATED, data }: TSuccessResponseProps) {
     super({
       message,
-      statusCode,
+      status,
       data
     })
   }

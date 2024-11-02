@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { USERS_MESSAGES } from '~/constants/message'
 import { CREATED, SuccessResponse } from '~/models/success/success.response'
-import { TTokenPayload } from '~/services/users/typings'
+import { TTokenPayload } from '~/services/users/type'
 import userServices from '~/services/users/users.services'
 export const verifyEmailController = async (
   req: Request<ParamsDictionary, any, any>,

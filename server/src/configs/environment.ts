@@ -22,6 +22,8 @@ type TEnv = {
   PROVINCE_COLLECTION: string
   DISTRICT_COLLECTION: string
   WARD_COLLECTION: string
+  CATEGORY_COLLECTION: string
+  BRAND_COLLECTION: string
 }
 export const env: TEnv = {
   CORS_ORIGIN: process.env.CORS_ORIGIN as string,
@@ -44,5 +46,7 @@ export const env: TEnv = {
   PASSWORD_RESETS_COLLECTION: process.env.DB_PASSWORD_RESETS_COLLECTION as string,
   PROVINCE_COLLECTION: process.env.DB_PROVINCE_COLLECTION as string,
   DISTRICT_COLLECTION: process.env.DB_DISTRICT_COLLECTION as string,
-  WARD_COLLECTION: process.env.DB_WARD_COLLECTION as string
+  WARD_COLLECTION: process.env.DB_WARD_COLLECTION as string,
+  CATEGORY_COLLECTION: process.env.DB_CATEGORY_COLLECTION as string,
+  BRAND_COLLECTION: process.env.DB_BRAND_COLLECTION as string
 }

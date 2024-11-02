@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb'
-import { TProvinceProps } from '~/models/schemas/provinces/typings'
+import { TProvinceProps } from '~/models/schemas/provinces/type'
 
 export default class Province {
   _id: ObjectId

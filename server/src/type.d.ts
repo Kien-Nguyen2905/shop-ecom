@@ -1,6 +1,6 @@
 import { Request } from 'express'
 import User from '~/models/schemas/users/users.schemas'
-import { TDecodeEmailToken, TTokenPayload } from '~/services/users/typings'
+import { TDecodeEmailToken, TTokenPayload } from '~/services/users/type'
 declare module 'express' {
   interface Request {
     user?: User

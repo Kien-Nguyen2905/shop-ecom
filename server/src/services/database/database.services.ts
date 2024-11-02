@@ -8,6 +8,7 @@ import PasswordReset from '~/models/schemas/password-resets/password-resets.sche
 import Province from '~/models/schemas/provinces/provinces.schemas'
 import District from '~/models/schemas/districts/districts.schemas'
 import Ward from '~/models/schemas/wards/wards.schemas'
+import Category from '~/models/schemas/categories/categories.schemas'
 config()
 
 class DatabaseService {
@@ -49,6 +50,9 @@ class DatabaseService {
   }
   get wards(): Collection<Ward> {
     return this.db.collection(env.WARD_COLLECTION as string)
+  }
+  get categories(): Collection<Category> {
+    return this.db.collection(env.CATEGORY_COLLECTION as string)
   }
 }
 

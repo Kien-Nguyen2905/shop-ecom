@@ -5,9 +5,9 @@ import { env } from '~/configs/environment'
 import { HTTP_STATUS } from '~/constants/httpStatus'
 import { USERS_MESSAGES } from '~/constants/message'
 import { ErrorWithStatus } from '~/models/errors/errors'
-import { TAddessProps } from '~/models/schemas/users/tyings'
+import { TAddessProps } from '~/models/schemas/users/type'
 import databaseService from '~/services/database/database.services'
-import { TDecodeEmailToken, TTokenPayload } from '~/services/users/typings'
+import { TDecodeEmailToken, TTokenPayload } from '~/services/users/type'
 import userServices from '~/services/users/users.services'
 import { verifyToken } from '~/utils/jwt'
 
@@ -37,7 +37,6 @@ export const emailVerifySchema: ParamSchema = {
   trim: true,
   custom: {
     options: async (value) => {
-      // check email exist
       const isExistEmail = await userServices.checkEmailExist(value)
       if (isExistEmail) {
         throw new Error(USERS_MESSAGES.EMAIL_ALREADY_EXISTS)

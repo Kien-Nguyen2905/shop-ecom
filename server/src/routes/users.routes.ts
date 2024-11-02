@@ -47,6 +47,6 @@ userRoute.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(refre
 
 userRoute.get('/profile', accessTokenValidator, wrapRequestHandler(getProfileController))
 
-userRoute.post('/profile', accessTokenValidator, updateProfileValidator, wrapRequestHandler(updateProfileController))
+userRoute.put('/profile', accessTokenValidator, updateProfileValidator, wrapRequestHandler(updateProfileController))
 
 export default userRoute

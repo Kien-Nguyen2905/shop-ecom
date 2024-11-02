@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb'
 import { ROLE } from '~/constants/enum'
-import { TAddessProps, TUserProps } from '~/models/schemas/users/tyings'
+import { TAddessProps, TUserProps } from '~/models/schemas/users/type'
 
 export default class User {
   _id?: ObjectId

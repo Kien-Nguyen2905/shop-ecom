@@ -1,5 +1,5 @@
 export type TSuccessResponseProps = {
   message?: string
-  statusCode?: number
+  status?: number
   data?: Record<string, any>
 }

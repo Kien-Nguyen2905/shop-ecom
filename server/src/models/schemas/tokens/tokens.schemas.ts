@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb'
-import { TTokenProps } from '~/models/schemas/tokens/tyings'
+import { TTokenProps } from '~/models/schemas/tokens/type'
 
 export default class Token {
   _id?: ObjectId

@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb'
 import { ROLE, Verify } from '~/constants/enum'
-import { TAddessProps } from '~/models/schemas/users/tyings'
+import { TAddessProps } from '~/models/schemas/users/type'
 
 export type TTokenPayload = {
   user_id: string

@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb'
-import { TWardProps } from '~/models/schemas/wards/tyings'
+import { TWardProps } from '~/models/schemas/wards/type'
 
 export default class Ward {
   _id: ObjectId

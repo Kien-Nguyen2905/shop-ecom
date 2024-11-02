@@ -1,12 +1,12 @@
 import { HTTP_STATUS } from '~/constants/httpStatus'
 import { USERS_MESSAGES } from '~/constants/message'
 import { REASON_PHRASES } from '~/constants/reasonPhrases'
-import { TErrorProps, TErrorsEntityProps } from '~/models/errors/typings'
+import { TErrorProps, TErrorsEntityProps } from '~/models/errors/type'
 
 export class ErrorWithStatus {
   message: string
   status?: number
-  constructor({ message, status }: { message: string; status: number }) {
+  constructor({ message, status }: { message: string; status?: number }) {
     this.message = message
     this.status = status
   }

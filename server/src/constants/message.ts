@@ -48,7 +48,16 @@ export const USERS_MESSAGES = {
   VILLAGE_STRING: 'Village must be a string.',
 
   STREET_ADDRESS_REQUIRED: 'Street address is required.',
-  STREET_ADDRESS_STRING: 'Street address must be a string.'
+  STREET_ADDRESS_STRING: 'Street address must be a string.',
+
+  CATEGORY_NAME_REQUIRED: 'Category name is required.',
+  CATEGORY_NAME_STRING: 'Category name must be a string.',
+  CATEGORY_NAME_EXISTS: 'Category name already exists.',
+  CATEGORY_NAME_NOT_EXISTS: 'Category name not exists.'
+}
+export const POPULAR_MESSAGES = {
+  SUCCESS_MESSAGES: 'Successfully',
+  ERROR_MESSAGES: 'Failed'
 }
 export const POPULAR_ERROR = {
   INTERNAL_SERVER_ERROR: 'Internal Server Error',
