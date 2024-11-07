@@ -71,10 +71,12 @@ export const quantitySchema: ParamSchema = {
   isNumeric: {
     errorMessage: WAREHOUSE_MESSAGES.QUANTITY_NUMERIC
   },
-  isLength: {
-    options: {
-      min: 1
-    },
-    errorMessage: WAREHOUSE_MESSAGES.QUANTITY_MIN
+  custom: {
+    options: (value) => {
+      if (value < 1) {
+        throw new Error(WAREHOUSE_MESSAGES.QUANTITY_MIN)
+      }
+      return true
+    }
   }
 }

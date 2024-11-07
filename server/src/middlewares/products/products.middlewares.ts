@@ -1,5 +1,5 @@
 import { checkSchema } from 'express-validator'
-import { brandIdSchema } from '~/middlewares/brands/parma.schema'
+import { brandIdSchema } from '~/middlewares/brands/param.schema'
 import { categoryIdSchema } from '~/middlewares/categories/param.schema'
 import {
   attributeSchema,

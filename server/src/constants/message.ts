@@ -116,7 +116,7 @@ export const PRODUCT_MESSAGES = {
 export const WAREHOUSE_MESSAGES = {
   QUANTITY_REQUIRED: 'Quantity is required',
   QUANTITY_NUMERIC: 'Quantity is numeric',
-  QUANTITY_MIN: 'Minimum 1uantity must be 1',
+  QUANTITY_MIN: 'Minimum quantity must be 1',
 
   INVALID_SOLD_VALUE: 'Sold value must be a non-negative integer.',
 
@@ -140,6 +140,10 @@ export const ORDER_MESSAGES = {
 }
 
 export const POPULAR_MESSAGES = {
+  QUANTITY_REQUIRED: 'Quantity is required',
+  QUANTITY_NUMERIC: 'Quantity is numeric',
+  QUANTITY_MIN: 'Minimum quantity must be 1',
+
   ID_REQUIRED: 'Id is required',
   ID_INVALID: 'Id is invalid',
   SUCCESS_MESSAGES: 'Successfully',

@@ -1,5 +1,5 @@
 import { checkSchema } from 'express-validator'
-import { brandIdSchema, brandNameSchema } from '~/middlewares/brands/parma.schema'
+import { brandIdSchema, brandNameSchema } from '~/middlewares/brands/param.schema'
 import { validate } from '~/utils/validate'
 
 export const brandValidator = validate(

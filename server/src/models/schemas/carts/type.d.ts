@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb'
 
-export interface TProductCartProps {
+export type TProductCartProps = {
+  _id?: ObjectId
   product_id: ObjectId
   image: string
   name: string
