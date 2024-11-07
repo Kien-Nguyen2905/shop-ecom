@@ -4,3 +4,7 @@ export type TUpdateCartPayload = {
   quantity: number
   user_id: string
 }
+export type TRemoveItemCartPayload = {
+  user_id: string
+  item_id: string
+}

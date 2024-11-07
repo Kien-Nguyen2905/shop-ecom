@@ -23,3 +23,14 @@ export const updateCartdController = async (
     data: await cartServices.updateCart({ ...req.body, user_id })
   }).send(res)
 }
+
+export const removeCartdController = async (
+  req: Request<ParamsDictionary, any, any>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { user_id } = req.decoded_token as TTokenPayload
+  return new SuccessResponse({
+    data: await cartServices.removeCart({ item_id: req.body.item_id, user_id })
+  }).send(res)
+}
