@@ -10,8 +10,10 @@ import {
   resetPasswordController,
   getProfileController,
   refreshTokenController,
-  updateProfileController
+  updateProfileController,
+  getAllUserController
 } from '~/controllers/users.controllers'
+import { adminAccessValidator } from '~/middlewares/admins/admins.middlewares'
 import {
   accessTokenValidator,
   loginValidator,
@@ -48,5 +50,9 @@ userRoute.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(refre
 userRoute.get('/profile', accessTokenValidator, wrapRequestHandler(getProfileController))
 
 userRoute.put('/profile', accessTokenValidator, updateProfileValidator, wrapRequestHandler(updateProfileController))
+
+userRoute.get('/all', adminAccessValidator, updateProfileValidator, wrapRequestHandler(getAllUserController))
+
+userRoute.get('/wishlist', adminAccessValidator, updateProfileValidator, wrapRequestHandler(getAllUserController))
 
 export default userRoute

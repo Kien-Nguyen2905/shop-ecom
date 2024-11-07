@@ -10,6 +10,11 @@ import District from '~/models/schemas/districts/districts.schemas'
 import Ward from '~/models/schemas/wards/wards.schemas'
 import Category from '~/models/schemas/categories/categories.schemas'
 import Brand from '~/models/schemas/brands/brands.schemas'
+import Product from '~/models/schemas/products/products.schemas'
+import Information from '~/models/schemas/informations/informations.schemas'
+import Warehouse from '~/models/schemas/warehouse/warehouse.schemas'
+import Cart from '~/models/schemas/carts/carts.schemas'
+import Wishlist from '~/models/schemas/wishlists/wishlists.schemas'
 config()
 
 class DatabaseService {
@@ -57,6 +62,25 @@ class DatabaseService {
   }
   get brands(): Collection<Brand> {
     return this.db.collection(env.BRAND_COLLECTION as string)
+  }
+  get products(): Collection<Product> {
+    return this.db.collection(env.PRODUCT_COLLECTION as string)
+  }
+  get informations(): Collection<Information> {
+    return this.db.collection(env.INFORMATION_COLLECTION as string)
+  }
+  get warehouse(): Collection<Warehouse> {
+    return this.db.collection(env.WAREHOUSE_COLLECTION as string)
+  }
+  get carts(): Collection<Cart> {
+    return this.db.collection(env.CART_COLLECTION as string)
+  }
+  get wishlist(): Collection<Wishlist> {
+    return this.db.collection(env.WISHLIST_COLLECTION as string)
+  }
+  // Phương thức để lấy collection động dựa trên tên, với ràng buộc `T extends Document`
+  getCollection<T extends Document>(collectionName: string): Collection<T> {
+    return this.db.collection<T>(collectionName)
   }
 }
 

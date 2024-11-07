@@ -55,33 +55,93 @@ export const CATEGORY_MESSAGES = {
   CATEGORY_NAME_REQUIRED: 'Category name is required.',
   CATEGORY_NAME_STRING: 'Category name must be a string.',
   CATEGORY_NAME_EXISTS: 'Category name already exists.',
-  CATEGORY_NAME_NOT_EXISTS: 'Category name does not exists.'
+  CATEGORY_NOT_EXISTS: 'Category does not exists.',
+  CATEGORY_BELONG_TO_EXIST_PRODUCT: 'Category belong to exist product',
+  CATEGORY_ID_INVALID: 'Category id is invalid'
 }
 export const BRAND_MESSAGES = {
   BRAND_NAME_REQUIRED: 'Brand name is required.',
   BRAND_NAME_STRING: 'Brand name must be a string.',
   BRAND_NAME_EXISTS: 'Brand name already exists.',
-  BRAND_NAME_NOT_EXISTS: 'Brand name does not exist.'
+  BRAND_NOT_EXISTS: 'Brand does not exist.',
+  BRAND_BELONG_TO_EXIST_PRODUCT: 'Brand belong to exist product',
+  BRAND_ID_INVALID: 'Brand id is invalid'
 }
 
 export const PRODUCT_MESSAGES = {
-  PRODUCT_NAME_REQUIRED: 'Product name is required.',
-  PRODUCT_NAME_STRING: 'Product name must be a string.',
-  PRODUCT_NAME_EXISTS: 'Product name already exists.',
-  PRODUCT_NAME_NOT_EXISTS: 'Product name does not exist.',
-  PRODUCT_PRICE_REQUIRED: 'Product price is required.',
-  PRODUCT_PRICE_INVALID: 'Product price is invalid.',
-  PRODUCT_QUANTITY_REQUIRED: 'Product quantity is required.',
-  PRODUCT_QUANTITY_INVALID: 'Product quantity is invalid.'
-}
+  PRODUCT_NOT_EXISTS: 'Product does not exists.',
+  PRODUCY_NAME_REQUIRED: 'Product name is required',
+  PRODUCY_NAME_STRING: 'Product name must be string',
+  PRODUCY_NAME_NAME_LENGTH: 'Product name length must be from 1',
 
+  PRODUCT_ID_REQUIRED: 'Product id is required',
+  PRODUCT_ID_INVALID: 'Product id is invalid',
+  THUMBNAIL_MUST_BE_STRING: 'Thumbnail must be a string',
+  THUMBNAIL_NOT_EMPTY: 'Thumbnail cannot be empty',
+  THUMBNAIL_INVALID_URL: 'Thumbnail must be a valid URL',
+
+  DESCRIPTION_MUST_BE_STRING: 'Description must be a string',
+  DESCRIPTION_NOT_EMPTY: 'Description cannot be empty',
+
+  FEATURED_MUST_BE_OBJECT: 'Featured must be an object',
+  FEATURED_IS_POPULAR_MUST_BE_BOOLEAN: 'isPopular must be a boolean',
+  FEATURED_ON_SALE_MUST_BE_BOOLEAN: 'onSale must be a boolean',
+  FEATURED_IS_RATED_MUST_BE_BOOLEAN: 'isRated must be a boolean',
+
+  VARIANT_ID_REQUIRED: 'Variant id is required',
+  VARIANT_ID_INVALID: 'Variant id is invalid',
+  VARIANTS_MUST_BE_ARRAY: 'Variants must be an array',
+  VARIANT_COLOR_MUST_BE_STRING: 'Variant color must be a string',
+  VARIANT_PRICE_POSITIVE: 'Variant price must be a positive number',
+  VARIANT_STOCK_POSITIVE_INTEGER: 'Variant stock must be a positive integer',
+  VARIANT_RATE_BETWEEN_0_AND_5: 'Variant rate must be an integer between 0 and 5',
+  VARIANT_IMAGES_INVALID: 'Variant images must be an array of valid URLs',
+  VARIANT_DISCOUNT_BETWEEN_0_AND_1: 'Variant discount must be a number between 0 and 1',
+  VARIANT_NOT_EXISTS: 'Variant does not exists.',
+
+  RATE_MUST_BE_INTEGER: 'Rate must be an integer between 0 and 5',
+
+  STOCK_POSITIVE_INTEGER: 'Stock must be a positive integer',
+  MINIMUM_STOCK: 'Minimum stock must be a positive integer',
+
+  ATTRIBUTE_MUST_BE_OBJECT: 'Attribute must be an object',
+  ATTRIBUTE_CPU_NON_EMPTY: 'CPU must be a non-empty string',
+  ATTRIBUTE_RAM_NON_EMPTY: 'RAM must be a non-empty string',
+  ATTRIBUTE_OS_NON_EMPTY: 'Operating system (os) must be a non-empty string',
+  ATTRIBUTE_SCREEN_MUST_BE_NUMBER: 'Screen must be a number',
+  ATTRIBUTE_WEIGHT_MUST_BE_INTEGER: 'Weight must be an integer',
+  ATTRIBUTE_PIN_NON_EMPTY: 'Pin must be a non-empty string',
+  ATTRIBUTE_DEMAND_ARRAY: 'Demand must be an array of non-empty strings'
+}
+export const WAREHOUSE_MESSAGES = {
+  QUANTITY_REQUIRED: 'Quantity is required',
+  QUANTITY_NUMERIC: 'Quantity is numeric',
+  QUANTITY_MIN: 'Minimum 1uantity must be 1',
+
+  INVALID_SOLD_VALUE: 'Sold value must be a non-negative integer.',
+
+  INVALID_IMPORT_QUANTITY: 'Import quantity must be a non-negative integer.',
+
+  STOCK_REQUIRED: 'Stock is required.',
+  INVALID_STOCK_VALUE: 'Stock must be a non-negative integer.',
+
+  INVALID_MINIMUM_STOCK_VALUE: 'Minimum stock must be a non-negative integer.',
+
+  SHIPMENTS_MUST_BE_ARRAY: 'Shipments must be an array.',
+  INVALID_SHIPMENT_ITEM: 'Each shipment must be a valid object.',
+  INVALID_SHIPMENT_QUANTITY: 'Shipment quantity must be a non-negative number.',
+  INVALID_SHIPMENT_DATE: 'Shipment date must be a valid date string.'
+}
 export const ORDER_MESSAGES = {
   ORDER_ID_REQUIRED: 'Order ID is required.',
   ORDER_NOT_FOUND: 'Order not found.',
   ORDER_STATUS_REQUIRED: 'Order status is required.',
   ORDER_STATUS_INVALID: 'Order status is invalid.'
 }
+
 export const POPULAR_MESSAGES = {
+  ID_REQUIRED: 'Id is required',
+  ID_INVALID: 'Id is invalid',
   SUCCESS_MESSAGES: 'Successfully',
   ERROR_MESSAGES: 'Failed'
 }

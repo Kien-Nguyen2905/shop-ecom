@@ -7,7 +7,11 @@ import {
 import { wrapRequestHandler } from '~/utils/handlerError'
 
 const addressRoute = Router()
+
 addressRoute.get('/provinces', wrapRequestHandler(provinceController))
+
 addressRoute.get('/districts/:province_code', wrapRequestHandler(districtsByProvinceController))
+
 addressRoute.get('/wards/:district_code', wrapRequestHandler(wardsByDistrictController))
+
 export default addressRoute

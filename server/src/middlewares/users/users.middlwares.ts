@@ -1,4 +1,5 @@
 import { checkSchema } from 'express-validator'
+import { productIdSchema } from '~/middlewares/products/param.schema'
 import {
   accessTokenSchema,
   confirmPasswordSchema,
@@ -10,7 +11,10 @@ import {
   refreshTokenSchema,
   passwordTokenSchema,
   phoneSchema,
-  addressSchema
+  addressSchema,
+  wishlistSchema,
+  fullNameUpdateSchema,
+  productIdUpdateSchema
 } from '~/middlewares/users/param.schema'
 import { validate } from '~/utils/validate'
 
@@ -25,7 +29,7 @@ export const verifyEmailValidator = validate(
     ['body']
   )
 )
-export const reSendVerifyValidator = validate(checkSchema({}, ['body']))
+export const reSendVerifyValidator = validate(checkSchema({ email: emailSchema }, ['body']))
 export const registerValidator = validate(
   checkSchema(
     {
@@ -80,9 +84,9 @@ export const resetPasswordValidator = validate(
 export const updateProfileValidator = validate(
   checkSchema(
     {
-      full_name: fullNameSchema,
+      full_name: fullNameUpdateSchema,
       phone: phoneSchema,
-      ...addressSchema
+      address: addressSchema
     },
     ['body']
   )

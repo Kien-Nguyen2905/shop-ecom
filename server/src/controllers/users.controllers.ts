@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { USERS_MESSAGES } from '~/constants/message'
 import { CREATED, SuccessResponse } from '~/models/success/success.response'
-import { TTokenPayload } from '~/services/users/type'
-import userServices from '~/services/users/users.services'
+import { TTokenPayload } from '~/services/user/type'
+import userServices from '~/services/user/users.services'
 export const verifyEmailController = async (
   req: Request<ParamsDictionary, any, any>,
   res: Response,
@@ -103,8 +103,19 @@ export const updateProfileController = async (
   next: NextFunction
 ) => {
   const { user_id } = req.decoded_token as TTokenPayload
-  const { full_name, phone, province, district, ward, street_address } = req.body
+  const { full_name, phone, address } = req.body
+
   return new SuccessResponse({
-    data: await userServices.updateProfile({ user_id, full_name, phone, province, district, ward, street_address })
+    data: await userServices.updateProfile({ user_id, full_name, phone, address })
+  }).send(res)
+}
+
+export const getAllUserController = async (
+  req: Request<ParamsDictionary, any, any>,
+  res: Response,
+  next: NextFunction
+) => {
+  return new SuccessResponse({
+    data: await userServices.getAllUser()
   }).send(res)
 }

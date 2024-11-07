@@ -57,3 +57,9 @@ export class ForbiddenError extends ErrorWithStatus {
     super({ message, status })
   }
 }
+
+export class NocontentError extends ErrorWithStatus {
+  constructor({ message = REASON_PHRASES.NO_CONTENT, status = HTTP_STATUS.NO_CONTENT }: TErrorProps = {}) {
+    super({ message, status })
+  }
+}

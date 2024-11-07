@@ -42,9 +42,9 @@ export const HTTP_STATUS = {
   /**
    * Official Documentation @ https://tools.ietf.org/html/rfc7231#section-6.3.4
    *
-   * This response code means returned meta-information set is not exact set as available from the origin server, but collected from a local or a third party copy. Except this condition, 200 OK response should be preferred instead of this response.
+   * This response code means returned meta-INFORMATION_COLLECTION set is not exact set as available from the origin server, but collected from a local or a third party copy. Except this condition, 200 OK response should be preferred instead of this response.
    */
-  NON_AUTHORITATIVE_INFORMATION: 203,
+  NON_AUTHORITATIVE_INFORMATION_COLLECTION: 203,
   /**
    * Official Documentation @ https://tools.ietf.org/html/rfc7231#section-6.3.5
    *
@@ -66,7 +66,7 @@ export const HTTP_STATUS = {
   /**
    * Official Documentation @ https://tools.ietf.org/html/rfc2518#section-10.2
    *
-   * A Multi-Status response conveys information about multiple resources in situations where multiple status codes might be appropriate.
+   * A Multi-Status response conveys INFORMATION_COLLECTION about multiple resources in situations where multiple status codes might be appropriate.
    */
   MULTI_STATUS: 207,
   /**

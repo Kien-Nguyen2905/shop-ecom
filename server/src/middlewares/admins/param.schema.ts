@@ -4,7 +4,7 @@ import { env } from '~/configs/environment'
 import { ROLE } from '~/constants/enum'
 import { HTTP_STATUS } from '~/constants/httpStatus'
 import { ErrorWithStatus, UnauthorizedError } from '~/models/errors/errors'
-import { TTokenPayload } from '~/services/users/type'
+import { TTokenPayload } from '~/services/user/type'
 import { verifyToken } from '~/utils/jwt'
 
 export const adminAccessSchema: ParamSchema = {

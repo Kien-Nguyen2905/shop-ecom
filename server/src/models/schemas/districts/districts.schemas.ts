@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb'
 import { TDistrictProps } from '~/models/schemas/districts/type'
 
 export default class District {
-  _id: ObjectId
+  _id?: ObjectId
   name: string
   code: number
   division_type: string

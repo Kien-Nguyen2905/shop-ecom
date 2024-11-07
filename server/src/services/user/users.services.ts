@@ -16,13 +16,15 @@ import {
   TVerificationEmail,
   TVerifyForgotReqBody,
   TVerifyReqBody
-} from '~/services/users/type'
+} from '~/services/user/type'
 import { hashPassword } from '~/utils/crypto'
 import { decodeToken, signToken, verifyToken } from '~/utils/jwt'
 import { sendVerification } from '~/utils/sendmail'
 import Verification from '~/models/schemas/verifications/verifications.schemas'
 import PasswordReset from '~/models/schemas/password-resets/password-resets.schemas'
-import { InternalServerError, NotFoundError } from '~/models/errors/errors'
+import { BadRequestError, InternalServerError, NotFoundError, UnauthorizedError } from '~/models/errors/errors'
+import Cart from '~/models/schemas/carts/carts.schemas'
+import Wishlist from '~/models/schemas/wishlists/wishlists.schemas'
 
 class UserServices {
   async signAccessToken({ user_id, role }: IAccessToken) {
@@ -36,7 +38,6 @@ class UserServices {
   }
   async signRefreshToken({ user_id, role, exp }: IRefreshToken) {
     if (exp) {
-      console.log('exist refresh token')
       return await signToken({
         payload: { user_id, role, exp },
         privateKey: env.JWT_SECRET_REFRESH_TOKEN as string
@@ -82,7 +83,11 @@ class UserServices {
     return sendVerification({ email, token, type })
   }
   async verifyEmail(payload: TVerifyReqBody) {
-    const email_token = await this.signEmailVerify(payload)
+    const email_token = await this.signEmailVerify({
+      full_name: payload.full_name,
+      email: payload.email,
+      password: hashPassword(payload.password)
+    } as TVerifyReqBody)
 
     const verification = new Verification({
       email: payload.email,
@@ -145,12 +150,16 @@ class UserServices {
       _id: user_id,
       full_name,
       email,
-      password: hashPassword(password)
+      password
     })
     const token = new Token({ user_id, refresh_token: refresh_token })
+    const cart = new Cart({ user_id })
+    const wishlist = new Wishlist({ user_id })
     const result = await Promise.all([
       databaseService.users.insertOne(user),
       databaseService.tokens.insertOne(token),
+      databaseService.wishlist.insertOne(wishlist),
+      databaseService.carts.insertOne(cart),
       databaseService.verifications.deleteOne({ email_token })
     ])
     if (!result) {
@@ -169,7 +178,7 @@ class UserServices {
       password: hashPassword(password)
     })
     if (!user) {
-      throw new InternalServerError()
+      throw new UnauthorizedError()
     }
 
     const [access_token, refresh_token] = await this.signAPairToken({
@@ -178,7 +187,7 @@ class UserServices {
     })
 
     const result = await databaseService.tokens.insertOne(
-      new Token({ user_id: user?._id, refresh_token: refresh_token })
+      new Token({ user_id: user._id, refresh_token: refresh_token })
     )
     if (!result) {
       throw new InternalServerError()
@@ -329,26 +338,34 @@ class UserServices {
     if (!result) {
       throw new NotFoundError()
     }
-    const { email, role, full_name, phone, address, wishlist } = result
-    return { email, role, full_name, phone, address, wishlist }
+    const { email, role, full_name, phone, address, earn_point, total_paid, total_wishlist } = result
+    return { email, role, full_name, phone, address, earn_point, total_paid, total_wishlist }
   }
-  async updateProfile({ user_id, full_name, phone, province, district, ward, street_address }: TUpdateProfilePayload) {
+  async updateProfile({ user_id, full_name, phone, address }: TUpdateProfilePayload) {
+    if (!full_name || !phone || !address) {
+      throw new BadRequestError()
+    }
+    const updateQuery: Record<string, any> = {}
+    if (full_name) updateQuery.full_name = full_name
+    if (phone) updateQuery.phone = phone
+    if (address) updateQuery.address = address
+
     const result = await databaseService.users.updateOne(
       {
         _id: new ObjectId(user_id)
       },
       {
-        $set: {
-          full_name,
-          phone,
-          address: { province, district, ward, street_address }
-        }
+        $set: updateQuery
       }
     )
-    if (!result.acknowledged) {
+    if (!result.modifiedCount) {
       throw new InternalServerError()
     }
-    return {}
+    return this.getProfile(user_id) || {}
+  }
+
+  async getAllUser() {
+    return (await databaseService.users.find()) || []
   }
 }
 const userServices = new UserServices()

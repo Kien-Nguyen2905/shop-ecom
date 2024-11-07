@@ -7,6 +7,7 @@ export type TAddessProps = {
   ward?: string
   street_address?: string
 }
+
 export type TUserProps = {
   _id?: ObjectId
   email: string
@@ -16,6 +17,9 @@ export type TUserProps = {
   full_name?: string
   phone?: string
   address?: TAddessProps
+  earn_point?: number
+  total_orders?: number
+  total_paid?: number
   wishlist?: ObjectId
   created_at?: Date
   updated_at?: Date

@@ -19,7 +19,11 @@ export class SuccessResponse {
 }
 
 export class CREATED extends SuccessResponse {
-  constructor({ message, status = HTTP_STATUS.CREATED, data }: TSuccessResponseProps) {
+  constructor({
+    message = POPULAR_MESSAGES.SUCCESS_MESSAGES,
+    status = HTTP_STATUS.CREATED,
+    data
+  }: TSuccessResponseProps) {
     super({
       message,
       status,

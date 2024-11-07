@@ -11,7 +11,9 @@ export default class User {
   full_name?: string
   phone?: string
   address?: TAddessProps
-  wishlist?: ObjectId
+  earn_point?: number
+  total_paid?: number
+  total_wishlist?: number
   created_at?: Date
   updated_at?: Date
   constructor(user: TUserProps) {
@@ -24,7 +26,8 @@ export default class User {
     this.full_name = user.full_name || ''
     this.phone = user.phone || ''
     this.address = user.address || {}
-    this.wishlist = user.wishlist || undefined
+    this.earn_point = user.earn_point || 0
+    this.total_paid = user.total_paid || 0
     this.created_at = user.created_at || date
     this.updated_at = user.updated_at || date
   }

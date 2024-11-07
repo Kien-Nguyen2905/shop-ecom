@@ -1,9 +1,10 @@
 import { ObjectId } from 'mongodb'
 import { CATEGORY_MESSAGES } from '~/constants/message'
-import { ConflictRequestError, ErrorWithStatus, InternalServerError, NotFoundError } from '~/models/errors/errors'
+import { ConflictRequestError, InternalServerError, NotFoundError } from '~/models/errors/errors'
 import Category from '~/models/schemas/categories/categories.schemas'
 import { TCategoryPayload } from '~/services/category/type'
 import databaseService from '~/services/database/database.services'
+import productServices from '~/services/product/product.services'
 
 class CategoryServices {
   async createCategory(name: string) {
@@ -21,6 +22,7 @@ class CategoryServices {
     }
     return category
   }
+
   async updateCategory({ _id, name }: TCategoryPayload) {
     const categoryId = new ObjectId(_id)
     const categoryExist = await databaseService.categories.findOne({ _id: categoryId })
@@ -51,6 +53,10 @@ class CategoryServices {
     return category
   }
   async deleteCategory(_id: string) {
+    const checkProductExist = await productServices.checkProductByCategory(_id)
+    if (checkProductExist) {
+      throw new ConflictRequestError({ message: CATEGORY_MESSAGES.CATEGORY_BELONG_TO_EXIST_PRODUCT })
+    }
     const categoryId = new ObjectId(_id)
     const category = await databaseService.categories.findOne({ _id: categoryId })
     if (!category) {

@@ -24,6 +24,12 @@ type TEnv = {
   WARD_COLLECTION: string
   CATEGORY_COLLECTION: string
   BRAND_COLLECTION: string
+  PRODUCT_COLLECTION: string
+  INFORMATION_COLLECTION: string
+  WAREHOUSE_COLLECTION: string
+  CART_COLLECTION: string
+  WISHLIST_COLLECTION: string
+  HOST: string
 }
 export const env: TEnv = {
   CORS_ORIGIN: process.env.CORS_ORIGIN as string,
@@ -48,5 +54,11 @@ export const env: TEnv = {
   DISTRICT_COLLECTION: process.env.DB_DISTRICT_COLLECTION as string,
   WARD_COLLECTION: process.env.DB_WARD_COLLECTION as string,
   CATEGORY_COLLECTION: process.env.DB_CATEGORY_COLLECTION as string,
-  BRAND_COLLECTION: process.env.DB_BRAND_COLLECTION as string
+  BRAND_COLLECTION: process.env.DB_BRAND_COLLECTION as string,
+  PRODUCT_COLLECTION: process.env.DB_PRODUCT_COLLECTION as string,
+  INFORMATION_COLLECTION: process.env.DB_INFORMATION_COLLECTION as string,
+  WAREHOUSE_COLLECTION: process.env.DB_WAREHOUSE_COLLECTION as string,
+  CART_COLLECTION: process.env.DB_CART_COLLECTION as string,
+  WISHLIST_COLLECTION: process.env.DB_WISHLIST_COLLECTION as string,
+  HOST: process.env.HOST as string
 }
