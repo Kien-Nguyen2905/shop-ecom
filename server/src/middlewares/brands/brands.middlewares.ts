@@ -13,7 +13,8 @@ export const brandValidator = validate(
 export const updatebrandlValidator = validate(
   checkSchema(
     {
-      name: brandNameSchema
+      name: brandNameSchema,
+      id: brandIdSchema
     },
     ['body', 'params']
   )

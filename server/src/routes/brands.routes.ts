@@ -19,7 +19,7 @@ brandRoute.put('/:id', updatebrandlValidator, adminAccessValidator, wrapRequestH
 
 brandRoute.get('/', wrapRequestHandler(getBrandController))
 
-brandRoute.get('/:id', wrapRequestHandler(getBrandDetailController))
+brandRoute.get('/:id', brandParamValidator, wrapRequestHandler(getBrandDetailController))
 
 brandRoute.delete('/:id', brandParamValidator, adminAccessValidator, wrapRequestHandler(deleteBrandController))
 

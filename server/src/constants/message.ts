@@ -132,6 +132,9 @@ export const WAREHOUSE_MESSAGES = {
   INVALID_SHIPMENT_QUANTITY: 'Shipment quantity must be a non-negative number.',
   INVALID_SHIPMENT_DATE: 'Shipment date must be a valid date string.'
 }
+export const CART_MESSAGE = {
+  ITEM_ID_REQUIRED: 'Item id is required'
+}
 export const ORDER_MESSAGES = {
   ORDER_ID_REQUIRED: 'Order ID is required.',
   ORDER_NOT_FOUND: 'Order not found.',
