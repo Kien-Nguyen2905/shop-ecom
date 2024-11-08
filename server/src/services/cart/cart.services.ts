@@ -63,7 +63,6 @@ class CartServices {
     return (await databaseService.carts.findOne({ user_id: new ObjectId(user_id) })) || []
   }
   async removeCart({ user_id, item_id }: TRemoveItemCartPayload) {
-    isInValidId(item_id)
     const cart = databaseService.carts.findOne({ user_id: new ObjectId(user_id) })
     if (!cart) {
       throw new NotFoundError()

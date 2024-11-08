@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { getCartController, removeCartdController, updateCartdController } from '~/controllers/carts.controllers'
-import { updateCartValidator } from '~/middlewares/carts/carts.middlewares'
+import { deleteCartValidator, updateCartValidator } from '~/middlewares/carts/carts.middlewares'
 import { accessTokenValidator } from '~/middlewares/users/users.middlwares'
 
 import { wrapRequestHandler } from '~/utils/handlerError'
@@ -11,6 +11,6 @@ cartRoute.get('/', accessTokenValidator, wrapRequestHandler(getCartController))
 
 cartRoute.put('/', updateCartValidator, accessTokenValidator, wrapRequestHandler(updateCartdController))
 
-cartRoute.delete('/', accessTokenValidator, wrapRequestHandler(removeCartdController))
+cartRoute.delete('/', deleteCartValidator, accessTokenValidator, wrapRequestHandler(removeCartdController))
 
 export default cartRoute

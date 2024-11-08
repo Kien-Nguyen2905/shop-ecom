@@ -16,6 +16,7 @@ import {
 import { wrapRequestHandler } from '~/utils/handlerError'
 
 const categoryRoute = Router()
+
 categoryRoute.post('/', categoryValidator, adminAccessValidator, wrapRequestHandler(createCategoryController))
 
 categoryRoute.put('/:id', updatecategorylValidator, adminAccessValidator, wrapRequestHandler(updateCategoryController))
