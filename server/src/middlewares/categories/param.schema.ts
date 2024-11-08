@@ -1,6 +1,6 @@
 import { ParamSchema } from 'express-validator'
-import { ObjectId } from 'mongodb'
 import { CATEGORY_MESSAGES } from '~/constants/message'
+import { idObjectInvalid } from '~/utils/checkValidObjectId'
 
 export const categoryIdSchema: ParamSchema = {
   notEmpty: {
@@ -9,10 +9,7 @@ export const categoryIdSchema: ParamSchema = {
   trim: true,
   custom: {
     options: (value) => {
-      if (!ObjectId.isValid(value)) {
-        throw new Error(CATEGORY_MESSAGES.CATEGORY_ID_INVALID)
-      }
-      return true
+      idObjectInvalid({ id: value, validation: true })
     }
   }
 }

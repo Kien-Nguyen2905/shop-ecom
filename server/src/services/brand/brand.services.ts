@@ -58,7 +58,11 @@ class BrandServices {
   }
 
   async getBrandDetail(_id: string) {
-    return ((await databaseService.brands.findOne({ _id: new ObjectId(_id) })) as TBrandProps) || {}
+    const result = (await databaseService.brands.findOne({ _id: new ObjectId(_id) })) as TBrandProps
+    if (!result) {
+      throw new NotFoundError()
+    }
+    return result
   }
 
   async deleteBrand(_id: string) {
