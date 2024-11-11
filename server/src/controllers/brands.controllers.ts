@@ -40,7 +40,7 @@ export const getBrandDetailController = async (
   next: NextFunction
 ) => {
   return new SuccessResponse({
-    data: await brandServices.getBrandDetail(req.params.id)
+    data: await brandServices.getBrandById(req.params.id)
   }).send(res)
 }
 

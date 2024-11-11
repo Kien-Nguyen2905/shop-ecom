@@ -3,6 +3,9 @@ import { BRAND_MESSAGES } from '~/constants/message'
 import { idObjectInvalid } from '~/utils/checkValidObjectId'
 
 export const brandIdSchema: ParamSchema = {
+  notEmpty: {
+    errorMessage: BRAND_MESSAGES.BRAND_ID_REQUIRED
+  },
   trim: true,
   custom: {
     options: async (value) => {

@@ -1,22 +1,14 @@
 import { checkSchema } from 'express-validator'
 import { miniumStockSchema, productIdSchema, variantIdSchema } from '~/middlewares/products/param.schema'
-import {
-  importQuantitySchema,
-  quantitySchema,
-  shipmentSchema,
-  soldSchema,
-  stockSchema
-} from '~/middlewares/warehouse/param.schema'
+import { importQuantitySchema, quantitySchema, shipmentSchema, stockSchema } from '~/middlewares/warehouse/param.schema'
 import { validate } from '~/utils/validate'
 
-export const warehouseValidator = validate(
+export const createWrehouseValidator = validate(
   checkSchema(
     {
       product_id: productIdSchema,
       variant_id: variantIdSchema,
-      sold: soldSchema,
       import_quantity: importQuantitySchema,
-      stock: stockSchema,
       minimum_stock: miniumStockSchema,
       shipments: shipmentSchema
     },
@@ -27,7 +19,9 @@ export const warehouseValidator = validate(
 export const warehouseUpdateValidator = validate(
   checkSchema(
     {
-      quantity: quantitySchema
+      quantity: quantitySchema,
+      product_id: productIdSchema,
+      variant_id: variantIdSchema
     },
     ['body']
   )

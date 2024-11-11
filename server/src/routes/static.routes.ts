@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import { serveImageController } from '~/controllers/images.controllers'
 
-const staticRouter = Router()
+const staticRoute = Router()
 
-staticRouter.get('/image/:name', serveImageController)
+staticRoute.get('/image/:name', serveImageController)
 
-export default staticRouter
+export default staticRoute

@@ -1,15 +1,17 @@
 import { ObjectId } from 'mongodb'
 import { BadRequestError, InternalServerError, NotFoundError } from '~/models/errors/errors'
+import { TCartProps } from '~/models/schemas/carts/type'
 import { TRemoveItemCartPayload, TUpdateCartPayload } from '~/services/cart/type'
 import databaseService from '~/services/database/database.services'
 import productServices from '~/services/product/product.services'
-import { isInValidId } from '~/utils/checkValidObjectId'
 
 class CartServices {
   async getCart(id: string) {
-    return (await databaseService.carts.findOne({ user_id: new ObjectId(id) })) || []
+    return ((await databaseService.carts.findOne({ user_id: new ObjectId(id) })) as TCartProps) || []
   }
   async updateCart({ product_id, variant_id, quantity, user_id }: TUpdateCartPayload) {
+    //Check quantity with variant stock
+    await productServices.checkProductandVariant(product_id, variant_id, quantity)
     const productId = new ObjectId(product_id)
     const variantId = new ObjectId(variant_id)
     const product = (await productServices.getProductById(product_id)) || {}
@@ -26,39 +28,36 @@ class CartServices {
       throw new NotFoundError()
     }
 
-    const existingProductIndex = cart.product?.findIndex(
+    const existingProductIndex = cart.products?.findIndex(
       (product) => product.product_id.equals(productId) && product.variant_id.equals(variantId)
     )
-
     if (existingProductIndex !== -1) {
       // Nếu sản phẩm đã tồn tại, cập nhật lại thông tin
-      cart.product![existingProductIndex!].quantity += quantity
+      cart.products![existingProductIndex!].quantity += quantity
     } else {
       // Nếu sản phẩm chưa tồn tại, thêm sản phẩm mới vào giỏ hàng
-      cart.product!.push({
+      cart.products!.push({
         _id: new ObjectId(),
         product_id: productId,
         variant_id: variantId,
         quantity,
-        image: product.name,
+        image: product.thumbnail,
         color: variant?.color,
         discount: variant?.discount,
         name: product.name,
         price: variant?.price
       })
-
-      // Cập nhật giỏ hàng trong cơ sở dữ liệu
-      await databaseService.carts.updateOne(
-        { user_id: new ObjectId(user_id) },
-        {
-          $set: {
-            product: cart.product,
-            updated_at: new Date()
-          }
-        }
-      )
     }
-
+    // Cập nhật giỏ hàng trong cơ sở dữ liệu
+    await databaseService.carts.updateOne(
+      { user_id: new ObjectId(user_id) },
+      {
+        $set: {
+          products: cart.products,
+          updated_at: new Date()
+        }
+      }
+    )
     // Trả về giỏ hàng đã cập nhật hoặc đã thêm mới
     return (await databaseService.carts.findOne({ user_id: new ObjectId(user_id) })) || []
   }
@@ -74,6 +73,9 @@ class CartServices {
       {
         $pull: {
           product: { _id: new ObjectId(item_id) }
+        },
+        $set: {
+          updated_at: new Date()
         }
       }
     )

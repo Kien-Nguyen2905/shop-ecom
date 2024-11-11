@@ -19,8 +19,9 @@ export const updateCategoryController = async (
   res: Response,
   next: NextFunction
 ) => {
-  await categoryServices.updateCategory({ _id: req.params.id, name: req.body.name })
-  return new SuccessResponse({}).send(res)
+  return new SuccessResponse({
+    data: await categoryServices.updateCategory({ _id: req.params.id, name: req.body.name })
+  }).send(res)
 }
 
 export const getCategoryController = async (
@@ -39,7 +40,7 @@ export const getCategoryDetailController = async (
   next: NextFunction
 ) => {
   return new SuccessResponse({
-    data: await categoryServices.getCategoryDetail(req.params.id)
+    data: await categoryServices.getCategoryById(req.params.id)
   }).send(res)
 }
 

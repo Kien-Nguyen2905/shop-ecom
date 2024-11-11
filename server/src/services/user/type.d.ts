@@ -40,7 +40,6 @@ export type TRefreshTokenPayload = {
   user_id: string
   role: ROLE
   exp: number
-  iat?: number
   refresh_token: strig
 }
 
@@ -55,6 +54,9 @@ export type TUpdateProfilePayload = {
   full_name?: string
   phone?: string
   address?: TAddress
+  earn_point?: number
+  total_order?: number
+  total_paid?: number
 }
 export type TProfilePayload = {}
 export interface IAccessToken {

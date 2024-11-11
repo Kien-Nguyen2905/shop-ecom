@@ -9,7 +9,6 @@ export type TVariant = {
   _id: ObjectId
   color: string
   price: number
-  rate: number
   stock: number
   images: string[]
   discount: number

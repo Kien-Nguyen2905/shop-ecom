@@ -7,6 +7,7 @@ import databaseService from '~/services/database/database.services'
 import {
   IAccessToken,
   IRefreshToken,
+  TAddress,
   TDecodeEmailToken,
   TLoginReqBody,
   TRefreshTokenPayload,
@@ -25,9 +26,13 @@ import PasswordReset from '~/models/schemas/password-resets/password-resets.sche
 import { BadRequestError, InternalServerError, NotFoundError, UnauthorizedError } from '~/models/errors/errors'
 import Cart from '~/models/schemas/carts/carts.schemas'
 import Wishlist from '~/models/schemas/wishlists/wishlists.schemas'
+import { USERS_MESSAGES } from '~/constants/message'
 
 class UserServices {
   async signAccessToken({ user_id, role }: IAccessToken) {
+    if (!user_id || role === undefined) {
+      throw new BadRequestError()
+    }
     return await signToken({
       payload: { user_id, role },
       privateKey: env.JWT_SECRET_ACCESS_TOKEN as string,
@@ -36,7 +41,11 @@ class UserServices {
       }
     })
   }
+
   async signRefreshToken({ user_id, role, exp }: IRefreshToken) {
+    if (!user_id || role === undefined) {
+      throw new BadRequestError()
+    }
     if (exp) {
       return await signToken({
         payload: { user_id, role, exp },
@@ -51,10 +60,18 @@ class UserServices {
       }
     })
   }
+
   async signAPairToken({ user_id, role, exp }: IRefreshToken) {
+    if (!user_id || role === undefined || !exp) {
+      throw new BadRequestError()
+    }
     return Promise.all([this.signAccessToken({ user_id, role }), this.signRefreshToken({ user_id, role, exp })])
   }
+
   async signForgotPassword(email: string) {
+    if (!email) {
+      throw new BadRequestError()
+    }
     return await signToken({
       payload: { email },
       privateKey: env.JWT_SECRET_FORGOT_PASSWORD_TOKEN as string,
@@ -63,7 +80,11 @@ class UserServices {
       }
     })
   }
+
   private signEmailVerify({ full_name, email, password }: TRegisterReqBody) {
+    if (!full_name || !email || !password) {
+      throw new BadRequestError()
+    }
     return signToken({
       payload: {
         full_name,
@@ -76,21 +97,33 @@ class UserServices {
       }
     })
   }
+
   private async sendVerificationEmail({ email, token, type }: TVerificationEmail) {
+    if (!email || !token || type === undefined) {
+      throw new BadRequestError()
+    }
     return sendVerification({ email, token, type })
   }
+
   private async sendVerificationForgotPassword({ email, token, type }: TVerificationEmail) {
+    if (!email || !token || type === undefined) {
+      throw new BadRequestError()
+    }
     return sendVerification({ email, token, type })
   }
-  async verifyEmail(payload: TVerifyReqBody) {
+
+  async verifyEmail({ email, password, full_name }: TVerifyReqBody) {
+    if (!email || !password || !full_name) {
+      throw new BadRequestError()
+    }
     const email_token = await this.signEmailVerify({
-      full_name: payload.full_name,
-      email: payload.email,
-      password: hashPassword(payload.password)
+      full_name: full_name,
+      email: email,
+      password: hashPassword(password)
     } as TVerifyReqBody)
 
     const verification = new Verification({
-      email: payload.email,
+      email: email,
       email_token
     })
     const result = await databaseService.verifications.insertOne(verification)
@@ -98,13 +131,17 @@ class UserServices {
       throw new InternalServerError()
     }
     await this.sendVerificationEmail({
-      email: payload.email,
+      email: email,
       token: email_token,
       type: EVerification.Email
     })
     return { email_token }
   }
+
   async reSendVerifyEmail(email: string) {
+    if (!email) {
+      throw new BadRequestError()
+    }
     const verificationRecord = await databaseService.verifications.findOne({ email })
 
     if (!verificationRecord) {
@@ -117,7 +154,7 @@ class UserServices {
 
     const updateResult = await databaseService.verifications.updateOne(
       { email },
-      { $set: { email_token: newEmailToken } }
+      { $set: { email_token: newEmailToken, created_at: new Date() } }
     )
 
     if (!updateResult.modifiedCount) {
@@ -131,7 +168,11 @@ class UserServices {
 
     return { email_token: newEmailToken }
   }
+
   async register(email_token: string) {
+    if (!email_token) {
+      throw new BadRequestError()
+    }
     const user_id = new ObjectId()
     const user_payload = await verifyToken<TDecodeEmailToken>({
       token: email_token,
@@ -167,18 +208,25 @@ class UserServices {
     }
     return { access_token, refresh_token, role: ROLE.User }
   }
+
   async checkEmailExist(email: string) {
+    if (!email) {
+      throw new BadRequestError()
+    }
     const user = await databaseService.users.findOne({ email })
     return Boolean(user)
   }
-  async login(payload: TLoginReqBody) {
-    const { email, password } = payload
+
+  async login({ email, password }: TLoginReqBody) {
+    if (!email || !password) {
+      throw new BadRequestError()
+    }
     const user = await databaseService.users.findOne({
       email,
       password: hashPassword(password)
     })
     if (!user) {
-      throw new UnauthorizedError()
+      throw new UnauthorizedError({ message: USERS_MESSAGES.EMAIL_OR_PASSWORD_INCORRECT })
     }
 
     const [access_token, refresh_token] = await this.signAPairToken({
@@ -198,7 +246,11 @@ class UserServices {
       role: user?.role
     }
   }
+
   async logout(refresh_token: string) {
+    if (!refresh_token) {
+      throw new BadRequestError()
+    }
     const refreshTokenExist = await databaseService.tokens.findOne({ refresh_token })
     if (!refreshTokenExist) {
       throw new NotFoundError()
@@ -207,10 +259,12 @@ class UserServices {
     if (!result.acknowledged) {
       throw new InternalServerError()
     }
-    return {}
   }
 
   async forgotPassword(email: string) {
+    if (!email) {
+      throw new BadRequestError()
+    }
     const forgot_password_token = await this.signForgotPassword(email)
     const user = await databaseService.users.findOne({ email })
     if (!user) {
@@ -244,6 +298,9 @@ class UserServices {
   }
 
   async reSendForgot(email: string) {
+    if (!email) {
+      throw new BadRequestError()
+    }
     const user = await databaseService.users.findOne({ email })
     if (!user) {
       throw new NotFoundError()
@@ -258,7 +315,7 @@ class UserServices {
     }
     const result = await databaseService.passwordResets.updateOne(
       { email },
-      { $set: { password_token: forgot_password_token } }
+      { $set: { password_token: forgot_password_token, created_at: new Date() } }
     )
     if (!result.acknowledged) {
       throw new InternalServerError()
@@ -278,6 +335,9 @@ class UserServices {
   }
 
   async resetPassword({ password, password_token }: TResetPasswordReqBody) {
+    if (!password || !password_token) {
+      throw new BadRequestError()
+    }
     const existPasswordToken = await databaseService.passwordResets.findOne({
       password_token
     })
@@ -303,7 +363,8 @@ class UserServices {
       },
       {
         $set: {
-          password: hashPassword(password)
+          password: hashPassword(password),
+          created_at: new Date()
         }
       }
     )
@@ -315,6 +376,9 @@ class UserServices {
   }
 
   async refreshToken({ exp, user_id, role, refresh_token }: TRefreshTokenPayload) {
+    if (exp === undefined || !user_id || role === undefined || !refresh_token) {
+      throw new BadRequestError()
+    }
     const [new_access_token, new_refresh_token] = await Promise.all([
       this.signAccessToken({ user_id: new ObjectId(user_id), role }),
       this.signRefreshToken({ user_id: new ObjectId(user_id), role, exp })
@@ -323,7 +387,8 @@ class UserServices {
       { refresh_token },
       {
         $set: {
-          refresh_token: new_refresh_token
+          refresh_token: new_refresh_token,
+          created_at: new Date()
         }
       }
     )
@@ -334,21 +399,43 @@ class UserServices {
   }
 
   async getProfile(user_id: string) {
+    if (!user_id) {
+      throw new UnauthorizedError()
+    }
     const result = await databaseService.users.findOne({ _id: new ObjectId(user_id) })
     if (!result) {
       throw new NotFoundError()
     }
-    const { email, role, full_name, phone, address, earn_point, total_paid, total_wishlist } = result
-    return { email, role, full_name, phone, address, earn_point, total_paid, total_wishlist }
+    const { email, role, full_name, phone, address, earn_point, total_paid } = result
+    return { email, role, full_name, phone, address, earn_point, total_paid }
   }
-  async updateProfile({ user_id, full_name, phone, address }: TUpdateProfilePayload) {
-    if (!full_name || !phone || !address) {
-      throw new BadRequestError()
+
+  async updateProfile({
+    user_id,
+    full_name,
+    phone,
+    address,
+    total_order,
+    total_paid,
+    earn_point
+  }: TUpdateProfilePayload) {
+    if (!user_id) {
+      throw new UnauthorizedError()
     }
-    const updateQuery: Record<string, any> = {}
+    const user = await this.getProfile(user_id)
+
+    const updateQuery: Record<string, string | number | TAddress | Date> = {}
+
+    updateQuery.updated_at = new Date()
     if (full_name) updateQuery.full_name = full_name
     if (phone) updateQuery.phone = phone
     if (address) updateQuery.address = address
+    if (total_order) updateQuery.total_order = total_order
+    if (total_paid) updateQuery.total_paid = total_paid
+    if (earn_point) {
+      const calculateEarnPoint = user.earn_point! + earn_point!
+      updateQuery.earn_point = calculateEarnPoint
+    }
 
     const result = await databaseService.users.updateOne(
       {
@@ -358,9 +445,11 @@ class UserServices {
         $set: updateQuery
       }
     )
-    if (!result.modifiedCount) {
+
+    if (!result.acknowledged || !result.modifiedCount) {
       throw new InternalServerError()
     }
+
     return this.getProfile(user_id) || {}
   }
 

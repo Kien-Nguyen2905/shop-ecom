@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { CREATED, SuccessResponse } from '~/models/success/success.response'
-import { TWarehouseUpdatePayload } from '~/services/warehouse/type'
 import warehouseServices from '~/services/warehouse/warehouse.services'
 
 export const createWareHouseController = async (
@@ -39,7 +38,8 @@ export const updateWarehouseController = async (
   res: Response,
   next: NextFunction
 ) => {
+  const { quantity, product_id, variant_id } = req.body
   return new SuccessResponse({
-    data: await warehouseServices.updateWarehouse({ quantity: req.body.quantity, id: req.params.id })
+    data: await warehouseServices.updateWarehouse({ quantity, product_id, variant_id, id: req.params.id })
   }).send(res)
 }

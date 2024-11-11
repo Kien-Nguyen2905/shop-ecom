@@ -1,15 +1,6 @@
 import { ParamSchema } from 'express-validator'
-import { ObjectId } from 'mongodb'
 import { WAREHOUSE_MESSAGES } from '~/constants/message'
 
-export const soldSchema: ParamSchema = {
-  isInt: {
-    options: { min: 0 },
-    errorMessage: WAREHOUSE_MESSAGES.INVALID_SOLD_VALUE
-  },
-  toInt: true,
-  optional: true
-}
 export const importQuantitySchema: ParamSchema = {
   isInt: {
     options: { min: 0 },
@@ -19,7 +10,6 @@ export const importQuantitySchema: ParamSchema = {
   optional: true
 }
 
-// Schema for stock
 export const stockSchema: ParamSchema = {
   isInt: {
     options: { min: 0 },
@@ -31,17 +21,14 @@ export const stockSchema: ParamSchema = {
   }
 }
 
-// Schema for minimum_stock
 export const miniumStockSchema: ParamSchema = {
   isInt: {
     options: { min: 1 },
     errorMessage: WAREHOUSE_MESSAGES.INVALID_MINIMUM_STOCK_VALUE
   },
-  toInt: true,
-  optional: true
+  toInt: true
 }
 
-// Schema for shipments
 export const shipmentSchema: ParamSchema = {
   isArray: {
     errorMessage: WAREHOUSE_MESSAGES.SHIPMENTS_MUST_BE_ARRAY
@@ -65,18 +52,9 @@ export const shipmentSchema: ParamSchema = {
   optional: true
 }
 export const quantitySchema: ParamSchema = {
-  notEmpty: {
-    errorMessage: WAREHOUSE_MESSAGES.QUANTITY_REQUIRED
+  isInt: {
+    options: { min: 1 },
+    errorMessage: WAREHOUSE_MESSAGES.QUANTITY_MIN
   },
-  isNumeric: {
-    errorMessage: WAREHOUSE_MESSAGES.QUANTITY_NUMERIC
-  },
-  custom: {
-    options: (value) => {
-      if (value < 1) {
-        throw new Error(WAREHOUSE_MESSAGES.QUANTITY_MIN)
-      }
-      return true
-    }
-  }
+  toInt: true
 }

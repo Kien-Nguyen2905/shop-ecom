@@ -3,9 +3,11 @@ dotenv.config()
 type TEnv = {
   CORS_ORIGIN: string
   PORT: string
+  HOST: string
   DB_CONNECT: string
   DB_NAME: string
   API_VERSION: string
+  PASSWORD_MAIL: string
   PASSWORD_SECRET: string
   JWT_SECRET_ACCESS_TOKEN: string
   JWT_SECRET_REFRESH_TOKEN: string
@@ -29,14 +31,19 @@ type TEnv = {
   WAREHOUSE_COLLECTION: string
   CART_COLLECTION: string
   WISHLIST_COLLECTION: string
-  HOST: string
+  ORDER_COLLECTION: string
+  TRANSACTION_COLLECTION: string
+  REVIEW_COLLECTION: string
+  SEPAY_API_KEY: string
 }
 export const env: TEnv = {
   CORS_ORIGIN: process.env.CORS_ORIGIN as string,
   PORT: process.env.PORT as string,
+  HOST: process.env.HOST as string,
   DB_CONNECT: process.env.CONNECT_STRING_MG as string,
   DB_NAME: process.env.DB_NAME as string,
   API_VERSION: process.env.API_VERSION as string,
+  PASSWORD_MAIL: process.env.PASSWORD_MAIL_APP as string,
   PASSWORD_SECRET: process.env.PASSWORD_SECRET as string,
   JWT_SECRET_ACCESS_TOKEN: process.env.PASSWORD_SECRET as string,
   ACCESS_TOKEN_EXPIRES_IN: process.env.ACCESS_TOKEN_EXPIRES_IN as string,
@@ -60,5 +67,8 @@ export const env: TEnv = {
   WAREHOUSE_COLLECTION: process.env.DB_WAREHOUSE_COLLECTION as string,
   CART_COLLECTION: process.env.DB_CART_COLLECTION as string,
   WISHLIST_COLLECTION: process.env.DB_WISHLIST_COLLECTION as string,
-  HOST: process.env.HOST as string
+  ORDER_COLLECTION: process.env.DB_ORDER_COLLECTION as string,
+  TRANSACTION_COLLECTION: process.env.DB_TRANSACTION_COLLECTION as string,
+  REVIEW_COLLECTION: process.env.DB_REVIEW_COLLECTION as string,
+  SEPAY_API_KEY: process.env.SEPAY_API_KEY as string
 }

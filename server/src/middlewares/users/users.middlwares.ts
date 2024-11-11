@@ -12,9 +12,7 @@ import {
   passwordTokenSchema,
   phoneSchema,
   addressSchema,
-  wishlistSchema,
-  fullNameUpdateSchema,
-  productIdUpdateSchema
+  fullNameUpdateSchema
 } from '~/middlewares/users/param.schema'
 import { validate } from '~/utils/validate'
 

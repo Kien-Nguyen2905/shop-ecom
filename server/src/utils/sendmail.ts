@@ -1,6 +1,7 @@
 import nodemailer, { SentMessageInfo } from 'nodemailer'
 import { env } from '~/configs/environment'
 import { EVerification } from '~/constants/enum'
+import { BadRequestError } from '~/models/errors/errors'
 
 export const sendVerification = async ({
   email,
@@ -11,6 +12,9 @@ export const sendVerification = async ({
   token: string
   type: EVerification
 }): Promise<SentMessageInfo> => {
+  if (!email || !token || type === undefined) {
+    throw new BadRequestError()
+  }
   // Khai báo kiểu trả về là Promise<SentMessageInfo>
   // Thiết lập transporter với thông tin SMTP
   const transporter = nodemailer.createTransport({
@@ -19,7 +23,7 @@ export const sendVerification = async ({
     secure: false, // true nếu sử dụng SSL, thường là với port 465
     auth: {
       user: 'kiennguyen12.com@gmail.com',
-      pass: 'snov uorv qnzy azky'
+      pass: `${env.PASSWORD_MAIL}`
     }
   })
 

@@ -9,13 +9,7 @@ import productServices from '~/services/product/product.services'
 
 class BrandServices {
   async createBrand(name: string) {
-    const brandExist = await databaseService.brands.findOne({ name })
-
-    if (brandExist) {
-      throw new ConflictRequestError({
-        message: BRAND_MESSAGES.BRAND_NAME_EXISTS
-      })
-    }
+    await this.checkBrandExist(name)
 
     const _id = new ObjectId()
     const brand = new Brand({ _id, name })
@@ -25,23 +19,21 @@ class BrandServices {
       throw new InternalServerError()
     }
 
-    return this.getBrandDetail(_id.toString()) || []
+    return this.getBrandById(_id.toString())
   }
 
   async updateBrand({ _id, name }: TBrandPayload) {
-    const brandUpdate = await databaseService.brands.findOne({ _id: new ObjectId(_id) })
-
-    if (!brandUpdate) {
-      throw new NotFoundError({
-        message: BRAND_MESSAGES.BRAND_NOT_EXISTS
-      })
+    if (!name) {
+      throw new BadRequestError()
     }
+    const brandUpdate = await this.getBrandById(_id)
 
     const result = await databaseService.brands.updateOne(
-      { _id: new ObjectId(_id) },
+      { _id: brandUpdate._id },
       {
         $set: {
-          name
+          name,
+          updated_at: new Date()
         }
       }
     )
@@ -50,38 +42,54 @@ class BrandServices {
       throw new InternalServerError()
     }
 
-    return this.getBrandDetail(_id) || {}
+    return this.getBrandById(_id) || {}
   }
 
   async getBrands() {
     return (await databaseService.brands.find().toArray()) || []
   }
 
-  async getBrandDetail(_id: string) {
+  async getBrandById(_id: string) {
+    if (!_id) {
+      throw new BadRequestError()
+    }
     const result = (await databaseService.brands.findOne({ _id: new ObjectId(_id) })) as TBrandProps
     if (!result) {
-      throw new NotFoundError()
+      throw new NotFoundError({ message: BRAND_MESSAGES.BRAND_NOT_EXISTS })
     }
     return result
   }
 
   async deleteBrand(_id: string) {
+    await this.checkBrandBelongProduct(_id)
+
+    await this.getBrandById(_id)
+
+    const result = await databaseService.brands.deleteOne({ _id: new ObjectId(_id) })
+    if (!result.acknowledged || !result.deletedCount) {
+      throw new InternalServerError()
+    }
+  }
+
+  async checkBrandExist(name: string) {
+    if (!name) {
+      throw new BadRequestError()
+    }
+    const result = await databaseService.brands.findOne({ name: name })
+    if (result) {
+      throw new ConflictRequestError({
+        message: BRAND_MESSAGES.BRAND_NAME_EXISTS
+      })
+    }
+  }
+
+  async checkBrandBelongProduct(_id: string) {
+    if (!_id) {
+      throw new BadRequestError()
+    }
     const checkProductExist = await productServices.checkProductByBrand(_id)
     if (checkProductExist) {
       throw new ConflictRequestError({ message: BRAND_MESSAGES.BRAND_BELONG_TO_EXIST_PRODUCT })
-    }
-
-    const brandId = new ObjectId(_id)
-    const brand = await databaseService.brands.findOne({ _id: brandId })
-    if (!brand) {
-      throw new NotFoundError({
-        message: BRAND_MESSAGES.BRAND_NOT_EXISTS
-      })
-    }
-
-    const result = await databaseService.brands.deleteOne({ _id: brandId })
-    if (!result.acknowledged || !result.deletedCount) {
-      throw new InternalServerError()
     }
   }
 }

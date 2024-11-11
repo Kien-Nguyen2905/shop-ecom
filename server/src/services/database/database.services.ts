@@ -15,6 +15,9 @@ import Information from '~/models/schemas/informations/informations.schemas'
 import Warehouse from '~/models/schemas/warehouse/warehouse.schemas'
 import Cart from '~/models/schemas/carts/carts.schemas'
 import Wishlist from '~/models/schemas/wishlists/wishlists.schemas'
+import Order from '~/models/schemas/orders/orders.schemas'
+import Transaction from '~/models/schemas/transactions/transactions.schemas'
+import Review from '~/models/schemas/reviews/reviews.schemas'
 config()
 
 class DatabaseService {
@@ -77,6 +80,15 @@ class DatabaseService {
   }
   get wishlist(): Collection<Wishlist> {
     return this.db.collection(env.WISHLIST_COLLECTION as string)
+  }
+  get orders(): Collection<Order> {
+    return this.db.collection(env.ORDER_COLLECTION as string)
+  }
+  get transactions(): Collection<Transaction> {
+    return this.db.collection(env.TRANSACTION_COLLECTION as string)
+  }
+  get reviews(): Collection<Review> {
+    return this.db.collection(env.REVIEW_COLLECTION as string)
   }
   // Phương thức để lấy collection động dựa trên tên, với ràng buộc `T extends Document`
   getCollection<T extends Document>(collectionName: string): Collection<T> {

@@ -5,14 +5,17 @@ import addressRoute from '~/routes/address.routes'
 import brandRoute from '~/routes/brands.routes'
 import cartRoute from '~/routes/carts.routes'
 import categoryRoute from '~/routes/categories.routes'
-import imagesRouter from '~/routes/images.routes'
+import imagesRoute from '~/routes/images.routes'
+import orderRoute from '~/routes/orders.routes'
 import productRoute from '~/routes/products.routes'
-import staticRouter from '~/routes/static.routes'
+import staticRoute from '~/routes/static.routes'
 import userRoute from '~/routes/users.routes'
 import warehouseRoute from '~/routes/warehouse.routes'
 import wishlistRoute from '~/routes/wishlists.routes'
 import databaseService from '~/services/database/database.services'
 import { initFolder } from '~/utils/file'
+import transactionRoute from '~/routes/transactions.routes'
+import reviewRoute from '~/routes/reviews.routes'
 const app = express()
 const port = env.PORT || 8080
 databaseService.connect()
@@ -27,8 +30,11 @@ app.use(`${env.API_VERSION}/product`, productRoute)
 app.use(`${env.API_VERSION}/warehouse`, warehouseRoute)
 app.use(`${env.API_VERSION}/cart`, cartRoute)
 app.use(`${env.API_VERSION}/wishlist`, wishlistRoute)
-app.use(`${env.API_VERSION}/images`, imagesRouter)
-app.use(`${env.API_VERSION}/static`, staticRouter)
+app.use(`${env.API_VERSION}/images`, imagesRoute)
+app.use(`${env.API_VERSION}/static`, staticRoute)
+app.use(`${env.API_VERSION}/order`, orderRoute)
+app.use(`${env.API_VERSION}/transaction`, transactionRoute)
+app.use(`${env.API_VERSION}/review`, reviewRoute)
 
 app.use(defaultErrorHandler)
 app.listen(port, () => {

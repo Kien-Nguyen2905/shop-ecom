@@ -40,9 +40,9 @@ export const loginController = async (req: Request<ParamsDictionary, any, any>, 
   }).send(res)
 }
 export const logoutController = async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+  await userServices.logout(req.body.refresh_token)
   return new SuccessResponse({
-    message: USERS_MESSAGES.LOGOUT_SUCCEED,
-    data: await userServices.logout(req.body.refresh_token)
+    message: USERS_MESSAGES.LOGOUT_SUCCEED
   }).send(res)
 }
 export const forgotPasswordController = async (
@@ -104,7 +104,6 @@ export const updateProfileController = async (
 ) => {
   const { user_id } = req.decoded_token as TTokenPayload
   const { full_name, phone, address } = req.body
-
   return new SuccessResponse({
     data: await userServices.updateProfile({ user_id, full_name, phone, address })
   }).send(res)

@@ -14,7 +14,7 @@ export type TProductCartProps = {
 export type TCartProps = {
   _id?: ObjectId
   user_id: ObjectId
-  product?: TProductCartProps[]
+  products?: TProductCartProps[]
   created_at?: Date
   updated_at?: Date
 }

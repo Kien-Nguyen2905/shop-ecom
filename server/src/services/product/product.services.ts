@@ -1,61 +1,67 @@
 import { TWarehousePayload } from '~/services/warehouse/type'
 import { ObjectId } from 'mongodb'
 import { BRAND_MESSAGES, CATEGORY_MESSAGES, PRODUCT_MESSAGES } from '~/constants/message'
-import { ConflictRequestError, InternalServerError, NotFoundError } from '~/models/errors/errors'
+import { BadRequestError, ConflictRequestError, InternalServerError, NotFoundError } from '~/models/errors/errors'
 import Information from '~/models/schemas/informations/informations.schemas'
 import Product from '~/models/schemas/products/products.schemas'
 import databaseService from '~/services/database/database.services'
-import { TProductPayload, TProductQuery } from '~/services/product/type'
+import { TProductPayload, TProductQuery, TUpdateProductPayload } from '~/services/product/type'
 import warehouseServices from '~/services/warehouse/warehouse.services'
 import { TProductProps } from '~/models/schemas/products/type'
+import categoryServices from '~/services/category/category.services'
+import brandServices from '~/services/brand/brand.services'
 
 class ProductServices {
-  async createProduct(payload: TProductPayload) {
+  async createProduct({
+    thumbnail,
+    description,
+    featured,
+    attribute,
+    name,
+    minimum_stock,
+    category_id,
+    brand_id,
+    variants
+  }: TProductPayload) {
+    if (!thumbnail || !description || !attribute || !name || !minimum_stock || !category_id || !brand_id || !variants) {
+      throw new BadRequestError()
+    }
+
     const product_id = new ObjectId()
-    const { thumbnail, description, featured, rate, attribute, name, minimum_stock } = payload
-    const productExist = await databaseService.products.findOne({ name })
-    if (productExist) {
-      throw new ConflictRequestError({ message: 'Product have exist' })
-    }
-    const category_id = new ObjectId(payload.category_id)
-    const brand_id = new ObjectId(payload.brand_id)
-    const categoryExist = await databaseService.categories.findOne({ _id: category_id })
-    if (!categoryExist) {
-      throw new NotFoundError({ message: CATEGORY_MESSAGES.CATEGORY_NOT_EXISTS })
-    }
-    const brandExist = await databaseService.brands.findOne({ _id: brand_id })
-    if (!brandExist) {
-      throw new NotFoundError({ message: BRAND_MESSAGES.BRAND_NOT_EXISTS })
-    }
-    payload.variants.map((item) => (item._id = new ObjectId()))
+    await Promise.all([
+      this.checkProductByName(name),
+      categoryServices.getCategoryById(category_id),
+      brandServices.getBrandById(brand_id)
+    ])
+
+    variants.forEach((item) => (item._id = new ObjectId()))
     const product = new Product({
       _id: product_id,
       name,
-      category_id,
-      brand_id,
+      category_id: new ObjectId(category_id),
+      brand_id: new ObjectId(brand_id),
       description,
       featured,
-      rate,
+      rate: 0,
       thumbnail,
-      variants: payload.variants
+      variants
     })
-    const resultProduct = await databaseService.products.insertOne(product)
-    if (!resultProduct.acknowledged) {
-      throw new InternalServerError()
-    }
     const information = new Information({ category_id: new ObjectId(category_id), product_id, attribute })
-    const resultInformation = await databaseService.informations.insertOne(information)
-    if (!resultInformation.acknowledged) {
+
+    const resultInsert = await Promise.all([
+      databaseService.products.insertOne(product),
+      databaseService.informations.insertOne(information)
+    ])
+    if (!resultInsert) {
       throw new InternalServerError()
     }
+
     let warehousePayload = {} as TWarehousePayload
-    for (const item of payload.variants) {
+    for (const item of variants) {
       warehousePayload = {
         product_id: product_id.toString(),
         variant_id: item._id.toString(),
-        sold: 0,
         import_quantity: item.stock,
-        stock: item.stock,
         minimum_stock,
         shipments: [
           {
@@ -165,13 +171,13 @@ class ProductServices {
     if (orderBy) {
       if (orderBy === 'price') {
         // If orderBy is 'price', sort by the price of the first variant
-        sort['firstVariantPrice'] = order === 'desc' ? -1 : 1
+        sort['firstVariantPrice'] = order
       } else if (orderBy === 'rate') {
         // If orderBy is 'rate', sort by the rate field
-        sort.rate = order === 'desc' ? -1 : 1
+        sort.rate = order
       } else {
         // For other fields, use the provided order
-        sort[orderBy] = order === 'desc' ? -1 : 1
+        sort[orderBy] = order
       }
     } else {
       // Default sorting by creation date if no orderBy is specified
@@ -205,18 +211,56 @@ class ProductServices {
   }
 
   async checkProductById(productId: string) {
+    if (!productId) {
+      throw new BadRequestError()
+    }
     const productExist = await databaseService.products.findOne({ _id: new ObjectId(productId) })
     if (!productExist) {
       throw new NotFoundError({ message: PRODUCT_MESSAGES.PRODUCT_NOT_EXISTS })
     }
   }
 
+  async checkProductandVariant(productId: string, variantId: string, quantity?: number) {
+    if (!productId || !variantId) {
+      throw new BadRequestError()
+    }
+    const productExist = await this.getProductById(productId)
+    const variantExist = productExist.variants.find((item) => item._id.toString() === variantId)
+    if (!variantExist) {
+      throw new NotFoundError({ message: PRODUCT_MESSAGES.VARIANT_NOT_EXISTS })
+    }
+    if (quantity) {
+      if (variantExist.stock < quantity) {
+        throw new BadRequestError()
+      }
+    }
+  }
+
   async getProductById(productId: string) {
-    await this.checkProductById(productId)
-    return ((await databaseService.products.findOne({ _id: new ObjectId(productId) })) as TProductProps) || {}
+    if (!productId) {
+      throw new BadRequestError()
+    }
+    const result = (await databaseService.products.findOne({ _id: new ObjectId(productId) })) as TProductProps
+    if (!result) {
+      throw new NotFoundError()
+    }
+    return result
+  }
+
+  async checkProductByName(name: string) {
+    if (!name) {
+      throw new BadRequestError()
+    }
+    const result = await databaseService.products.findOne({ name })
+    if (result) {
+      throw new ConflictRequestError({ message: PRODUCT_MESSAGES.PRODUCT_EXISTS })
+    }
   }
 
   async checkProductByBrand(brandId: string) {
+    if (!brandId) {
+      throw new BadRequestError()
+    }
     const productExist = await databaseService.products.findOne({ brand_id: new ObjectId(brandId) })
     if (productExist) {
       return true
@@ -225,6 +269,9 @@ class ProductServices {
   }
 
   async checkProductByCategory(categoryId: string) {
+    if (!categoryId) {
+      throw new BadRequestError()
+    }
     const productExist = await databaseService.products.findOne({ category_id: new ObjectId(categoryId) })
     if (productExist) {
       return true
@@ -232,7 +279,10 @@ class ProductServices {
     return false
   }
 
-  async updateProduct(productId: string, payload: TProductPayload) {
+  async updateProduct(productId: string, payload: TUpdateProductPayload) {
+    if (!productId) {
+      throw new BadRequestError()
+    }
     await this.checkProductById(productId)
     const category_id = new ObjectId(payload.category_id)
     const brand_id = new ObjectId(payload.brand_id)
@@ -249,7 +299,7 @@ class ProductServices {
 
     const result = await databaseService.products.updateOne(
       { _id: new ObjectId(productId) },
-      { $set: { ...payload, category_id, brand_id } }
+      { $set: { ...payload, category_id, brand_id, updated_at: new Date() } }
     )
     if (!result.acknowledged) {
       throw new InternalServerError()
@@ -258,10 +308,14 @@ class ProductServices {
   }
 
   async deleteProduct(productId: string) {
+    if (!productId) {
+      throw new BadRequestError()
+    }
     await this.checkProductById(productId)
     await Promise.all([
       databaseService.products.deleteOne({ _id: new ObjectId(productId) }),
-      databaseService.informations.deleteOne({ product_id: new ObjectId(productId) })
+      databaseService.informations.deleteOne({ product_id: new ObjectId(productId) }),
+      warehouseServices.updateIsDeleted(productId)
     ])
   }
 }

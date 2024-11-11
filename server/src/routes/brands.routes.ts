@@ -13,6 +13,7 @@ import { brandParamValidator, brandValidator, updatebrandlValidator } from '~/mi
 import { wrapRequestHandler } from '~/utils/handlerError'
 
 const brandRoute = Router()
+
 brandRoute.post('/', brandValidator, adminAccessValidator, wrapRequestHandler(createBrandController))
 
 brandRoute.put('/:id', updatebrandlValidator, adminAccessValidator, wrapRequestHandler(updateBrandController))

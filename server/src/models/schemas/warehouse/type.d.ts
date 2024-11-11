@@ -7,11 +7,12 @@ export type TWarehouseProps = {
   _id?: ObjectId
   product_id: ObjectId
   variant_id: ObjectId
-  sold: number
+  sold?: number
   import_quantity: number
-  stock: number
+  stock?: number
   minimum_stock: number
   shipments: TShipment[]
+  isDeleted?: boolean
   created_at?: Date
   updated_at?: Date
 }

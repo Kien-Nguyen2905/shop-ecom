@@ -7,25 +7,25 @@ import productServices from '~/services/product/product.services'
 import { TWarehousePayload, TWarehouseUpdatePayload } from '~/services/warehouse/type'
 
 class WarehouseServices {
-  async createWarehouse(payload: TWarehousePayload) {
+  async createWarehouse({ import_quantity, minimum_stock, product_id, shipments, variant_id }: TWarehousePayload) {
+    if (import_quantity === undefined || minimum_stock === undefined || !product_id || !shipments || !variant_id) {
+      throw new BadRequestError()
+    }
     const _id = new ObjectId()
-    const { product_id, variant_id, sold, stock, minimum_stock, shipments, import_quantity } = payload
-    await productServices.checkProductById(product_id)
-    const variantExist = await databaseService.products.findOne({
-      'variants._id': new ObjectId(variant_id)
-    })
+
+    const product = await productServices.getProductById(product_id)
+    const variantExist = product.variants.some((item) => item._id.toString() === variant_id)
     if (!variantExist) {
       throw new NotFoundError({ message: PRODUCT_MESSAGES.VARIANT_NOT_EXISTS })
     }
+
     const warehouse = new Warehouse({
       _id,
       product_id: new ObjectId(product_id),
       variant_id: new ObjectId(variant_id),
       import_quantity,
       minimum_stock,
-      shipments,
-      sold,
-      stock
+      shipments
     })
     const resultWarehouse = await databaseService.warehouse.insertOne(warehouse)
     if (!resultWarehouse.acknowledged) {
@@ -34,21 +34,24 @@ class WarehouseServices {
     return this.getWarehouseById(_id.toString())
   }
 
-  async updateWarehouse(payload: TWarehouseUpdatePayload) {
-    const { id, quantity } = payload
-
-    if (!ObjectId.isValid(id)) {
+  async updateWarehouse({ id, quantity, product_id, variant_id }: TWarehouseUpdatePayload) {
+    if (!id || quantity === undefined || !product_id || !variant_id) {
       throw new BadRequestError()
     }
-    const warehouse = await databaseService.warehouse.findOne({ _id: new ObjectId(id) })
+
+    const warehouse = await databaseService.warehouse.findOne({
+      _id: new ObjectId(id),
+      product_id: new ObjectId(product_id),
+      variant_id: new ObjectId(variant_id)
+    })
     if (!warehouse) {
-      throw new NotFoundError({ message: 'Warehouse not found' })
+      throw new NotFoundError()
     }
 
     // Tính toán số lượng mới
 
     const updatedImportQuantity = warehouse.import_quantity + quantity
-    const updatedStock = warehouse.stock + quantity
+    const updatedStock = warehouse.stock! + quantity
     // Tạo thông tin shipment mới
     const newShipment = {
       shipment_date: new Date(),
@@ -70,17 +73,55 @@ class WarehouseServices {
       }
     )
 
-    if (!result.acknowledged) {
-      throw new InternalServerError({ message: 'Failed to update warehouse' })
+    if (!result.acknowledged || !result.modifiedCount) {
+      throw new InternalServerError()
     }
 
+    const resultProduct = await databaseService.products.updateOne(
+      {
+        _id: new ObjectId(product_id),
+        'variants._id': new ObjectId(variant_id)
+      },
+      {
+        $set: {
+          'variants.$.stock': updatedStock,
+          updated_at: new Date()
+        }
+      }
+    )
+    if (!resultProduct.acknowledged || !resultProduct.modifiedCount) {
+      throw new InternalServerError()
+    }
     return (await databaseService.warehouse.findOne({ _id: new ObjectId(id) })) || []
   }
+
   async getWarehouseById(_id: string) {
+    if (!_id) {
+      throw new BadRequestError()
+    }
     return (await databaseService.warehouse.findOne({ _id: new ObjectId(_id) })) || []
   }
+
   async getWarehouse() {
     return (await databaseService.warehouse.find().toArray()) || []
+  }
+
+  async updateIsDeleted(productId: string) {
+    if (!productId) {
+      throw new BadRequestError()
+    }
+    const result = await databaseService.warehouse.updateMany(
+      { product_id: new ObjectId(productId) },
+      {
+        $set: {
+          isDeleted: true,
+          updated_at: new Date()
+        }
+      }
+    )
+    if (!result.acknowledged || !result.modifiedCount) {
+      throw new InternalServerError()
+    }
   }
 }
 const warehouseServices = new WarehouseServices()

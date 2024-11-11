@@ -8,7 +8,6 @@ import {
   miniumStockSchema,
   nameProductSchema,
   productIdSchema,
-  rateSchema,
   thumbnailSchema,
   variantsSchema
 } from '~/middlewares/products/param.schema'
@@ -24,7 +23,6 @@ export const productValidator = validate(
       description: descriptionSchema,
       featured: featuredSchema,
       variants: variantsSchema,
-      rate: rateSchema,
       minimum_stock: miniumStockSchema,
       attribute: attributeSchema
     },

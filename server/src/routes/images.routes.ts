@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import { uploadImageController } from '~/controllers/images.controllers'
 import { wrapRequestHandler } from '~/utils/handlerError'
-const imagesRouter = Router()
+const imagesRoute = Router()
 
-imagesRouter.post('/upload-image', wrapRequestHandler(uploadImageController))
+imagesRoute.post('/upload-image', wrapRequestHandler(uploadImageController))
 
-export default imagesRouter
+export default imagesRoute

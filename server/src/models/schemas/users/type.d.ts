@@ -18,9 +18,8 @@ export type TUserProps = {
   phone?: string
   address?: TAddessProps
   earn_point?: number
-  total_orders?: number
+  total_order?: number
   total_paid?: number
-  wishlist?: ObjectId
   created_at?: Date
   updated_at?: Date
 }

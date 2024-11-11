@@ -57,25 +57,31 @@ export const CATEGORY_MESSAGES = {
   CATEGORY_NAME_EXISTS: 'Category name already exists.',
   CATEGORY_NOT_EXISTS: 'Category does not exists.',
   CATEGORY_BELONG_TO_EXIST_PRODUCT: 'Category belong to exist product',
-  CATEGORY_ID_INVALID: 'Category id is invalid'
+  CATEGORY_ID_INVALID: 'Category id is invalid',
+  CATEGORY_ID_MUST_BE_STRING: 'Category id must be string'
 }
 export const BRAND_MESSAGES = {
   BRAND_NAME_REQUIRED: 'Brand name is required.',
   BRAND_NAME_STRING: 'Brand name must be a string.',
-  BRAND_NAME_EXISTS: 'Brand name already exists.',
+  BRAND_NAME_EXISTS: 'Brand name already exist.',
   BRAND_NOT_EXISTS: 'Brand does not exist.',
   BRAND_BELONG_TO_EXIST_PRODUCT: 'Brand belong to exist product',
-  BRAND_ID_INVALID: 'Brand id is invalid'
+  BRAND_ID_INVALID: 'Brand id is invalid',
+  BRAND_ID_REQUIRED: 'Brand id is required'
 }
 
 export const PRODUCT_MESSAGES = {
-  PRODUCT_NOT_EXISTS: 'Product does not exists.',
+  PRODUCT_EXISTS: 'Product has already existed.',
+
+  PRODUCT_NOT_EXISTS: 'Product does not exist.',
   PRODUCY_NAME_REQUIRED: 'Product name is required',
   PRODUCY_NAME_STRING: 'Product name must be string',
-  PRODUCY_NAME_NAME_LENGTH: 'Product name length must be from 1',
+  PRODUCY_NAME_NAME_LENGTH: 'Product name length must be from 5 letters',
 
   PRODUCT_ID_REQUIRED: 'Product id is required',
   PRODUCT_ID_INVALID: 'Product id is invalid',
+  PRODUCT_ID_MUST_BE_STRING: 'Product id must be string',
+
   THUMBNAIL_MUST_BE_STRING: 'Thumbnail must be a string',
   THUMBNAIL_NOT_EMPTY: 'Thumbnail cannot be empty',
   THUMBNAIL_INVALID_URL: 'Thumbnail must be a valid URL',
@@ -90,6 +96,8 @@ export const PRODUCT_MESSAGES = {
 
   VARIANT_ID_REQUIRED: 'Variant id is required',
   VARIANT_ID_INVALID: 'Variant id is invalid',
+  VARIANT_ID_MUST_BE_STRING: 'Variant id must be string',
+
   VARIANTS_MUST_BE_ARRAY: 'Variants must be an array',
   VARIANT_COLOR_MUST_BE_STRING: 'Variant color must be a string',
   VARIANT_PRICE_POSITIVE: 'Variant price must be a positive number',
@@ -114,11 +122,7 @@ export const PRODUCT_MESSAGES = {
   ATTRIBUTE_DEMAND_ARRAY: 'Demand must be an array of non-empty strings'
 }
 export const WAREHOUSE_MESSAGES = {
-  QUANTITY_REQUIRED: 'Quantity is required',
-  QUANTITY_NUMERIC: 'Quantity is numeric',
-  QUANTITY_MIN: 'Minimum quantity must be 1',
-
-  INVALID_SOLD_VALUE: 'Sold value must be a non-negative integer.',
+  QUANTITY_MIN: 'Quantity must be a interger from 1',
 
   INVALID_IMPORT_QUANTITY: 'Import quantity must be a non-negative integer.',
 
@@ -133,19 +137,39 @@ export const WAREHOUSE_MESSAGES = {
   INVALID_SHIPMENT_DATE: 'Shipment date must be a valid date string.'
 }
 export const CART_MESSAGE = {
-  ITEM_ID_REQUIRED: 'Item id is required'
+  ITEM_ID_REQUIRED: 'Item id is required',
+  ITEM_ID_MUST_BE_STRING: 'Item id must be string'
 }
 export const ORDER_MESSAGES = {
+  PRODUCTS_ARRAY: 'Products must be array',
   ORDER_ID_REQUIRED: 'Order ID is required.',
   ORDER_NOT_FOUND: 'Order not found.',
   ORDER_STATUS_REQUIRED: 'Order status is required.',
-  ORDER_STATUS_INVALID: 'Order status is invalid.'
+  ORDER_STATUS_INVALID: 'Order status is invalid.',
+
+  ORDER_NOTE_MUST_BE_STRING: 'Order note must be string',
+
+  TYPE_PAYMENT_MUST_BE_INTEGER: 'Type payment must be an integer and either 0 or 1',
+
+  EARN_POINT_MUST_BE_NUMBER: 'Earn point must be number',
+
+  TRANSACTION_ID_MUST_BE_STRING: 'Transaction id must be string',
+  TRANSACTION_ID_REQUIRED: 'Transaction id  is required',
+
+  ODER_ID_MUST_BE_STRING: 'Oder id must be string',
+
+  STATUS_MUST_BE_INTEGER: 'Status must be an integer and from 0 to 2'
+}
+
+export const REVIEW_MESSAGES = {
+  TITLE_REQUIRED: 'Title is required',
+  TITLE_MUST_BE_STRING: 'Title review must be string',
+  RATE_MUST_BE_INTEGER: 'Status must be an integer and from 0 to 5'
 }
 
 export const POPULAR_MESSAGES = {
   QUANTITY_REQUIRED: 'Quantity is required',
-  QUANTITY_NUMERIC: 'Quantity is numeric',
-  QUANTITY_MIN: 'Minimum quantity must be 1',
+  QUANTITY_MIN: 'Minimum quantity must be an interger and from 1',
 
   ID_REQUIRED: 'Id is required',
   ID_INVALID: 'Id is invalid',

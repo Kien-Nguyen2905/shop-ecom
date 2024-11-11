@@ -6,12 +6,12 @@ import {
   updateWarehouseController
 } from '~/controllers/warehouse.controller'
 import { adminAccessValidator } from '~/middlewares/admins/admins.middlewares'
-import { warehouseUpdateValidator } from '~/middlewares/warehouse/warehouse.middlewares'
+import { createWrehouseValidator, warehouseUpdateValidator } from '~/middlewares/warehouse/warehouse.middlewares'
 
 import { wrapRequestHandler } from '~/utils/handlerError'
 
 const warehouseRoute = Router()
-// warehouseRoute.post('/', adminAccessValidator, wrapRequestHandler(createWareHouseController))
+warehouseRoute.post('/', createWrehouseValidator, adminAccessValidator, wrapRequestHandler(createWareHouseController))
 
 warehouseRoute.get('/', adminAccessValidator, wrapRequestHandler(getWareHouseController))
 
