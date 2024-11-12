@@ -118,7 +118,7 @@ export const emailTokenSchema: ParamSchema = {
       } catch (error) {
         throw new ErrorWithStatus({
           message: (error as JsonWebTokenError).message,
-          status: HTTP_STATUS.UNAUTHORIZED
+          status: HTTP_STATUS.BAD_GATEWAY
         })
       }
     }

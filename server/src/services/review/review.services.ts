@@ -13,16 +13,10 @@ class ReviewServices {
   }
 
   async getReviewById(review_id: string) {
-    if (!review_id) {
-      throw new BadRequestError()
-    }
     return ((await databaseService.reviews.findOne({ _id: new ObjectId(review_id) })) as TReviewProps) || {}
   }
 
   async createReview({ user_id, order_id, product_id, variant_id, title, description, rate }: TCreateReviewPayload) {
-    if (!user_id || !order_id || !variant_id || !title || !description || rate === undefined) {
-      throw new BadRequestError()
-    }
     await orderServices.findVariantUnreview({ order_id, variant_id })
     const _id = new ObjectId()
     const review = new Review({

@@ -63,9 +63,6 @@ class OrderService {
     earn_point,
     transaction_id
   }: TCreateOrderPayload) {
-    if (!user_id || !products || !address || !note || type_payment === undefined || !transaction_id) {
-      throw new BadRequestError()
-    }
     // Check quantity in stock
     await this.checkStockAvailability(products)
 
@@ -115,7 +112,7 @@ class OrderService {
       note,
       total,
       status: STATUS_ORDER.WAITING,
-      type_payment,
+      type_payment: type_payment!,
       transaction_id: new ObjectId(transaction_id)
     })
     const result = await databaseService.orders.insertOne(order)
@@ -160,15 +157,9 @@ class OrderService {
     return (await databaseService.orders.find().toArray()) || []
   }
   async getOrderDetail(orderId: string) {
-    if (!orderId) {
-      throw new BadRequestError()
-    }
     return ((await databaseService.orders.findOne({ _id: new ObjectId(orderId) })) as TOrderProps) || {}
   }
   async updateOrder({ user_id, order_id, status }: TUpdateStatusOrderPayload) {
-    if (!user_id || !order_id || status === undefined) {
-      throw new BadRequestError()
-    }
     const order = await this.getOrderDetail(order_id)
     if (!order) {
       throw new NotFoundError()
@@ -246,15 +237,9 @@ class OrderService {
     return (await this.getOrderDetail(order_id)) || {}
   }
   async getOrderByUser(user_id: string) {
-    if (!user_id) {
-      throw new BadRequestError()
-    }
     return databaseService.orders.find({ user_id: new ObjectId(user_id) }).toArray() || []
   }
   async findVariantUnreview({ order_id, variant_id }: TFindVariantUnreview) {
-    if (!order_id || !variant_id) {
-      throw new BadRequestError()
-    }
     const variantInOrder = await databaseService.orders.findOne({
       _id: new ObjectId(order_id),
       products: {
@@ -271,9 +256,6 @@ class OrderService {
     return variantInOrder
   }
   async updateIsReviewed(order_id: string, variant_id: string) {
-    if (!order_id) {
-      throw new BadRequestError()
-    }
     const order = await this.getOrderDetail(order_id)
     if (!order) {
       throw new NotFoundError()

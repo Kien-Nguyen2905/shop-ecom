@@ -23,10 +23,6 @@ class ProductServices {
     brand_id,
     variants
   }: TProductPayload) {
-    if (!thumbnail || !description || !attribute || !name || !minimum_stock || !category_id || !brand_id || !variants) {
-      throw new BadRequestError()
-    }
-
     const product_id = new ObjectId()
     await Promise.all([
       this.checkProductByName(name),
@@ -211,9 +207,6 @@ class ProductServices {
   }
 
   async checkProductById(productId: string) {
-    if (!productId) {
-      throw new BadRequestError()
-    }
     const productExist = await databaseService.products.findOne({ _id: new ObjectId(productId) })
     if (!productExist) {
       throw new NotFoundError({ message: PRODUCT_MESSAGES.PRODUCT_NOT_EXISTS })
@@ -221,9 +214,6 @@ class ProductServices {
   }
 
   async checkProductandVariant(productId: string, variantId: string, quantity?: number) {
-    if (!productId || !variantId) {
-      throw new BadRequestError()
-    }
     const productExist = await this.getProductById(productId)
     const variantExist = productExist.variants.find((item) => item._id.toString() === variantId)
     if (!variantExist) {
@@ -237,9 +227,6 @@ class ProductServices {
   }
 
   async getProductById(productId: string) {
-    if (!productId) {
-      throw new BadRequestError()
-    }
     const result = (await databaseService.products.findOne({ _id: new ObjectId(productId) })) as TProductProps
     if (!result) {
       throw new NotFoundError()
@@ -248,9 +235,6 @@ class ProductServices {
   }
 
   async checkProductByName(name: string) {
-    if (!name) {
-      throw new BadRequestError()
-    }
     const result = await databaseService.products.findOne({ name })
     if (result) {
       throw new ConflictRequestError({ message: PRODUCT_MESSAGES.PRODUCT_EXISTS })
@@ -258,9 +242,6 @@ class ProductServices {
   }
 
   async checkProductByBrand(brandId: string) {
-    if (!brandId) {
-      throw new BadRequestError()
-    }
     const productExist = await databaseService.products.findOne({ brand_id: new ObjectId(brandId) })
     if (productExist) {
       return true
@@ -269,9 +250,6 @@ class ProductServices {
   }
 
   async checkProductByCategory(categoryId: string) {
-    if (!categoryId) {
-      throw new BadRequestError()
-    }
     const productExist = await databaseService.products.findOne({ category_id: new ObjectId(categoryId) })
     if (productExist) {
       return true
@@ -280,9 +258,6 @@ class ProductServices {
   }
 
   async updateProduct(productId: string, payload: TUpdateProductPayload) {
-    if (!productId) {
-      throw new BadRequestError()
-    }
     await this.checkProductById(productId)
     const category_id = new ObjectId(payload.category_id)
     const brand_id = new ObjectId(payload.brand_id)
@@ -308,9 +283,6 @@ class ProductServices {
   }
 
   async deleteProduct(productId: string) {
-    if (!productId) {
-      throw new BadRequestError()
-    }
     await this.checkProductById(productId)
     await Promise.all([
       databaseService.products.deleteOne({ _id: new ObjectId(productId) }),

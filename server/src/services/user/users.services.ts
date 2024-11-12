@@ -30,9 +30,6 @@ import { USERS_MESSAGES } from '~/constants/message'
 
 class UserServices {
   async signAccessToken({ user_id, role }: IAccessToken) {
-    if (!user_id || role === undefined) {
-      throw new BadRequestError()
-    }
     return await signToken({
       payload: { user_id, role },
       privateKey: env.JWT_SECRET_ACCESS_TOKEN as string,
@@ -43,9 +40,6 @@ class UserServices {
   }
 
   async signRefreshToken({ user_id, role, exp }: IRefreshToken) {
-    if (!user_id || role === undefined) {
-      throw new BadRequestError()
-    }
     if (exp) {
       return await signToken({
         payload: { user_id, role, exp },
@@ -62,16 +56,10 @@ class UserServices {
   }
 
   async signAPairToken({ user_id, role, exp }: IRefreshToken) {
-    if (!user_id || role === undefined || !exp) {
-      throw new BadRequestError()
-    }
     return Promise.all([this.signAccessToken({ user_id, role }), this.signRefreshToken({ user_id, role, exp })])
   }
 
   async signForgotPassword(email: string) {
-    if (!email) {
-      throw new BadRequestError()
-    }
     return await signToken({
       payload: { email },
       privateKey: env.JWT_SECRET_FORGOT_PASSWORD_TOKEN as string,
@@ -82,9 +70,6 @@ class UserServices {
   }
 
   private signEmailVerify({ full_name, email, password }: TRegisterReqBody) {
-    if (!full_name || !email || !password) {
-      throw new BadRequestError()
-    }
     return signToken({
       payload: {
         full_name,
@@ -99,23 +84,14 @@ class UserServices {
   }
 
   private async sendVerificationEmail({ email, token, type }: TVerificationEmail) {
-    if (!email || !token || type === undefined) {
-      throw new BadRequestError()
-    }
     return sendVerification({ email, token, type })
   }
 
   private async sendVerificationForgotPassword({ email, token, type }: TVerificationEmail) {
-    if (!email || !token || type === undefined) {
-      throw new BadRequestError()
-    }
     return sendVerification({ email, token, type })
   }
 
   async verifyEmail({ email, password, full_name }: TVerifyReqBody) {
-    if (!email || !password || !full_name) {
-      throw new BadRequestError()
-    }
     const email_token = await this.signEmailVerify({
       full_name: full_name,
       email: email,
@@ -139,9 +115,6 @@ class UserServices {
   }
 
   async reSendVerifyEmail(email: string) {
-    if (!email) {
-      throw new BadRequestError()
-    }
     const verificationRecord = await databaseService.verifications.findOne({ email })
 
     if (!verificationRecord) {
@@ -170,9 +143,6 @@ class UserServices {
   }
 
   async register(email_token: string) {
-    if (!email_token) {
-      throw new BadRequestError()
-    }
     const user_id = new ObjectId()
     const user_payload = await verifyToken<TDecodeEmailToken>({
       token: email_token,
@@ -210,17 +180,11 @@ class UserServices {
   }
 
   async checkEmailExist(email: string) {
-    if (!email) {
-      throw new BadRequestError()
-    }
     const user = await databaseService.users.findOne({ email })
     return Boolean(user)
   }
 
   async login({ email, password }: TLoginReqBody) {
-    if (!email || !password) {
-      throw new BadRequestError()
-    }
     const user = await databaseService.users.findOne({
       email,
       password: hashPassword(password)
@@ -248,9 +212,6 @@ class UserServices {
   }
 
   async logout(refresh_token: string) {
-    if (!refresh_token) {
-      throw new BadRequestError()
-    }
     const refreshTokenExist = await databaseService.tokens.findOne({ refresh_token })
     if (!refreshTokenExist) {
       throw new NotFoundError()
@@ -262,9 +223,6 @@ class UserServices {
   }
 
   async forgotPassword(email: string) {
-    if (!email) {
-      throw new BadRequestError()
-    }
     const forgot_password_token = await this.signForgotPassword(email)
     const user = await databaseService.users.findOne({ email })
     if (!user) {
@@ -298,9 +256,6 @@ class UserServices {
   }
 
   async reSendForgot(email: string) {
-    if (!email) {
-      throw new BadRequestError()
-    }
     const user = await databaseService.users.findOne({ email })
     if (!user) {
       throw new NotFoundError()
@@ -335,9 +290,6 @@ class UserServices {
   }
 
   async resetPassword({ password, password_token }: TResetPasswordReqBody) {
-    if (!password || !password_token) {
-      throw new BadRequestError()
-    }
     const existPasswordToken = await databaseService.passwordResets.findOne({
       password_token
     })
@@ -376,9 +328,6 @@ class UserServices {
   }
 
   async refreshToken({ exp, user_id, role, refresh_token }: TRefreshTokenPayload) {
-    if (exp === undefined || !user_id || role === undefined || !refresh_token) {
-      throw new BadRequestError()
-    }
     const [new_access_token, new_refresh_token] = await Promise.all([
       this.signAccessToken({ user_id: new ObjectId(user_id), role }),
       this.signRefreshToken({ user_id: new ObjectId(user_id), role, exp })
@@ -399,9 +348,6 @@ class UserServices {
   }
 
   async getProfile(user_id: string) {
-    if (!user_id) {
-      throw new UnauthorizedError()
-    }
     const result = await databaseService.users.findOne({ _id: new ObjectId(user_id) })
     if (!result) {
       throw new NotFoundError()
@@ -419,9 +365,6 @@ class UserServices {
     total_paid,
     earn_point
   }: TUpdateProfilePayload) {
-    if (!user_id) {
-      throw new UnauthorizedError()
-    }
     const user = await this.getProfile(user_id)
 
     const updateQuery: Record<string, string | number | TAddress | Date> = {}

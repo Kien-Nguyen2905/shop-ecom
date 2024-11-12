@@ -7,16 +7,10 @@ class AddressServices {
   }
 
   async getDistrictsByProvince(province_code: string) {
-    if (!province_code) {
-      throw new BadRequestError()
-    }
     return (await databaseService.districts.find({ province_code: +province_code }).toArray()) || []
   }
 
   async getWardsByDistrict(district_code: string) {
-    if (!district_code) {
-      throw new BadRequestError()
-    }
     return (await databaseService.wards.find({ district_code: +district_code }).toArray()) || []
   }
 }

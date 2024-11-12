@@ -8,9 +8,6 @@ import { TWarehousePayload, TWarehouseUpdatePayload } from '~/services/warehouse
 
 class WarehouseServices {
   async createWarehouse({ import_quantity, minimum_stock, product_id, shipments, variant_id }: TWarehousePayload) {
-    if (import_quantity === undefined || minimum_stock === undefined || !product_id || !shipments || !variant_id) {
-      throw new BadRequestError()
-    }
     const _id = new ObjectId()
 
     const product = await productServices.getProductById(product_id)
@@ -35,10 +32,6 @@ class WarehouseServices {
   }
 
   async updateWarehouse({ id, quantity, product_id, variant_id }: TWarehouseUpdatePayload) {
-    if (!id || quantity === undefined || !product_id || !variant_id) {
-      throw new BadRequestError()
-    }
-
     const warehouse = await databaseService.warehouse.findOne({
       _id: new ObjectId(id),
       product_id: new ObjectId(product_id),
@@ -96,9 +89,6 @@ class WarehouseServices {
   }
 
   async getWarehouseById(_id: string) {
-    if (!_id) {
-      throw new BadRequestError()
-    }
     return (await databaseService.warehouse.findOne({ _id: new ObjectId(_id) })) || []
   }
 
@@ -107,9 +97,6 @@ class WarehouseServices {
   }
 
   async updateIsDeleted(productId: string) {
-    if (!productId) {
-      throw new BadRequestError()
-    }
     const result = await databaseService.warehouse.updateMany(
       { product_id: new ObjectId(productId) },
       {

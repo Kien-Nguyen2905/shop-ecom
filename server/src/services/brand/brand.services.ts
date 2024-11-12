@@ -50,9 +50,6 @@ class BrandServices {
   }
 
   async getBrandById(_id: string) {
-    if (!_id) {
-      throw new BadRequestError()
-    }
     const result = (await databaseService.brands.findOne({ _id: new ObjectId(_id) })) as TBrandProps
     if (!result) {
       throw new NotFoundError({ message: BRAND_MESSAGES.BRAND_NOT_EXISTS })
@@ -72,9 +69,6 @@ class BrandServices {
   }
 
   async checkBrandExist(name: string) {
-    if (!name) {
-      throw new BadRequestError()
-    }
     const result = await databaseService.brands.findOne({ name: name })
     if (result) {
       throw new ConflictRequestError({
@@ -84,9 +78,6 @@ class BrandServices {
   }
 
   async checkBrandBelongProduct(_id: string) {
-    if (!_id) {
-      throw new BadRequestError()
-    }
     const checkProductExist = await productServices.checkProductByBrand(_id)
     if (checkProductExist) {
       throw new ConflictRequestError({ message: BRAND_MESSAGES.BRAND_BELONG_TO_EXIST_PRODUCT })

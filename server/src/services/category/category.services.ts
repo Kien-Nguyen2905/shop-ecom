@@ -24,9 +24,6 @@ class CategoryServices {
   }
 
   async updateCategory({ _id, name }: TCategoryPayload) {
-    if (!name) {
-      throw new BadRequestError()
-    }
     const categoryUpdate = await this.getCategoryById(_id)
 
     const result = await databaseService.categories.updateOne(
@@ -51,9 +48,6 @@ class CategoryServices {
   }
 
   async getCategoryById(_id: string) {
-    if (!_id) {
-      throw new BadRequestError()
-    }
     const result = ((await databaseService.categories.findOne({ _id: new ObjectId(_id) })) as TCategoryProps) || {}
     if (!result) {
       throw new NotFoundError({ message: CATEGORY_MESSAGES.CATEGORY_NOT_EXISTS })
@@ -73,9 +67,6 @@ class CategoryServices {
   }
 
   async checkCategoryExist(name: string) {
-    if (!name) {
-      throw new BadRequestError()
-    }
     const result = await databaseService.categories.findOne({ name: name })
     if (result) {
       throw new ConflictRequestError({
@@ -85,9 +76,6 @@ class CategoryServices {
   }
 
   async checkCategoryBelongProduct(_id: string) {
-    if (!_id) {
-      throw new BadRequestError()
-    }
     const checkProductExist = await productServices.checkProductByCategory(_id)
     if (checkProductExist) {
       throw new ConflictRequestError({ message: CATEGORY_MESSAGES.CATEGORY_BELONG_TO_EXIST_PRODUCT })

@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 import { env } from '~/configs/environment'
 import { defaultErrorHandler } from '~/middlewares/error.middlewares'
 import addressRoute from '~/routes/address.routes'
@@ -18,6 +19,13 @@ import transactionRoute from '~/routes/transactions.routes'
 import reviewRoute from '~/routes/reviews.routes'
 const app = express()
 const port = env.PORT || 8080
+app.use(
+  cors({
+    origin: `${env.CORS_ORIGIN}`, // Cho phép FE từ localhost:3000 truy cập
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Các phương thức được phép
+    allowedHeaders: ['Content-Type', 'Authorization'] // Các header được phép
+  })
+)
 databaseService.connect()
 app.use(express.json())
 initFolder()

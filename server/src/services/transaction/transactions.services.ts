@@ -9,9 +9,6 @@ import { TCreateTransactionPayload, TTransactionSepayQuery } from '~/services/tr
 
 class TransactionServices {
   async createTransaction({ order_id, user_id, type_payment, value, content }: TCreateTransactionPayload) {
-    if (!order_id || !user_id || !type_payment || value === undefined) {
-      throw new BadRequestError()
-    }
     const _id = new ObjectId()
     const transaction = new Transaction({
       _id,
@@ -28,15 +25,9 @@ class TransactionServices {
     return this.getTransaction(_id.toString())
   }
   async getTransaction(_id: string) {
-    if (!_id) {
-      throw new BadRequestError()
-    }
     return databaseService.transactions.findOne({ _id: new ObjectId(_id) }) || {}
   }
   async getTransactionSePay({ content, value, user_id }: TTransactionSepayQuery) {
-    if (!content || value === undefined) {
-      throw new BadRequestError()
-    }
     const response = await axios.get('https://my.sepay.vn/userapi/transactions/list', {
       params: {
         limit: 3
