@@ -1,35 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { lazy, Suspense } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import './assets/styles/index.scss';
+import { ADMIN_PATHS, CUSTOMER_PATHS } from './constants';
+const MainLayout = lazy(() => import('./layouts/MainLayout/MainLayout'));
+const AdminLayout = lazy(() => import('./layouts/AdminLayout/AdminLayout'));
+const ClientRoute = lazy(() => import('./components/ClientRoute/ClientRoute'));
+const CategoryAdminPage = lazy(
+  () => import('./pages/CategoryAdminPage/CategoryAdminPage'),
+);
+
+const VerifyEmailPage = lazy(
+  () => import('./pages/VerifyEmailPage/VerifyEmailPage'),
+);
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Suspense>
+      <Routes>
+        <Route path={CUSTOMER_PATHS.ROOT} element={<MainLayout />}>
+          <Route element={<ClientRoute redirectPath={CUSTOMER_PATHS.ROOT} />}>
+            <Route
+              path={CUSTOMER_PATHS.VERIFY_EMAIL}
+              element={<VerifyEmailPage />}
+            />
+          </Route>
+        </Route>
+        <Route path={ADMIN_PATHS.ROOT} element={<AdminLayout />}>
+          <Route path="/admin/category" element={<CategoryAdminPage />} />
+        </Route>
+      </Routes>
+    </Suspense>
+  );
 }
 
-export default App
+export default App;
