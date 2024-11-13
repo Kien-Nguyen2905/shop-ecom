@@ -1,11 +1,11 @@
-export interface IToken {
+export type TToken = {
   access_token: string;
   refresh_token: string;
-}
-export interface ILoginUser {
+};
+export type TLoginUser = {
   access_token: string;
   refresh_token: string;
-}
+};
 
 // export interface IRegisterUser {
 //   id?: string;

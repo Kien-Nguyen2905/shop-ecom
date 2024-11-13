@@ -1,4 +1,5 @@
 import { instance } from '../Interceptor';
+import { SuccessResponse } from '../tyings';
 import {
   TRegisterPayload,
   TVerifyEmailResponse,
@@ -12,19 +13,28 @@ import {
 
 const authServices = {
   verifyEmail: (payload: TVerifyEmailPayload) => {
-    return instance.post<TVerifyEmailResponse>(`/users/verify-email`, payload);
+    return instance.post<SuccessResponse<TVerifyEmailResponse>>(
+      `/users/verify-email`,
+      payload,
+    );
   },
   register: (payload: TRegisterPayload) => {
-    return instance.post<TRegisterResponse>(`/users/register`, payload);
+    return instance.post<SuccessResponse<TRegisterResponse>>(
+      `/users/register`,
+      payload,
+    );
   },
   resendVerifyEmail: (payload: TResendVerifyEmailPayload) => {
-    return instance.post<TResendVerifyEmailResponse>(
+    return instance.post<SuccessResponse<TResendVerifyEmailResponse>>(
       `/users/resend-verify`,
       payload,
     );
   },
   login: (payload: TLoginPayload) => {
-    return instance.post<TLoginResponse>(`/users/login`, payload);
+    return instance.post<SuccessResponse<TLoginResponse>>(
+      `/users/login`,
+      payload,
+    );
   },
 };
 

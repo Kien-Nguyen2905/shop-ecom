@@ -1,5 +1,5 @@
 export { AdminRoute } from './AdminRoute';
-export { ClientRoute } from './ClientRoute';
+export { CustomerRoute } from './CustomerRoute';
 export { Modal } from './Modal';
 
 export * as Loading from './Loading';

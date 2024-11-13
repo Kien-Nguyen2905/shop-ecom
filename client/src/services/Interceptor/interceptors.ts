@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { BASE_URL, LOCAL_STORAGE } from '../../constants';
-import { IRefreshToken } from './tyings';
+import { TRefreshTokenResponse } from './tyings';
 import { SuccessResponse } from '../tyings';
 
 const instance: AxiosInstance = axios.create({
@@ -14,17 +14,26 @@ instance.interceptors.response.use(
     const originalRequest = error.config;
     if (error.response?.status === 401 || error.response?.status === 403) {
       try {
-        const data: IRefreshToken = await instance.put('/customer/refresh', {
-          refreshToken: localStorage.getItem('refreshToken'),
-        });
-        localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, data.access_token);
-        localStorage.setItem(LOCAL_STORAGE.REFRESH_TOKEN, data.refresh_token);
+        const res = await instance.post<SuccessResponse<TRefreshTokenResponse>>(
+          '/users/refresh-token',
+          {
+            refreshToken: localStorage.getItem('refreshToken'),
+          },
+        );
+        localStorage.setItem(
+          LOCAL_STORAGE.ACCESS_TOKEN,
+          res.data.data.access_token,
+        );
+        localStorage.setItem(
+          LOCAL_STORAGE.REFRESH_TOKEN,
+          res.data.data.refresh_token,
+        );
         if (originalRequest) {
-          originalRequest.headers.Authorization = `Bearer ${data.access_token}`;
+          originalRequest.headers.Authorization = `Bearer ${res.data.data.access_token}`;
           return instance(originalRequest);
         }
       } catch (error) {
-        // console.log(error);
+        console.log(error);
       }
     }
 

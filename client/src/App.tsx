@@ -4,7 +4,9 @@ import './assets/styles/index.scss';
 import { ADMIN_PATHS, CUSTOMER_PATHS } from './constants';
 const MainLayout = lazy(() => import('./layouts/MainLayout/MainLayout'));
 const AdminLayout = lazy(() => import('./layouts/AdminLayout/AdminLayout'));
-const ClientRoute = lazy(() => import('./components/ClientRoute/ClientRoute'));
+const CustomerRoute = lazy(
+  () => import('./components/CustomerRoute/CustomerRoute'),
+);
 const CategoryAdminPage = lazy(
   () => import('./pages/CategoryAdminPage/CategoryAdminPage'),
 );
@@ -21,7 +23,7 @@ function App() {
     <Suspense>
       <Routes>
         <Route path={CUSTOMER_PATHS.ROOT} element={<MainLayout />}>
-          <Route element={<ClientRoute redirectPath={CUSTOMER_PATHS.ROOT} />}>
+          <Route element={<CustomerRoute redirectPath={CUSTOMER_PATHS.ROOT} />}>
             <Route
               path={CUSTOMER_PATHS.VERIFY_EMAIL}
               element={<VerifyEmailPage />}

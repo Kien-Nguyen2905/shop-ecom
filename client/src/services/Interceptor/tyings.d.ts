@@ -1,3 +1,4 @@
-import { IToken } from '../../components/Modal/tyings';
-
-export interface IRefreshToken extends IToken {}
+export type TRefreshTokenResponse = {
+  access_token: string;
+  refresh_token: string;
+};
