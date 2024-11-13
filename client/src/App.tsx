@@ -26,7 +26,7 @@ function App() {
           </Route>
         </Route>
         <Route path={ADMIN_PATHS.ROOT} element={<AdminLayout />}>
-          <Route path="/admin/category" element={<CategoryAdminPage />} />
+          <Route path={ADMIN_PATHS.CATEGORY} element={<CategoryAdminPage />} />
         </Route>
       </Routes>
     </Suspense>

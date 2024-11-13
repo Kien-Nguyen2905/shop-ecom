@@ -282,3 +282,7 @@
 .ant-spin-dot-item {
   color: #fcb941;
 }
+
+.ant-table-cell:hover {
+  background-color: transparent !important; /* Disables hover background */
+}

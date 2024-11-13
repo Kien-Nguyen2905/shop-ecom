@@ -1,4 +1,3 @@
-import React from 'react';
 import { AiOutlineHome } from 'react-icons/ai';
 import { BiCommentDetail } from 'react-icons/bi';
 import { BsBox } from 'react-icons/bs';
@@ -8,6 +7,7 @@ import { MdKeyboardArrowDown, MdOutlineCategory } from 'react-icons/md';
 import { PiWarehouse } from 'react-icons/pi';
 import { TbBrandDatabricks } from 'react-icons/tb';
 import { NavLink } from 'react-router-dom';
+import { ADMIN_PATHS } from '../../../constants';
 
 const Sidebar = () => {
   return (
@@ -20,21 +20,25 @@ const Sidebar = () => {
       <nav className="flex flex-col flex-wrap w-full p-6 hs-accordion-group">
         <ul className="space-y-1.5">
           <li>
-            <a className="flex items-center gap-x-3.5 py-2 px-2.5 bg-gray-100 text-sm text-gray-700 rounded-lg hover:bg-gray-100">
-              <AiOutlineHome size={20} />
-              Dashboard
-            </a>
+            <NavLink
+              to={ADMIN_PATHS.ROOT}
+              className="hs-accordion-toggle justify-between hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+            >
+              <div className="flex gap-3">
+                <AiOutlineHome size={20} />
+                Dashboard
+              </div>
+            </NavLink>
           </li>
           <li>
             <NavLink
-              to={'/category'}
+              to={ADMIN_PATHS.CATEGORY}
               className="hs-accordion-toggle justify-between hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
             >
               <div className="flex gap-3">
                 <MdOutlineCategory size={20} />
                 Catgory
               </div>
-              <MdKeyboardArrowDown size={20} />
             </NavLink>
           </li>
           <li>
@@ -46,7 +50,6 @@ const Sidebar = () => {
                 <TbBrandDatabricks size={20} />
                 Brand
               </div>
-              <MdKeyboardArrowDown size={20} />
             </button>
           </li>
           <li>

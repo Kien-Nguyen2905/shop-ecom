@@ -1,13 +1,14 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { BASE_URL, LOCAL_STORAGE } from '../../constants';
 import { IRefreshToken } from './tyings';
+import { SuccessResponse } from '../tyings';
 
 const instance: AxiosInstance = axios.create({
   baseURL: BASE_URL,
 });
 instance.interceptors.response.use(
-  (response: AxiosResponse) => {
-    return response?.data;
+  (response: AxiosResponse<SuccessResponse<any>>) => {
+    return response;
   },
   async (error: AxiosError) => {
     const originalRequest = error.config;

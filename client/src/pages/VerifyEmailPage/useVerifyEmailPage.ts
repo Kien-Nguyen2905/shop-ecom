@@ -11,7 +11,7 @@ import {
 } from '../../services/Auth/typings';
 import { useEffect, useState } from 'react';
 
-export const useVerifyEmail = () => {
+export const useVerifyEmailPage = () => {
   const [time, setTime] = useState<number>(0);
   const register = useRegisterMutation();
   const resendVerifyEmail = useResendVerifyEmailMutation();

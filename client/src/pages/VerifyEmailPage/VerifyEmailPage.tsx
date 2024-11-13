@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { LoadingVerify } from '../../components/Loading';
-import { useVerifyEmail } from './useVerifyEmail';
 import { CUSTOMER_PATHS, LOCAL_STORAGE } from '../../constants';
 import { Button } from '../../components/Button';
+import { useVerifyEmailPage } from './useVerifyEmailPage';
 
 const VerifyEmailPage = () => {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ const VerifyEmailPage = () => {
   const token = new URLSearchParams(location.search).get('token') as string;
   const email = localStorage.getItem(LOCAL_STORAGE.EMAIL) as string;
   const { handleRegister, isResending, time, handleResendEmail } =
-    useVerifyEmail();
+    useVerifyEmailPage();
 
   useEffect(() => {
     if (token) {

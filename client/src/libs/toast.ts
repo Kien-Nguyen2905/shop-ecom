@@ -3,8 +3,7 @@ import { IToast } from './tyings';
 import { UseFormSetError } from 'react-hook-form';
 import { EntityError, handleAxiosError } from './http';
 
-export function showToast({ type, message, error }: IToast) {
-  console.log(error.response.data.errors);
+export function showToast({ type, message }: IToast) {
   toast[type](message);
 }
 
