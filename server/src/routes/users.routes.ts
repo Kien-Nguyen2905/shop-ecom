@@ -11,7 +11,8 @@ import {
   getProfileController,
   refreshTokenController,
   updateProfileController,
-  getAllUserController
+  getAllUserController,
+  oauthController
 } from '~/controllers/users.controllers'
 import { adminAccessValidator } from '~/middlewares/admins/admins.middlewares'
 import {
@@ -54,5 +55,7 @@ userRoute.put('/profile', accessTokenValidator, updateProfileValidator, wrapRequ
 userRoute.get('/all', adminAccessValidator, updateProfileValidator, wrapRequestHandler(getAllUserController))
 
 userRoute.get('/wishlist', adminAccessValidator, updateProfileValidator, wrapRequestHandler(getAllUserController))
+
+userRoute.get('/oauth/google', wrapRequestHandler(oauthController))
 
 export default userRoute

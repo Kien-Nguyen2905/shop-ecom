@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
+import { env } from '~/configs/environment'
 import { USERS_MESSAGES } from '~/constants/message'
 import { CREATED, SuccessResponse } from '~/models/success/success.response'
 import { TTokenPayload } from '~/services/user/type'
@@ -117,4 +118,11 @@ export const getAllUserController = async (
   return new SuccessResponse({
     data: await userServices.getAllUser()
   }).send(res)
+}
+
+export const oauthController = async (req: Request, res: Response) => {
+  const { code } = req.query
+  const result = await userServices.oauth(code as string)
+  const urlRedirect = `${env.CLIENT_REDIRECT}?access_token=${result.access_token}&refresh_token=${result.refresh_token}`
+  return res.redirect(urlRedirect)
 }

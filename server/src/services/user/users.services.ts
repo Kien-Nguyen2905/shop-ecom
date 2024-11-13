@@ -27,6 +27,7 @@ import { BadRequestError, InternalServerError, NotFoundError, UnauthorizedError 
 import Cart from '~/models/schemas/carts/carts.schemas'
 import Wishlist from '~/models/schemas/wishlists/wishlists.schemas'
 import { USERS_MESSAGES } from '~/constants/message'
+import axios from 'axios'
 
 class UserServices {
   async signAccessToken({ user_id, role }: IAccessToken) {
@@ -190,7 +191,7 @@ class UserServices {
       password: hashPassword(password)
     })
     if (!user) {
-      throw new UnauthorizedError({ message: USERS_MESSAGES.EMAIL_OR_PASSWORD_INCORRECT })
+      throw new NotFoundError({ message: USERS_MESSAGES.EMAIL_OR_PASSWORD_INCORRECT })
     }
 
     const [access_token, refresh_token] = await this.signAPairToken({
@@ -397,7 +398,104 @@ class UserServices {
   }
 
   async getAllUser() {
-    return (await databaseService.users.find()) || []
+    return (await databaseService.users.find().toArray()).reverse() || []
+  }
+
+  private async getOauthGoogleToken(code: string) {
+    const body = {
+      code,
+      client_id: env.GOOGLE_CLIENT_ID,
+      client_secret: env.GOOGLE_CLIENT_SECRET,
+      redirect_uri: env.GOOGLE_REDIRECT_URI,
+      grant_type: 'authorization_code'
+    }
+    const { data } = await axios.post('https://oauth2.googleapis.com/token', body, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+
+    return data as {
+      access_token: string
+      id_token: string
+    }
+  }
+
+  private async getGoogleUserInfo(access_token: string, id_token: string) {
+    const { data } = await axios.get('https://www.googleapis.com/oauth2/v1/userinfo', {
+      params: {
+        access_token,
+        alt: 'json'
+      },
+      headers: {
+        Authorization: `Bearer ${id_token}`
+      }
+    })
+    return data as {
+      id: string
+      email: string
+      verified_email: boolean
+      name: string
+      given_name: string
+      family_name: string
+      picture: string
+      locale: string
+    }
+  }
+
+  async oauth(code: string) {
+    const { id_token, access_token } = await this.getOauthGoogleToken(code)
+    const userInfo = await this.getGoogleUserInfo(access_token, id_token)
+
+    // Kiểm tra email đã được đăng ký chưa
+    const user = await databaseService.users.findOne({ email: userInfo.email })
+    // Nếu tồn tại thì cho login vào
+    if (user) {
+      const [access_token, refresh_token] = await this.signAPairToken({
+        user_id: user?._id,
+        role: user?.role!
+      })
+      const result = await databaseService.tokens.insertOne(
+        new Token({ user_id: user._id, refresh_token: refresh_token })
+      )
+      if (!result) {
+        throw new InternalServerError()
+      }
+      return {
+        access_token,
+        refresh_token,
+        role: user?.role
+      }
+    } else {
+      // random string password
+      const password = Math.random().toString(36).substring(2, 15)
+      // không thì đăng ký
+      const user_id = new ObjectId()
+
+      const [access_token, refresh_token] = await this.signAPairToken({
+        user_id,
+        role: ROLE.User
+      })
+      const user = new User({
+        _id: user_id,
+        full_name: userInfo.name,
+        email: userInfo.email,
+        password: hashPassword(password)
+      })
+      const token = new Token({ user_id, refresh_token: refresh_token })
+      const cart = new Cart({ user_id })
+      const wishlist = new Wishlist({ user_id })
+      const result = await Promise.all([
+        databaseService.users.insertOne(user),
+        databaseService.tokens.insertOne(token),
+        databaseService.wishlist.insertOne(wishlist),
+        databaseService.carts.insertOne(cart)
+      ])
+      if (!result) {
+        throw new InternalServerError()
+      }
+      return { access_token, refresh_token, role: ROLE.User }
+    }
   }
 }
 const userServices = new UserServices()

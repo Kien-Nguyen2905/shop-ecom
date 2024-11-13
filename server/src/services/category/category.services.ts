@@ -26,6 +26,15 @@ class CategoryServices {
   async updateCategory({ _id, name }: TCategoryPayload) {
     const categoryUpdate = await this.getCategoryById(_id)
 
+    // Check if the new name is the same as the current one
+    if (categoryUpdate.name === name) {
+      // If the name is the same, just return the existing category without updating
+      return categoryUpdate
+    }
+
+    // Check if the new name already exists
+    await this.checkCategoryExist(name)
+
     const result = await databaseService.categories.updateOne(
       { _id: categoryUpdate._id },
       {
@@ -44,7 +53,8 @@ class CategoryServices {
   }
 
   async getCategory() {
-    return (await databaseService.categories.find().toArray()) || []
+    const categories = await databaseService.categories.find().toArray()
+    return categories.reverse() || []
   }
 
   async getCategoryById(_id: string) {

@@ -54,7 +54,7 @@ export const ADDRESS_MESSAGES = {
 export const CATEGORY_MESSAGES = {
   CATEGORY_NAME_REQUIRED: 'Category name is required.',
   CATEGORY_NAME_STRING: 'Category name must be a string.',
-  CATEGORY_NAME_EXISTS: 'Category name already exists.',
+  CATEGORY_NAME_EXISTS: 'Category name already exists',
   CATEGORY_NOT_EXISTS: 'Category does not exists.',
   CATEGORY_BELONG_TO_EXIST_PRODUCT: 'Category belong to exist product',
   CATEGORY_ID_INVALID: 'Category id is invalid',

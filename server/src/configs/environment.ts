@@ -35,6 +35,10 @@ type TEnv = {
   TRANSACTION_COLLECTION: string
   REVIEW_COLLECTION: string
   SEPAY_API_KEY: string
+  GOOGLE_CLIENT_ID: string
+  GOOGLE_CLIENT_SECRET: string
+  GOOGLE_REDIRECT_URI: string
+  CLIENT_REDIRECT: string
 }
 export const env: TEnv = {
   CORS_ORIGIN: process.env.CORS_ORIGIN as string,
@@ -70,5 +74,9 @@ export const env: TEnv = {
   ORDER_COLLECTION: process.env.DB_ORDER_COLLECTION as string,
   TRANSACTION_COLLECTION: process.env.DB_TRANSACTION_COLLECTION as string,
   REVIEW_COLLECTION: process.env.DB_REVIEW_COLLECTION as string,
-  SEPAY_API_KEY: process.env.SEPAY_API_KEY as string
+  SEPAY_API_KEY: process.env.SEPAY_API_KEY as string,
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID as string,
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET as string,
+  GOOGLE_REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI as string,
+  CLIENT_REDIRECT: process.env.CLIENT_REDIRECT_CALLBACK as string
 }

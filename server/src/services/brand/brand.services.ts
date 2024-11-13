@@ -46,7 +46,7 @@ class BrandServices {
   }
 
   async getBrands() {
-    return (await databaseService.brands.find().toArray()) || []
+    return (await databaseService.brands.find().toArray()).reverse() || []
   }
 
   async getBrandById(_id: string) {
