@@ -4,6 +4,7 @@ import './assets/styles/index.scss';
 import { ADMIN_PATHS, CUSTOMER_PATHS } from './constants';
 const MainLayout = lazy(() => import('./layouts/MainLayout/MainLayout'));
 const AdminLayout = lazy(() => import('./layouts/AdminLayout/AdminLayout'));
+const OauthPage = lazy(() => import('./pages/OauthPage/OauthPage'));
 const CustomerRoute = lazy(
   () => import('./components/CustomerRoute/CustomerRoute'),
 );
@@ -23,6 +24,8 @@ function App() {
     <Suspense>
       <Routes>
         <Route path={CUSTOMER_PATHS.ROOT} element={<MainLayout />}>
+          <Route path={CUSTOMER_PATHS.OAUTH} element={<OauthPage />} />
+
           <Route element={<CustomerRoute redirectPath={CUSTOMER_PATHS.ROOT} />}>
             <Route
               path={CUSTOMER_PATHS.VERIFY_EMAIL}

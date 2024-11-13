@@ -20,8 +20,8 @@ const Modal = () => {
     control,
     isLoadingLogin,
     isLoadingVerifyEmail,
+    googleOAuthUrl,
   } = useModal();
-
   if (!isOpen) return null;
   const onSubmit = (values: TVerifyEmailPayload) => {
     if (activeTab === 'signIn') {
@@ -100,7 +100,7 @@ const Modal = () => {
         <div className="flex flex-col items-center justify-center gap-6">
           <span>or sign in with</span>
           <Link
-            to={'/'}
+            to={googleOAuthUrl}
             className="flex items-center gap-3 px-5 py-2 border hover:text-primary"
           >
             <FcGoogle /> Login With Google
