@@ -5,6 +5,7 @@ type TCustomerPaths = {
 type TAdminPaths = {
   ROOT: string;
   CATEGORY: string;
+  BRAND: string;
 };
 
 export const CUSTOMER_PATHS: TCustomerPaths = {
@@ -14,4 +15,5 @@ export const CUSTOMER_PATHS: TCustomerPaths = {
 export const ADMIN_PATHS: TAdminPaths = {
   ROOT: '/admin',
   CATEGORY: '/admin/category',
+  BRAND: '/admin/brand',
 };

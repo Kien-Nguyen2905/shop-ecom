@@ -1,16 +1,16 @@
 import React from 'react';
 import { Table, Form, Typography, Popconfirm, Button, Input } from 'antd';
-import { TCategoryResponse } from '../../services/Category/tyings';
 import TableCell from './TableCell';
 import dayjs from 'dayjs';
 import { TEditableTableProps } from './tyings';
 import { SearchOutlined } from '@ant-design/icons';
+import { TBrandResponse } from '../../../services/Brand/tyings';
 
-const TableCategory: React.FC<TEditableTableProps> = ({
+const TableBrand: React.FC<TEditableTableProps> = ({
   handleQueryProps,
   handleTableProps,
 }) => {
-  const { dataCategory, errors } = handleQueryProps;
+  const { dataBrand, errors } = handleQueryProps;
   const {
     cancelRecord,
     deleteRecord,
@@ -25,7 +25,7 @@ const TableCategory: React.FC<TEditableTableProps> = ({
 
   const columns = [
     {
-      title: 'Category',
+      title: 'Brand',
       dataIndex: 'name',
       width: '35%',
       editable: true,
@@ -75,7 +75,7 @@ const TableCategory: React.FC<TEditableTableProps> = ({
       dataIndex: 'created_at',
       width: '25%',
       editable: false,
-      sorter: (a: TCategoryResponse, b: TCategoryResponse) =>
+      sorter: (a: TBrandResponse, b: TBrandResponse) =>
         dayjs(a.created_at).unix() - dayjs(b.created_at).unix(),
       render: (created_at: string) =>
         dayjs(created_at).format('DD-MM-YYYY | HH:mm:ss'),
@@ -85,7 +85,7 @@ const TableCategory: React.FC<TEditableTableProps> = ({
       dataIndex: 'updated_at',
       width: '25%',
       editable: false,
-      sorter: (a: TCategoryResponse, b: TCategoryResponse) =>
+      sorter: (a: TBrandResponse, b: TBrandResponse) =>
         dayjs(a.updated_at).unix() - dayjs(b.updated_at).unix(),
       render: (updated_at: string) =>
         dayjs(updated_at).format('DD-MM-YYYY | HH:mm:ss'),
@@ -93,7 +93,7 @@ const TableCategory: React.FC<TEditableTableProps> = ({
     {
       title: 'Operation',
       dataIndex: 'operation',
-      render: (_: any, record: TCategoryResponse) => {
+      render: (_: any, record: TBrandResponse) => {
         const editable = isEditing(record);
         return editable ? (
           <span className="flex gap-5">
@@ -139,7 +139,7 @@ const TableCategory: React.FC<TEditableTableProps> = ({
     }
     return {
       ...col,
-      onCell: (record: TCategoryResponse) => ({
+      onCell: (record: TBrandResponse) => ({
         record,
         inputType: 'text',
         dataIndex: col.dataIndex,
@@ -150,6 +150,7 @@ const TableCategory: React.FC<TEditableTableProps> = ({
       }),
     };
   });
+
   return (
     <Form form={form}>
       <div className="flex items-center gap-3 pb-[20px] w-max ml-auto">
@@ -162,14 +163,14 @@ const TableCategory: React.FC<TEditableTableProps> = ({
         </Button>
       </div>
 
-      <Table<TCategoryResponse>
+      <Table<TBrandResponse>
         components={{
           body: { cell: TableCell },
         }}
         bordered
-        dataSource={dataCategory}
+        dataSource={dataBrand}
         columns={mergedColumns}
-        pagination={{ pageSize: 10, onChange: cancelRecord }}
+        pagination={{ pageSize: 8, onChange: cancelRecord }}
         rowClassName="editable-row"
         rowKey="_id"
         showSorterTooltip={{ target: 'sorter-icon' }}
@@ -178,4 +179,4 @@ const TableCategory: React.FC<TEditableTableProps> = ({
   );
 };
 
-export default TableCategory;
+export default TableBrand;

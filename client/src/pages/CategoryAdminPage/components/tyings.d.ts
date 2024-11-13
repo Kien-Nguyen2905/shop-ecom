@@ -3,7 +3,7 @@ import {
   TCategoryPayload,
   TCategoryResponse,
   TUpdateCategoryPayload,
-} from './../../services/Category/tyings.d';
+} from '../../../services/Category/tyings';
 export type THandleQueryProps = {
   errors: Record<string, string>;
   dataCategory: TCategoryResponse[];

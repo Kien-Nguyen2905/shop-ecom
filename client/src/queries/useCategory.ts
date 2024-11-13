@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import categoryServices from '../services/Category/categoryServices';
 import { TCategoryResponse } from '../services/Category/tyings';
+import { categoryServices } from '../services/Category';
 
 export const useCategoryQuery = () => {
   return useQuery<TCategoryResponse[]>({

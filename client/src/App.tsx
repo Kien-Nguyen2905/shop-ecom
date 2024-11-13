@@ -8,6 +8,9 @@ const ClientRoute = lazy(() => import('./components/ClientRoute/ClientRoute'));
 const CategoryAdminPage = lazy(
   () => import('./pages/CategoryAdminPage/CategoryAdminPage'),
 );
+const BrandAdminPage = lazy(
+  () => import('./pages/BrandAdminPage/BrandAdminPage'),
+);
 
 const VerifyEmailPage = lazy(
   () => import('./pages/VerifyEmailPage/VerifyEmailPage'),
@@ -27,6 +30,7 @@ function App() {
         </Route>
         <Route path={ADMIN_PATHS.ROOT} element={<AdminLayout />}>
           <Route path={ADMIN_PATHS.CATEGORY} element={<CategoryAdminPage />} />
+          <Route path={ADMIN_PATHS.BRAND} element={<BrandAdminPage />} />
         </Route>
       </Routes>
     </Suspense>
