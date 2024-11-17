@@ -31,6 +31,9 @@ export const handleError = ({
             message: errors[field],
           });
         }
+        toast.error(message || 'Lỗi không xác định', {
+          autoClose: duration ?? 5000,
+        });
         return;
       } else {
         // Hiển thị lỗi chung nếu không có lỗi cho trường cụ thể

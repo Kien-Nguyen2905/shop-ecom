@@ -10,6 +10,9 @@ const categoryServices = {
   getCategory: () => {
     return instance.get<SuccessResponse<TCategoryResponse>>(`/category`);
   },
+  getCategoryById: (id: string) => {
+    return instance.get<SuccessResponse<TCategoryResponse>>(`/category/${id}`);
+  },
   createCategory: (payload: TCategoryPayload) => {
     return instance.post<SuccessResponse<TCategoryResponse>>(
       `/category`,

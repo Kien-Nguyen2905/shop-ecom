@@ -286,3 +286,8 @@
 .ant-table-cell:hover {
   background-color: transparent !important; /* Disables hover background */
 }
+
+.ant-upload.ant-upload-select {
+  width: 275px !important;
+  height: 205px !important;
+}

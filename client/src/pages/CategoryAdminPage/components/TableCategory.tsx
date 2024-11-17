@@ -1,26 +1,45 @@
 import React from 'react';
-import { Table, Form, Typography, Popconfirm, Button, Input } from 'antd';
-import TableCell from './TableCell';
+import {
+  Table,
+  Typography,
+  Popconfirm,
+  Button,
+  Input,
+  Drawer,
+  Tag,
+} from 'antd';
+import { Controller } from 'react-hook-form';
 import dayjs from 'dayjs';
 import { TEditableTableProps } from './tyings';
-import { SearchOutlined } from '@ant-design/icons';
 import { TCategoryResponse } from '../../../services/Category/tyings';
 
 const TableCategory: React.FC<TEditableTableProps> = ({
   handleQueryProps,
   handleTableProps,
 }) => {
-  const { dataCategory, errors } = handleQueryProps;
+  const { dataCategory } = handleQueryProps;
   const {
-    cancelRecord,
-    deleteRecord,
-    editRecord,
-    insertRecord,
-    saveRecord,
-    isEditing,
-    isInserting,
-    editingKey,
-    form,
+    isView,
+    setNewFieldName,
+    setFieldValues,
+    setSingleAttribute,
+    setIsMultipleMode,
+    isMultipleMode,
+    singleAttribute,
+    fieldValues,
+    newFieldName,
+    isOpen,
+    openDrawer,
+    closeDrawer,
+    setAttributes,
+    attributes,
+    control,
+    handleSubmit,
+    handleAddAttribute,
+    handleAddMultipleField,
+    onSubmit,
+    handleRemoveInput,
+    handleDelete,
   } = handleTableProps;
 
   const columns = [
@@ -29,46 +48,6 @@ const TableCategory: React.FC<TEditableTableProps> = ({
       dataIndex: 'name',
       width: '35%',
       editable: true,
-      // filterDropdown: ({
-      //   setSelectedKeys,
-      //   selectedKeys,
-      //   confirm,
-      //   clearFilters,
-      // }: {
-      //   setSelectedKeys: (selectedKeys: React.Key[]) => void;
-      //   selectedKeys: React.Key[];
-      //   confirm: () => void;
-      //   clearFilters?: () => void;
-      // }) => (
-      //   <div className="p-[8px]">
-      //     <Input
-      //       placeholder="Search Category"
-      //       value={selectedKeys[0]}
-      //       onChange={(e) =>
-      //         setSelectedKeys(e.target.value ? [e.target.value] : [])
-      //       }
-      //       onPressEnter={() => confirm()}
-      //       style={{ width: 188, marginBottom: 8, display: 'block' }}
-      //     />
-      //     <div className="flex items-center gap-5">
-      //       <Button
-      //         type="primary"
-      //         icon={<SearchOutlined />}
-      //         onClick={() => confirm()}
-      //         size="small"
-      //         style={{ width: 90 }}
-      //       >
-      //         Search
-      //       </Button>
-      //       <Button onClick={clearFilters} size="small" style={{ width: 90 }}>
-      //         Reset
-      //       </Button>
-      //     </div>
-      //   </div>
-      // ),
-      // onFilter: (value: any, record: any) =>
-      //   record.name.toString().toLowerCase().includes(value.toLowerCase()),
-      // sorter: (a: any, b: any) => a.name.length - b.name.length,
     },
     {
       title: 'Created',
@@ -93,88 +72,195 @@ const TableCategory: React.FC<TEditableTableProps> = ({
     {
       title: 'Operation',
       dataIndex: 'operation',
-      render: (_: any, record: TCategoryResponse) => {
-        const editable = isEditing(record);
-        return editable ? (
-          <span className="flex gap-5">
-            <Typography.Link
-              onClick={() => saveRecord(record._id, form)}
-              style={{ marginInlineEnd: 8 }}
+      render: (_: any, record: TCategoryResponse) => (
+        <div className="flex gap-5">
+          <button
+            onClick={() => {
+              openDrawer({ categoryId: record._id, isEdit: true });
+            }}
+            className="text-blue-500"
+          >
+            Edit
+          </button>
+          <button>
+            <Popconfirm
+              className="text-red-500"
+              title="Sure to delete?"
+              okText="Yes"
+              cancelText="No"
+              onConfirm={() => handleDelete(record._id)}
             >
-              <span className="text-green-400">Save</span>
-            </Typography.Link>
-            <Popconfirm title="Sure to cancel?" onConfirm={cancelRecord}>
-              <span className="text-yellow-400 cursor-pointer">Cancel</span>
+              <a className="text-red-500 hover:text-red-500">Delete</a>
             </Popconfirm>
-          </span>
-        ) : (
-          <div className="flex gap-5">
-            <button
-              className="text-blue-500"
-              disabled={editingKey !== ''}
-              onClick={() => editRecord(record)}
-            >
-              Edit
-            </button>
-            <button disabled={editingKey !== ''}>
-              <Popconfirm
-                className="text-red-500"
-                title="Sure to delete?"
-                onConfirm={() => deleteRecord(record)}
-                okText="Yes"
-                cancelText="No"
-              >
-                <a className="text-red-500">Delete</a>
-              </Popconfirm>
-            </button>
-          </div>
-        );
-      },
+          </button>
+          <button
+            onClick={() => {
+              openDrawer({ categoryId: record._id });
+            }}
+          >
+            <a className="text-green-500 hover:text-green-500">View</a>
+          </button>
+        </div>
+      ),
     },
   ];
 
-  const mergedColumns = columns.map((col) => {
-    if (!col.editable) {
-      return col;
-    }
-    return {
-      ...col,
-      onCell: (record: TCategoryResponse) => ({
-        record,
-        inputType: 'text',
-        dataIndex: col.dataIndex,
-        title: col.title,
-        editing: isEditing(record),
-        error: errors?.[record._id],
-        errorText: errors?.[record._id],
-      }),
-    };
-  });
   return (
-    <Form form={form}>
+    <div>
       <div className="flex items-center gap-3 pb-[20px] w-max ml-auto">
-        <Button
-          onClick={insertRecord}
-          type="primary"
-          disabled={isInserting || editingKey !== ''}
-        >
+        <Button onClick={() => openDrawer({})} type="primary">
           Insert
         </Button>
       </div>
 
-      <Table<TCategoryResponse>
-        components={{
-          body: { cell: TableCell },
-        }}
+      <Table
         bordered
         dataSource={dataCategory}
-        columns={mergedColumns}
-        pagination={{ pageSize: 8, onChange: cancelRecord }}
-        rowClassName="editable-row"
-        rowKey="_id"
-        showSorterTooltip={{ target: 'sorter-icon' }}
+        columns={columns}
+        pagination={{ pageSize: 8 }}
       />
-    </Form>
+
+      <Drawer
+        width={420}
+        onClose={closeDrawer}
+        open={isOpen}
+        extra={
+          <div>
+            <Button onClick={closeDrawer} style={{ marginRight: 8 }}>
+              Cancel
+            </Button>
+            {!isView && (
+              <Button type="primary" onClick={handleSubmit(onSubmit)}>
+                Save
+              </Button>
+            )}
+          </div>
+        }
+      >
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="mb-4">
+            <label>Category</label>
+            <Controller
+              name="name"
+              control={control}
+              render={({ field, fieldState }) => (
+                <>
+                  <Input
+                    {...field}
+                    readOnly={isView}
+                    placeholder="Category Name"
+                  />
+                  {fieldState.error && (
+                    <Typography.Text type="danger">
+                      {fieldState.error.message}
+                    </Typography.Text>
+                  )}
+                </>
+              )}
+            />
+          </div>
+
+          <div className="mb-4">
+            <Typography.Text strong>Attributes</Typography.Text>
+            <div className="flex flex-wrap gap-3 mt-2">
+              {Object.entries(attributes).map(([key, value]) => (
+                <Tag
+                  key={key}
+                  color="blue"
+                  closable={!isView}
+                  onClose={() => {
+                    const updatedAttributes = { ...attributes };
+                    delete updatedAttributes[key];
+                    setAttributes(updatedAttributes);
+                  }}
+                >
+                  {typeof value === 'string'
+                    ? `${value}`
+                    : `${key}: ${(value as Array<string>).join(', ')}`}
+                </Tag>
+              ))}
+            </div>
+
+            {!isView && (
+              <Button
+                type="dashed"
+                onClick={() => setIsMultipleMode(!isMultipleMode)}
+                className="mt-3"
+              >
+                {isMultipleMode
+                  ? 'Switch to Normal Mode'
+                  : 'Switch to Multiple Mode'}
+              </Button>
+            )}
+
+            {!isView && (
+              <>
+                {!isMultipleMode ? (
+                  <div className="mt-3">
+                    <Input
+                      value={singleAttribute}
+                      onChange={(e) => setSingleAttribute(e.target.value)}
+                      placeholder="Add new attribute"
+                      style={{ width: '80%' }}
+                    />
+                    <Button
+                      type="primary"
+                      onClick={handleAddAttribute}
+                      disabled={!singleAttribute}
+                      style={{ marginLeft: '8px' }}
+                    >
+                      Add
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="mt-3">
+                    <Input
+                      value={newFieldName}
+                      onChange={(e) => setNewFieldName(e.target.value)}
+                      placeholder="Field Name"
+                      style={{ width: '80%' }}
+                    />
+                    {fieldValues.map((value: string, index: number) => (
+                      <div className="flex items-center gap-5 pt-[10px]">
+                        <Input
+                          key={index}
+                          value={value}
+                          onChange={(e) => {
+                            const updatedValues = [...fieldValues];
+                            updatedValues[index] = e.target.value;
+                            setFieldValues(updatedValues);
+                          }}
+                          placeholder={`Value ${index + 1}`}
+                          style={{ width: '80%' }}
+                        />
+                        <Button onClick={() => handleRemoveInput(index)} danger>
+                          Remove
+                        </Button>
+                      </div>
+                    ))}
+                    <Button
+                      type="dashed"
+                      onClick={() => setFieldValues([...fieldValues, ''])}
+                      className="mt-2"
+                    >
+                      Add Value
+                    </Button>
+                    <Button
+                      type="primary"
+                      onClick={handleAddMultipleField}
+                      disabled={!newFieldName || fieldValues.length === 0}
+                      className="mt-3"
+                    >
+                      Submit Multiple
+                    </Button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </form>
+      </Drawer>
+    </div>
   );
 };
 

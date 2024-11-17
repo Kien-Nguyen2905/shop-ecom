@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { showToast } from '../../libs';
+import { handleError, showToast } from '../../libs';
 import {
+  useCategoryByIdQuery,
   useCategoryQuery,
   useCreateCategoryMutation,
   useDeleteCategoryMutation,
@@ -11,147 +12,123 @@ import {
   TCategoryResponse,
   TUpdateCategoryPayload,
 } from '../../services/Category/tyings';
-import dayjs from 'dayjs';
-import { Form } from 'antd';
+import {
+  useCreateInformationMutation,
+  useInformationByIdQuery,
+  useUpdateInformationMutation,
+} from '../../queries/useInformation';
+import { useForm } from 'react-hook-form';
+import { TFormValues } from './tyings.';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { ADMIN_PATHS } from '../../constants';
+import { removeAccents } from '../../utils';
+import { TUpdateInformationPayload } from '../../services/Information/tyings';
 
 export const useCategoryAdminPage = () => {
+  const navigate = useNavigate();
+
+  const { control, handleSubmit, reset, setValue, setError } =
+    useForm<TFormValues>({
+      defaultValues: {
+        name: '',
+        attributes: undefined,
+      },
+    });
   const { data } = useCategoryQuery();
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMultipleMode, setIsMultipleMode] = useState(false);
+  const [newFieldName, setNewFieldName] = useState('');
+  const [fieldValues, setFieldValues] = useState<string[]>([]);
+  const [singleAttribute, setSingleAttribute] = useState('');
+
   const createCategory = useCreateCategoryMutation();
+  const createInformation = useCreateInformationMutation();
   const deleteCategory = useDeleteCategoryMutation();
   const updateCategory = useUpdateCategoryMutation();
-  const [errors, setErrors] = useState<Record<string, string>>({}); // Change to an object to handle errors per category
+  const updadetInformation = useUpdateInformationMutation();
+
   const [dataCategory, setDataCategory] = useState<TCategoryResponse[]>(data!);
-  const [editingKey, setEditingKey] = useState<string>('');
-  const [isInserting, setIsInserting] = useState<boolean>(false);
-  const [form] = Form.useForm();
+
+  const [attributes, setAttributes] = useState<Record<string, any>>({});
+  const location = useLocation();
+  const urlParams = new URLSearchParams(location.search);
+  const categoryId = urlParams.get('categoryId') || '';
+  const { data: informationData } = useInformationByIdQuery(categoryId);
+  const { data: categoryData } = useCategoryByIdQuery(categoryId);
+
+  const [isView, setIsView] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+
   useEffect(() => {
     if (data) {
       setDataCategory(data);
     }
-  }, [data]);
-  //NOTE: nếu không có useEffect này thì khi click edit sẽ mấy hết giá trị input
-  //NOTE: không hợp chung được vì khi insert cũng setDataCategory theo cái list mới với 1 item new
-  useEffect(() => {
-    if (editingKey) {
-      // When editing a record, set form values to the record data
-      const record = dataCategory.find((item) => item._id === editingKey);
-      if (record) {
-        form.setFieldsValue({ name: record.name });
+    if (isOpen) {
+      if (informationData?.attributes) {
+        setAttributes(informationData?.attributes);
+      }
+      if (categoryData) {
+        setValue('name', categoryData.name);
       }
     }
-  }, [editingKey, dataCategory, form]);
+  }, [isOpen, informationData, categoryData, data]);
 
-  const isEditing = (record: TCategoryResponse) => record._id === editingKey;
-
-  const editRecord = (record: Partial<TCategoryResponse>) => {
-    setEditingKey(record._id!);
-  };
-
-  const cancelRecord = () => {
-    setEditingKey('');
-    setIsInserting(false);
-    setDataCategory(dataCategory.filter((item) => item._id !== 'newItem'));
-    setErrors({});
-  };
-
-  const deleteRecord = async (record: Partial<TCategoryResponse>) => {
-    if (record._id) {
-      await handleDelete(record._id);
-    }
-  };
-
-  const saveRecord = async (key: string, form: any) => {
-    try {
-      const row = await form.validateFields();
-      const newData = [...dataCategory];
-      const index = newData.findIndex((item) => key === item._id);
-
-      if (index > -1) {
-        const item = newData[index];
-        let result;
-        if (item._id === 'newItem') {
-          result = await handleCreate({ name: row.name });
-        } else {
-          if (item.name !== row.name) {
-            result = await handleUpdate({
-              id: item._id,
-              payload: { name: row.name },
-            });
-          } else {
-            setEditingKey('');
-            setIsInserting(false);
-            setErrors({});
-            return;
-          }
-        }
-
-        if (result) {
-          // Use a setter to properly update the state
-          setDataCategory((prevData) =>
-            prevData.map((d) => (d._id === key ? { ...d, name: row.name } : d)),
-          );
-          setEditingKey('');
-          setIsInserting(false);
-          setErrors({});
-        } else {
-          if (errors) {
-            setErrors((prevErrors) => ({
-              ...prevErrors,
-              [key]: errors['newItem'] || 'Category name already exists',
-            }));
-          }
-        }
+  const openDrawer = async ({
+    categoryId,
+    isEdit = false,
+  }: {
+    categoryId: string;
+    isEdit?: boolean;
+  }) => {
+    if (categoryId) {
+      navigate(`?categoryId=${categoryId}`);
+      if (isEdit) {
+        setIsView(false);
+        setIsEdit(true);
+      } else {
+        setIsView(true);
       }
-    } catch (error: any) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [key]: error.errorFields[0].errors[0],
-      }));
-      showToast({
-        type: 'error',
-        message: error.errorFields[0].errors[0],
-      });
+    } else {
+      setIsView(false);
     }
+    setIsOpen(true);
   };
 
-  const insertRecord = () => {
-    const newData = [
-      {
-        _id: 'newItem',
-        name: '',
-        created_at: dayjs().toISOString(),
-        updated_at: dayjs().toISOString(),
-      } as TCategoryResponse,
-      ...dataCategory,
-    ];
-    setDataCategory(newData);
-    setEditingKey('newItem');
-    setIsInserting(true);
+  const closeDrawer = async () => {
+    setIsOpen(false);
+    setAttributes({});
+    setIsMultipleMode(false);
+    setNewFieldName('');
+    setFieldValues([]);
+    setSingleAttribute('');
+    reset(); // Reset form state
+    navigate(ADMIN_PATHS.CATEGORY);
   };
 
   const handleCreate = async (
-    payload: TCategoryPayload,
-  ): Promise<TCategoryResponse | undefined> => {
+    payload: TCategoryPayload & {
+      attributes: {};
+    },
+  ) => {
     try {
       const res = await createCategory.mutateAsync(payload);
 
-      if (res?.data?.data.name) {
+      const resInformation = await createInformation.mutateAsync({
+        category_id: res.data.data._id,
+        attributes: payload.attributes,
+      });
+      if (res?.data?.data._id && resInformation.data.data._id) {
         showToast({
           type: 'success',
           message: res?.data.message,
         });
-        return res?.data.data as TCategoryResponse;
+        closeDrawer();
       }
     } catch (error: any) {
-      if (error?.response?.data?.message) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          newItem: error?.response?.data?.message,
-        }));
-      }
-      showToast({
-        type: 'error',
-        message: error?.response?.data?.message,
+      handleError({
+        error,
+        setError,
       });
     }
   };
@@ -159,23 +136,21 @@ export const useCategoryAdminPage = () => {
   const handleDelete = async (id: string) => {
     try {
       const res = await deleteCategory.mutateAsync(id);
-      if (res?.data.message) {
+      if (res?.data.status === 200) {
         showToast({
           type: 'success',
           message: res?.data.message,
         });
       }
     } catch (error: any) {
-      showToast({
-        type: 'error',
-        message: error?.response?.data?.message,
+      handleError({
+        error,
+        setError,
       });
     }
   };
 
-  const handleUpdate = async (
-    payload: TUpdateCategoryPayload,
-  ): Promise<TCategoryResponse | undefined> => {
+  const handleUpdateCatgory = async (payload: TUpdateCategoryPayload) => {
     try {
       const res = await updateCategory.mutateAsync(payload);
       if (res?.data.data.name) {
@@ -183,15 +158,12 @@ export const useCategoryAdminPage = () => {
           type: 'success',
           message: res?.data.message,
         });
-        return res?.data.data as TCategoryResponse;
       }
     } catch (error: any) {
-      if (error?.response?.data?.message) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          newItem: error?.response?.data?.message,
-        }));
-      }
+      handleError({
+        error,
+        setError,
+      });
       showToast({
         type: 'error',
         message: error?.response?.data?.message,
@@ -199,21 +171,106 @@ export const useCategoryAdminPage = () => {
     }
   };
 
-  const handleQueryProps = {
-    dataCategory,
-    errors,
+  const handleUpdateInformation = async (
+    payload: TUpdateInformationPayload,
+  ) => {
+    try {
+      await updadetInformation.mutateAsync(payload);
+    } catch (error: any) {
+      handleError({
+        error,
+        setError,
+      });
+      showToast({
+        type: 'error',
+        message: error?.response?.data?.message,
+      });
+    }
   };
 
+  const handleAddAttribute = () => {
+    if (singleAttribute) {
+      setAttributes((prev: any) => ({
+        ...prev,
+        [singleAttribute]: singleAttribute,
+      }));
+      setSingleAttribute('');
+    }
+  };
+
+  const handleAddMultipleField = () => {
+    if (newFieldName && fieldValues.length > 0) {
+      setAttributes((prev: any) => ({
+        ...prev,
+        [newFieldName]: fieldValues,
+      }));
+      setNewFieldName('');
+      setFieldValues([]);
+    }
+  };
+
+  const onSubmit = async (
+    data: TCategoryPayload & { attributes: Record<string, string | []> },
+  ) => {
+    const payload = { ...data, attributes };
+    const attributesConvert = Object.keys(attributes).reduce((acc, key) => {
+      const newKey = removeAccents(key);
+      acc[newKey] = attributes[key];
+      return acc;
+    }, {} as Record<string, any>);
+    if (isEdit) {
+      await handleUpdateCatgory({
+        id: categoryId,
+        payload: { name: data.name },
+      });
+      if (informationData?._id) {
+        await handleUpdateInformation({
+          id: informationData?._id!,
+          payload: { attributes: attributesConvert, category_id: categoryId },
+        });
+      } else {
+        await createInformation.mutateAsync({
+          category_id: categoryId,
+          attributes: attributesConvert,
+        });
+      }
+    } else {
+      await handleCreate({ ...payload, attributes: attributesConvert });
+    }
+  };
+
+  const handleRemoveInput = (index: number) => {
+    // Xoá index tồn tại trong mảng theo index được click
+    const newAttibute = fieldValues?.filter((_, i) => i != index);
+    setFieldValues(newAttibute);
+  };
+  const handleQueryProps = {
+    dataCategory,
+  };
   const handleTableProps = {
-    form,
-    editingKey,
-    isInserting,
-    isEditing,
-    editRecord,
-    cancelRecord,
-    deleteRecord,
-    saveRecord,
-    insertRecord,
+    handleAddAttribute,
+    handleAddMultipleField,
+    onSubmit,
+    setIsMultipleMode,
+    isMultipleMode,
+    singleAttribute,
+    fieldValues,
+    newFieldName,
+    setSingleAttribute,
+    setNewFieldName,
+    setFieldValues,
+    isOpen,
+    handleCreate,
+    openDrawer,
+    closeDrawer,
+    setAttributes,
+    attributes,
+    control,
+    handleSubmit,
+    reset,
+    handleDelete,
+    handleRemoveInput,
+    isView,
   };
   return {
     handleQueryProps,
