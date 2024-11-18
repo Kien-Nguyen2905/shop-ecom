@@ -3,7 +3,7 @@ import { BiCommentDetail } from 'react-icons/bi';
 import { BsBox } from 'react-icons/bs';
 import { FaMoneyCheck, FaRegUser } from 'react-icons/fa';
 import { LiaProductHunt } from 'react-icons/lia';
-import { MdKeyboardArrowDown, MdOutlineCategory } from 'react-icons/md';
+import { MdOutlineCategory } from 'react-icons/md';
 import { PiWarehouse } from 'react-icons/pi';
 import { TbBrandDatabricks } from 'react-icons/tb';
 import { NavLink } from 'react-router-dom';
@@ -61,20 +61,18 @@ const Sidebar = () => {
                 <LiaProductHunt size={20} />
                 Product
               </div>
-              <MdKeyboardArrowDown size={20} />
             </NavLink>
           </li>
           <li>
-            <button
-              type="button"
+            <NavLink
+              to={ADMIN_PATHS.WAREHOUSE}
               className="hs-accordion-toggle justify-between hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
             >
               <div className="flex gap-3">
                 <PiWarehouse size={20} />
                 Warehouse
               </div>
-              <MdKeyboardArrowDown size={20} />
-            </button>
+            </NavLink>
           </li>
           <li>
             <button
@@ -85,7 +83,6 @@ const Sidebar = () => {
                 <BsBox size={20} />
                 Order
               </div>
-              <MdKeyboardArrowDown size={20} />
             </button>
           </li>
           <li>
@@ -97,7 +94,6 @@ const Sidebar = () => {
                 <FaMoneyCheck size={20} />
                 Transaction
               </div>
-              <MdKeyboardArrowDown size={20} />
             </button>
           </li>
           <li>
@@ -109,7 +105,6 @@ const Sidebar = () => {
                 <FaRegUser size={20} />
                 Customer
               </div>
-              <MdKeyboardArrowDown size={20} />
             </button>
           </li>
           <li>
@@ -121,7 +116,6 @@ const Sidebar = () => {
                 <BiCommentDetail size={20} />
                 Review
               </div>
-              <MdKeyboardArrowDown size={20} />
             </button>
             <div className="hs-accordion-content w-full overflow-hidden transition-[height] duration-300 hidden">
               <ul className="pt-2 hs-accordion-group ps-3">

@@ -55,6 +55,7 @@ export type TFeatured = {
   isRated: boolean;
 };
 export type TVariant = {
+  _id: string;
   color: string;
   price: number;
   stock: number;

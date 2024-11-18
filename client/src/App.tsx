@@ -2,7 +2,6 @@ import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import './assets/styles/index.scss';
 import { ADMIN_PATHS, CUSTOMER_PATHS } from './constants';
-import { ProductAdminPage } from './pages';
 const MainLayout = lazy(() => import('./layouts/MainLayout/MainLayout'));
 const AdminLayout = lazy(() => import('./layouts/AdminLayout/AdminLayout'));
 const OauthPage = lazy(() => import('./pages/OauthPage/OauthPage'));
@@ -15,9 +14,14 @@ const CategoryAdminPage = lazy(
 const BrandAdminPage = lazy(
   () => import('./pages/BrandAdminPage/BrandAdminPage'),
 );
-
 const VerifyEmailPage = lazy(
   () => import('./pages/VerifyEmailPage/VerifyEmailPage'),
+);
+const ProductAdminPage = lazy(
+  () => import('./pages/ProductAdminPage/ProductAdminPage'),
+);
+const WarehouseAdminPage = lazy(
+  () => import('./pages/WarehouseAdminPage/WarehouseAdminPage'),
 );
 
 function App() {
@@ -38,6 +42,10 @@ function App() {
           <Route path={ADMIN_PATHS.CATEGORY} element={<CategoryAdminPage />} />
           <Route path={ADMIN_PATHS.BRAND} element={<BrandAdminPage />} />
           <Route path={ADMIN_PATHS.PRODUCT} element={<ProductAdminPage />} />
+          <Route
+            path={ADMIN_PATHS.WAREHOUSE}
+            element={<WarehouseAdminPage />}
+          />
         </Route>
       </Routes>
     </Suspense>
