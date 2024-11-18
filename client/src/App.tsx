@@ -23,6 +23,9 @@ const ProductAdminPage = lazy(
 const WarehouseAdminPage = lazy(
   () => import('./pages/WarehouseAdminPage/WarehouseAdminPage'),
 );
+const CustomerAdminPage = lazy(
+  () => import('./pages/CustomerAdminPage/CustomerAdminPage'),
+);
 
 function App() {
   return (
@@ -46,6 +49,7 @@ function App() {
             path={ADMIN_PATHS.WAREHOUSE}
             element={<WarehouseAdminPage />}
           />
+          <Route path={ADMIN_PATHS.CUSTOMER} element={<CustomerAdminPage />} />
         </Route>
       </Routes>
     </Suspense>

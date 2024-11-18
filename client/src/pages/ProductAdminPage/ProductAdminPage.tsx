@@ -45,7 +45,6 @@ const ProductAdminPage: React.FC = () => {
   const handleAddProduct = () => {
     setAddProductModalOpen(true); // Open the modal to add a new product
   };
-  console.log(mappedProductData);
   const columns = [
     {
       title: 'Product',

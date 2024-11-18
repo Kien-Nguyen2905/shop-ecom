@@ -119,11 +119,11 @@ export const useCategoryAdminPage = () => {
         attributes: payload.attributes,
       });
       if (res?.data?.data._id && resInformation.data.data._id) {
+        closeDrawer();
         showToast({
           type: 'success',
           message: res?.data.message,
         });
-        closeDrawer();
       }
     } catch (error: any) {
       handleError({
@@ -137,6 +137,7 @@ export const useCategoryAdminPage = () => {
     try {
       const res = await deleteCategory.mutateAsync(id);
       if (res?.data.status === 200) {
+        closeDrawer();
         showToast({
           type: 'success',
           message: res?.data.message,
@@ -154,6 +155,7 @@ export const useCategoryAdminPage = () => {
     try {
       const res = await updateCategory.mutateAsync(payload);
       if (res?.data.data.name) {
+        closeDrawer();
         showToast({
           type: 'success',
           message: res?.data.message,

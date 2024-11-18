@@ -11,10 +11,7 @@ import { debounce } from 'lodash';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ADMIN_PATHS } from '../../constants';
 import { showToast } from '../../libs';
-import {
-  TCreateProductPayload,
-  TCreateProductResponse,
-} from '../../services/Product/tyings';
+import { TCreateProductPayload } from '../../services/Product/tyings';
 
 export const useProductAdminPage = () => {
   const navigate = useNavigate();
@@ -40,7 +37,6 @@ export const useProductAdminPage = () => {
         setQueryString(`search=${query}`);
         navigate(`?search=${query}`);
       }, 700),
-
     [], // Ensure the debounce function is memoized
   );
   const openModalView = (productId?: string) => {
@@ -61,6 +57,7 @@ export const useProductAdminPage = () => {
           type: 'success',
           message: res?.data.message,
         });
+        closeModalView();
       }
     } catch (error: any) {
       showToast({
@@ -70,9 +67,7 @@ export const useProductAdminPage = () => {
     }
   };
 
-  const handleCreate = async (
-    values: TCreateProductPayload,
-  ): Promise<TCreateProductResponse | undefined> => {
+  const handleCreate = async (values: TCreateProductPayload) => {
     try {
       const res = await createProduct.mutateAsync(values);
       if (res.data.data._id) {
@@ -80,7 +75,7 @@ export const useProductAdminPage = () => {
           type: 'success',
           message: res?.data.message,
         });
-        return res.data.data;
+        closeModalView();
       }
     } catch (error: any) {
       showToast({
