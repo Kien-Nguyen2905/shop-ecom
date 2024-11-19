@@ -10,6 +10,7 @@ type TAdminPaths = {
   PRODUCT: string;
   WAREHOUSE: string;
   CUSTOMER: string;
+  REVIEW: string;
 };
 
 export const CUSTOMER_PATHS: TCustomerPaths = {
@@ -24,4 +25,5 @@ export const ADMIN_PATHS: TAdminPaths = {
   PRODUCT: '/admin/product',
   WAREHOUSE: '/admin/warehouse',
   CUSTOMER: '/admin/customer',
+  REVIEW: '/admin/review',
 };

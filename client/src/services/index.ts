@@ -6,3 +6,4 @@ export * as Product from './Product';
 export * as Information from './Information';
 export * as Warehouse from './Warehouse';
 export * as User from './User';
+export * as Review from './Review';

@@ -108,15 +108,15 @@ const Sidebar = () => {
             </NavLink>
           </li>
           <li>
-            <button
-              type="button"
+            <NavLink
+              to={ADMIN_PATHS.REVIEW}
               className="hs-accordion-toggle justify-between hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
             >
               <div className="flex gap-3">
                 <BiCommentDetail size={20} />
                 Review
               </div>
-            </button>
+            </NavLink>
             <div className="hs-accordion-content w-full overflow-hidden transition-[height] duration-300 hidden">
               <ul className="pt-2 hs-accordion-group ps-3">
                 <li>

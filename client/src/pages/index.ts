@@ -4,3 +4,4 @@ export { BrandAdminPage } from './BrandAdminPage';
 export { ProductAdminPage } from './ProductAdminPage';
 export { WarehouseAdminPage } from './WarehouseAdminPage';
 export { CustomerAdminPage } from './CustomerAdminPage';
+export { ReviewAdminPage } from './ReviewAdminPage';

@@ -16,3 +16,14 @@ export type TUserAllResponse = {
     updated_at: string; // ISO date string
   }>;
 };
+
+export type TUserByIdResponse = {
+  _id: string;
+  email: string;
+  role: number;
+  full_name: string;
+  phone: string;
+  address: Record<string, string>; // Vì address là object, ta có thể dùng kiểu linh hoạt
+  earn_point: number;
+  total_paid: number;
+};

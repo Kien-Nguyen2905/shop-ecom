@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { TUserAllResponse } from '../services/User/tyings';
+import { TUserAllResponse, TUserByIdResponse } from '../services/User/tyings';
 import { userServices } from '../services/User';
 
 export const useUserAllQuery = () => {
@@ -9,5 +9,18 @@ export const useUserAllQuery = () => {
       const response = await userServices.getAllUser();
       return Array.isArray(response.data?.data) ? response.data?.data : [];
     },
+  });
+};
+
+export const useUserByIdQuery = (id: string = '') => {
+  return useQuery<TUserByIdResponse>({
+    queryKey: ['users', id],
+    queryFn: async () => {
+      const response = await userServices.getUserById(id);
+      return response.data?.data || {};
+    },
+    enabled: !!id, // Chỉ gọi API khi `id` có giá trị
+    refetchOnWindowFocus: false, // Không tự động refetch khi focus vào window
+    staleTime: 0, // Luôn fetch dữ liệu mới nhất
   });
 };
