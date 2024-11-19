@@ -32,3 +32,29 @@ export type TLoginResponse = {
   refresh_token: string;
   role: number;
 };
+
+export type TProfileResponse = {
+  _id: string; // Assuming _id is a string, adjust if necessary
+  email: string;
+  role: number; // Assuming role is a number, adjust if it can be a different type (e.g., string)
+  full_name: string;
+  phone: string;
+  address: Address; // Can be extended later
+  earn_point: number;
+  total_paid: number;
+};
+
+export type TForgotPasswordPayload = TResendVerifyEmailPayload;
+export type TForgotPasswordResponse = {
+  forgot_password_token: string;
+};
+
+export type TResendForgotPasswordPayload = TResendVerifyEmailPayload;
+export type TResendForgotPasswordResponse = TForgotPasswordResponse;
+
+export type TResetPasswordPayload = {
+  password: string;
+  confirm_password: string;
+  password_token: string;
+};
+export type TResetPasswordResponse = {};

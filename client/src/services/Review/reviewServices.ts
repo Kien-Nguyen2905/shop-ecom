@@ -3,8 +3,10 @@ import { SuccessResponse } from '../tyings';
 import { TReviewResponse } from './tyings';
 
 const reviewService = {
-  getReview: () => {
-    return instance.get<SuccessResponse<TReviewResponse>>(`/review`);
+  getReview: (queryString: string = '') => {
+    return instance.get<SuccessResponse<TReviewResponse>>(
+      `/review${queryString ? '?' : ''}${queryString}`,
+    );
   },
 };
 export default reviewService;

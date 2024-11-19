@@ -6,6 +6,7 @@ import { useModal } from './useModal';
 import { Link } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { TVerifyEmailPayload } from '../../services/Auth/typings';
+import { CUSTOMER_PATHS } from '../../constants';
 
 const Modal = () => {
   const {
@@ -18,12 +19,13 @@ const Modal = () => {
     closeModal,
     handleSubmit,
     control,
-    isLoadingLogin,
     isLoadingVerifyEmail,
     googleOAuthUrl,
+    isLoadingLogin,
   } = useModal();
   if (!isOpen) return null;
   const onSubmit = (values: TVerifyEmailPayload) => {
+    console.log(values);
     if (activeTab === 'signIn') {
       hanldeLogin?.(values);
     } else {
@@ -56,13 +58,14 @@ const Modal = () => {
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-4 pt-5"
         >
-          <Input
-            required
-            lable="Full name"
-            control={control}
-            name="full_name"
-            className={activeTab !== 'signUp' ? 'hidden' : ''}
-          ></Input>
+          {activeTab === 'signUp' && (
+            <Input
+              required
+              lable="Full name"
+              control={control}
+              name="full_name"
+            ></Input>
+          )}
           <Input
             required
             lable={`${
@@ -78,16 +81,21 @@ const Modal = () => {
             control={control}
             name="password"
           ></Input>
-          <Input
-            type="password"
-            required
-            lable="Confirm password"
-            control={control}
-            name="confirm_password"
-            className={activeTab !== 'signUp' ? 'hidden' : ''}
-          ></Input>
+          {activeTab === 'signUp' && (
+            <Input
+              type="password"
+              required
+              lable="Confirm password"
+              control={control}
+              name="confirm_password"
+            />
+          )}
           <div className="flex">
-            <Link to={'/'} className="hover:text-primary">
+            <Link
+              to={CUSTOMER_PATHS.FORGOT_PASSWORD}
+              onClick={() => closeModal()}
+              className="hover:text-primary"
+            >
               Forgot Your Password?
             </Link>
             <Button

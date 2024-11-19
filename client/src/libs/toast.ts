@@ -16,6 +16,7 @@ export const handleError = ({
   setError?: UseFormSetError<any>;
   duration?: number;
 }) => {
+  console.log(error.isAxiosError);
   // Kiểm tra nếu error là một AxiosError và xử lý
   if (error.isAxiosError) {
     // Xử lý lỗi Axios và tạo đối tượng HttpError thích hợp
@@ -25,15 +26,18 @@ export const handleError = ({
       const { message, errors } = handledError.payload;
       if (setError && errors) {
         // Xử lý lỗi cho từng trường
-        for (const field in errors) {
-          setError(field, {
-            type: 'server',
-            message: errors[field],
+        if (Object.keys(errors).length > 0) {
+          for (const field in errors) {
+            setError(field, {
+              type: 'server',
+              message: errors[field],
+            });
+          }
+        } else {
+          toast.error(message || 'Lỗi không xác định', {
+            autoClose: duration ?? 5000,
           });
         }
-        toast.error(message || 'Lỗi không xác định', {
-          autoClose: duration ?? 5000,
-        });
         return;
       } else {
         // Hiển thị lỗi chung nếu không có lỗi cho trường cụ thể

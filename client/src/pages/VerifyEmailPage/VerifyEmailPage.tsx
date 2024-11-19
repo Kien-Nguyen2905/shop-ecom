@@ -1,23 +1,20 @@
 import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { LoadingVerify } from '../../components/Loading';
-import { CUSTOMER_PATHS, LOCAL_STORAGE } from '../../constants';
+import { LOCAL_STORAGE } from '../../constants';
 import { Button } from '../../components/Button';
 import { useVerifyEmailPage } from './useVerifyEmailPage';
 
 const VerifyEmailPage = () => {
-  const navigate = useNavigate();
   const location = useLocation();
   const token = new URLSearchParams(location.search).get('token') as string;
   const email = localStorage.getItem(LOCAL_STORAGE.EMAIL) as string;
-  const { handleRegister, isResending, time, handleResendEmail } =
+  const { handleRegisterByEmail, isResending, time, handleResendEmail } =
     useVerifyEmailPage();
 
   useEffect(() => {
     if (token) {
-      handleRegister({ email_token: token });
-    } else {
-      navigate(CUSTOMER_PATHS.ROOT);
+      handleRegisterByEmail({ email_token: token });
     }
   }, []);
 

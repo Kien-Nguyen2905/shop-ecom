@@ -29,12 +29,19 @@ const CustomerAdminPage = lazy(
 const ReviewAdminPage = lazy(
   () => import('./pages/ReviewAdminPage/ReviewAdminPage'),
 );
+const ForgotPasswordPage = lazy(
+  () => import('./pages/ForgotPasswordPage/ForgotPasswordPage'),
+);
 function App() {
   return (
     <Suspense>
       <Routes>
         <Route path={CUSTOMER_PATHS.ROOT} element={<MainLayout />}>
           <Route path={CUSTOMER_PATHS.OAUTH} element={<OauthPage />} />
+          <Route
+            path={CUSTOMER_PATHS.FORGOT_PASSWORD}
+            element={<ForgotPasswordPage />}
+          />
 
           <Route element={<CustomerRoute redirectPath={CUSTOMER_PATHS.ROOT} />}>
             <Route

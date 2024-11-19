@@ -2,6 +2,7 @@ type TCustomerPaths = {
   ROOT: string;
   VERIFY_EMAIL: string;
   OAUTH: string;
+  FORGOT_PASSWORD: string;
 };
 type TAdminPaths = {
   ROOT: string;
@@ -17,6 +18,7 @@ export const CUSTOMER_PATHS: TCustomerPaths = {
   ROOT: '/',
   VERIFY_EMAIL: '/verify-email',
   OAUTH: '/oauth',
+  FORGOT_PASSWORD: '/forgot-password',
 };
 export const ADMIN_PATHS: TAdminPaths = {
   ROOT: '/admin',

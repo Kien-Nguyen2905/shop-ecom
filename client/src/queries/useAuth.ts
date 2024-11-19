@@ -24,3 +24,21 @@ export const useLoginMutation = () => {
     mutationFn: authServices.login,
   });
 };
+
+export const useForgotPasswordMutation = () => {
+  return useMutation({
+    mutationFn: authServices.forgotPassword,
+  });
+};
+
+export const useResendForgotPasswordMutation = () => {
+  return useMutation({
+    mutationFn: authServices.resendforgotPassword,
+  });
+};
+
+export const useResetPasswordMutation = () => {
+  return useMutation({
+    mutationFn: authServices.resetPassword,
+  });
+};

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useController } from 'react-hook-form';
 import { TInputProps } from './typings';
+import { RULES } from '../../constants';
 
 const Input: React.FC<TInputProps> = ({
   lable,
@@ -9,6 +10,7 @@ const Input: React.FC<TInputProps> = ({
   name,
   type = 'text',
   className = '',
+  ...props
 }) => {
   const {
     field,
@@ -16,13 +18,7 @@ const Input: React.FC<TInputProps> = ({
   } = useController({
     control,
     name,
-    rules: {
-      // required: { value: true, message: 'Please enter your email address' },
-      // pattern: {
-      //   value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
-      //   message: "Invalid email",
-      // },
-    },
+    rules: control.rules || RULES[name],
     defaultValue: '',
   });
   return (
@@ -40,6 +36,7 @@ const Input: React.FC<TInputProps> = ({
           invalid ? 'border-red-600' : ''
         }`}
         {...field}
+        {...props}
       />
       {invalid && <p className="text-red-600">{error?.message}</p>}
     </div>

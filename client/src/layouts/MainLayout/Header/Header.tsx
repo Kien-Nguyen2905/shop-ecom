@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import useHeader from './userHeader';
 
 const Header = () => {
-  const { showModal, setShowModal, openModal, closeModal, isOpen } =
+  const { showModal, setShowModal, openModal, closeModal, isOpen, profile } =
     useHeader();
   return (
     <div className="p-[14px] border-b-bBottom border ">
@@ -13,7 +13,7 @@ const Header = () => {
         <div className="flex items-center justify-center gap-2 transition cursor-pointer hover:text-primary">
           <FiPhone className="" />
           <Link to={'/'} className="">
-            Hotline: 098 9596 912
+            Shop Ecom
           </Link>
         </div>
         <div
@@ -21,24 +21,21 @@ const Header = () => {
           //   onMouseEnter={() => setShowModal(true)}
           //   onMouseLeave={() => setShowModal(false)}
         >
-          <button className="" onClick={openModal}>
-            Login | Register
-          </button>
-          {/* {!profile ? (
+          {!profile ? (
             <>
               <LuUser2 className="" />
-              <button className="" onClick={_openModal}>
+              <button className="" onClick={openModal}>
                 Login | Register
               </button>
             </>
           ) : (
             <>
               <span className="">
-                {profile.firstName ? profile.firstName : 'Guest'}
+                {profile.full_name ? profile.full_name : 'Guest'}
               </span>
               <RiArrowDropDownLine size={20} className="" />
             </>
-          )} */}
+          )}
         </div>
         {/* {profile && (
           <div

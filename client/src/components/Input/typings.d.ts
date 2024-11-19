@@ -5,4 +5,5 @@ export type TInputProps = {
   control: any;
   name: string;
   type?: string;
+  rules?: RegisterOptions;
 };

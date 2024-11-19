@@ -9,7 +9,7 @@ import {
 } from './tyings';
 
 const productServices = {
-  getProduct: (queryString: string) => {
+  getProduct: (queryString: string = '') => {
     return instance.get<SuccessResponse<TProductResponse>>(
       `/product${queryString ? '?' : ''}${queryString}`,
     );

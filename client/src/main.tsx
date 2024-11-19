@@ -3,10 +3,14 @@ import App from './App.tsx';
 import 'react-toastify/dist/ReactToastify.css';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import { Provider } from 'react-redux';
+import store from './store/store.ts';
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
-    <ToastContainer />
-    <App />
+    <Provider store={store}>
+      <ToastContainer />
+      <App />
+    </Provider>
   </BrowserRouter>,
 );

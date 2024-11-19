@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useMainContext } from '../../context/MainConTextProvider';
 import {
   TLoginPayload,
+  TProfileResponse,
   TVerifyEmailPayload,
 } from '../../services/Auth/typings';
 import { useNavigate } from 'react-router-dom';
@@ -12,17 +13,23 @@ import {
   GOOGLE_REDIRECT_URI,
   LOCAL_STORAGE,
 } from '../../constants';
-import { useLoginMutation, useVerifyEmailMutation } from '../../queries';
-import { handleError } from '../../libs';
+import { useVerifyEmailMutation } from '../../queries';
+import { handleError, showToast } from '../../libs';
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { Dispatch } from 'redux';
+import { login } from '../../store/middlewares/authMiddleWare';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { SuccessResponse } from '../../services/tyings';
+
 export const useModal = () => {
+  const dispatch = useDispatch<Dispatch<any>>();
   const verifyEmail = useVerifyEmailMutation();
-  const login = useLoginMutation();
   const { handleSubmit, control, setError, reset } =
-    useForm<TVerifyEmailPayload>();
+    useForm<TVerifyEmailPayload>({ mode: 'onChange' });
   const navigate = useNavigate();
   const { isOpen, closeModal } = useMainContext();
-
+  const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('signIn');
 
   const handleSignInClick = () => {
@@ -36,28 +43,28 @@ export const useModal = () => {
   };
 
   const hanldeLogin = async (values: TLoginPayload) => {
-    if (values?.email) {
-      try {
-        const res = await login.mutateAsync(values);
-        if (res?.data.data.access_token) {
-          localStorage.setItem(
-            LOCAL_STORAGE.ACCESS_TOKEN,
-            res.data.data.access_token,
-          );
-          localStorage.setItem(
-            LOCAL_STORAGE.REFRESH_TOKEN,
-            res.data.data.refresh_token,
-          );
-          res?.data.data.role
-            ? navigate(CUSTOMER_PATHS.ROOT)
-            : navigate(ADMIN_PATHS.ROOT);
-        }
-      } catch (error) {
-        handleError({
-          error,
-          setError,
+    try {
+      setIsLoading(true);
+      const res = await dispatch(login(values));
+      const dataUser: SuccessResponse<TProfileResponse> =
+        unwrapResult<any>(res);
+      if (dataUser?.data._id) {
+        dataUser?.data.role
+          ? navigate(CUSTOMER_PATHS.ROOT)
+          : navigate(ADMIN_PATHS.ROOT);
+        closeModal();
+        showToast({
+          type: 'success',
+          message: dataUser.message,
         });
       }
+    } catch (error) {
+      handleError({
+        error,
+        setError,
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -65,6 +72,8 @@ export const useModal = () => {
     try {
       const res = await verifyEmail.mutateAsync(values);
       if (res?.data.data.email_token) {
+        reset();
+        closeModal();
         localStorage.setItem(LOCAL_STORAGE.EMAIL, values.email);
         navigate(CUSTOMER_PATHS.VERIFY_EMAIL);
       }
@@ -102,7 +111,7 @@ export const useModal = () => {
     hanldeLogin,
     closeModal,
     isLoadingVerifyEmail: verifyEmail.isPending,
-    isLoadingLogin: login.isPending,
+    isLoadingLogin: isLoading,
     isOpen,
     handleSubmit,
     control,

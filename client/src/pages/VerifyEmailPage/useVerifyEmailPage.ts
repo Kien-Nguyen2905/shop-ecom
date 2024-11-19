@@ -17,25 +17,32 @@ export const useVerifyEmailPage = () => {
   const resendVerifyEmail = useResendVerifyEmailMutation();
   const navigate = useNavigate();
 
-  const handleRegister = async (payload: TRegisterPayload) => {
+  const handleRegisterByEmail = async (payload: TRegisterPayload) => {
     try {
       const res = await register.mutateAsync(payload);
-      if (res?.data) {
-        localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, res.data.access_token);
+      if (res?.data.data) {
+        localStorage.setItem(
+          LOCAL_STORAGE.ACCESS_TOKEN,
+          res.data.data.access_token,
+        );
         localStorage.setItem(
           LOCAL_STORAGE.REFRESH_TOKEN,
-          res.data.refresh_token,
+          res.data.data.refresh_token,
         );
-        localStorage.setItem(LOCAL_STORAGE.ROLE, res.data.refresh_token);
+        localStorage.setItem(LOCAL_STORAGE.ROLE, res.data.data.role.toString());
         localStorage.removeItem(LOCAL_STORAGE.EMAIL);
         navigate(CUSTOMER_PATHS.ROOT);
+        showToast({
+          type: 'success',
+          message: res.data.message,
+        });
       }
     } catch (error: any) {
       if (error.response.data.status) {
         navigate(CUSTOMER_PATHS.ROOT);
       }
       showToast({
-        type: 'error',
+        type: 'warn',
         message: error.response.data.message,
       });
     }
@@ -44,7 +51,7 @@ export const useVerifyEmailPage = () => {
   const handleResendEmail = async (payload: TResendVerifyEmailPayload) => {
     try {
       const res = await resendVerifyEmail.mutateAsync(payload);
-      if (res?.data.email_token) {
+      if (res?.data.data.email_token) {
         showToast({
           type: 'success',
           message: 'Resend email successfully',
@@ -73,7 +80,7 @@ export const useVerifyEmailPage = () => {
     return () => clearInterval(timer); // Dọn dẹp interval khi component unmount
   }, [time]);
   return {
-    handleRegister,
+    handleRegisterByEmail,
     isResending: resendVerifyEmail.isPending,
     time,
     handleResendEmail,

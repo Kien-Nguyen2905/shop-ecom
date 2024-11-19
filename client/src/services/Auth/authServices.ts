@@ -9,6 +9,13 @@ import {
   TResendVerifyEmailPayload,
   TLoginPayload,
   TLoginResponse,
+  TProfileResponse,
+  TForgotPasswordResponse,
+  TResendForgotPasswordPayload,
+  TResendForgotPasswordResponse,
+  TResetPasswordPayload,
+  TResetPasswordResponse,
+  TForgotPasswordPayload,
 } from './typings';
 
 const authServices = {
@@ -33,6 +40,27 @@ const authServices = {
   login: (payload: TLoginPayload) => {
     return instance.post<SuccessResponse<TLoginResponse>>(
       `/users/login`,
+      payload,
+    );
+  },
+  getProfile: () => {
+    return instance.get<SuccessResponse<TProfileResponse>>(`/users/profile`);
+  },
+  forgotPassword: (payload: TForgotPasswordPayload) => {
+    return instance.post<SuccessResponse<TForgotPasswordResponse>>(
+      `/users/forgot-password`,
+      payload,
+    );
+  },
+  resendforgotPassword: (payload: TResendForgotPasswordPayload) => {
+    return instance.post<SuccessResponse<TResendForgotPasswordResponse>>(
+      `/users/resend-forgot`,
+      payload,
+    );
+  },
+  resetPassword: (payload: TResetPasswordPayload) => {
+    return instance.post<SuccessResponse<TResetPasswordResponse>>(
+      `/users/reset-password`,
       payload,
     );
   },
