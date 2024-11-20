@@ -5,12 +5,12 @@ import { useProductQuery } from '../../queries';
 export const useHomePage = () => {
   const { data } = useProductQuery();
   const products = data?.products;
-  const [selectTab, setSelectTab] = useState<String>(TAB.FEATURED);
+  const [selectTab, setSelectTab] = useState<String>(TAB.POPULAR);
   // using useMemo handle out list matching for tab and return selectTab
   const hotProduct = useMemo(() => {
     let list: any[] = [];
     switch (selectTab) {
-      case TAB.FEATURED:
+      case TAB.POPULAR:
         list = products?.filter((item) => item.featured.isPopular) || [];
         break;
       case TAB.ONSALE:
@@ -29,5 +29,5 @@ export const useHomePage = () => {
       setSelectTab,
     };
   }, [selectTab, products]);
-  return { hotProduct };
+  return { hotProduct, products };
 };

@@ -15,7 +15,7 @@ export const CAROUSEL = [
 ];
 
 export const TAB = {
-  FEATURED: 'featured',
-  ONSALE: 'onsale',
-  RATED: 'toprated',
+  POPULAR: 'isPopular',
+  ONSALE: 'isRated',
+  RATED: 'onSale',
 };

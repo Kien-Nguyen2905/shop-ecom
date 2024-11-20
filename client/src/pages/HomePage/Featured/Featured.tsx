@@ -10,11 +10,11 @@ const Featured: FC<TFeaturedProps> = ({ list, selectTab, setSelectTab }) => {
         <div className="flex items-center justify-center gap-3 mb-10 feature">
           <span
             className={`relative cursor-pointer nav-link px-2 py-[10px] font-semibold text-2xl ${
-              selectTab == TAB.FEATURED ? 'text-primary active' : ''
+              selectTab == TAB.POPULAR ? 'text-primary active' : ''
             }`}
-            onClick={() => setSelectTab(TAB.FEATURED)}
+            onClick={() => setSelectTab(TAB.POPULAR)}
           >
-            Featured
+            Popular
           </span>
           <span
             className={`relative cursor-pointer nav-link px-2 py-[10px] font-semibold text-2xl ${

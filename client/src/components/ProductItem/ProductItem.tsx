@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import { TProductItemProps } from './tyings';
 
 const ProductItem: FC<TProductItemProps> = ({ className = '', item }) => {
-  console.log(item);
   return (
     <div className={`max-w-[277px] border-[0.5px] relative group ${className}`}>
       <div className="">
@@ -21,9 +20,13 @@ const ProductItem: FC<TProductItemProps> = ({ className = '', item }) => {
           <span className="text-[10px]">Add to wishlist</span>
           <IoIosHeartEmpty size={15} className="w-full" />
         </button>
-        <span className="absolute w-12 h-12 text-[13px] font-PpLight flex items-center justify-center text-white rounded-full top-6 left-2 bg-[#ef837b]">
-          Sale
-        </span>
+        {item.variants[0].discount > 0 && (
+          <>
+            <span className="absolute w-12 h-12 text-[13px] font-PpLight flex items-center justify-center text-white rounded-full top-6 left-2 bg-[#ef837b]">
+              Sale
+            </span>
+          </>
+        )}
         <button className="absolute flex items-center justify-center w-full gap-4 text-white transition-all transform translate-y-full opacity-0 pointer-events-none h-9 bg-backFont group-hover:-translate-y-9 group-hover:opacity-100 group-hover:pointer-events-auto">
           <BsCartCheck />
           Add To Cart
@@ -38,8 +41,8 @@ const ProductItem: FC<TProductItemProps> = ({ className = '', item }) => {
         </Link>
         <div className="text-primary text-[16px]">$19</div>
         <div className="">
-          <Rate disabled allowHalf defaultValue={item?.rating} />
-          <span className="ratings-text">( 4 Reviews )</span>
+          <Rate disabled value={item.rate} />
+          {/* <span className="ratings-text">( 4 Reviews )</span> */}
         </div>
       </div>
     </div>

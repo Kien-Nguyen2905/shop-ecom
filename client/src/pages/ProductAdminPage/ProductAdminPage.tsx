@@ -23,16 +23,15 @@ const ProductAdminPage: React.FC = () => {
   const [isAddProductModalOpen, setAddProductModalOpen] = useState(false);
 
   const mappedProductData: TProductTableProps[] | undefined =
-    productData?.products.map((item: TProductItem, index: number) => ({
+    productData?.products.map((item: TProductItem) => ({
       key: item._id || '', // Unique key for the row
       name: item.name || '',
       category:
         categoryList?.find((cate) => cate._id === item.category_id)?.name || '', // Default category
       brand:
         brandList?.find((brand) => brand._id === item.brand_id)?.name || '', // Default to an empty string
-      price: item.variants[index]?.price || 0, // Default price to 0
-      color: item.variants[index]?.color || '', // Default color
-      discount: item.variants[index]?.discount || 0, // Default discount to 0
+      price: item.variants[0]?.price,
+      discount: item.variants[0]?.discount || 0, // Default discount to 0
       thumbnail: item.thumbnail || '', // Provide a placeholder thumbnail
       rate: item.rate || 0, // Default rate to 0
       created_at: dayjs(item.created_at).format('DD/MM/YYYY'), // Format created date
@@ -73,16 +72,11 @@ const ProductAdminPage: React.FC = () => {
       ),
     },
     {
-      title: 'Color',
-      dataIndex: 'color',
-      className: 'text-left',
-    },
-    {
       title: 'Price',
       dataIndex: 'price',
       width: '15%',
       className: 'text-left',
-      render: (price: number) => `${price.toFixed(2)}`,
+      render: (price: number) => price,
     },
     {
       title: 'Discount',
@@ -91,7 +85,6 @@ const ProductAdminPage: React.FC = () => {
       className: 'text-left',
       render: (discount: number) => (
         <div className="flex flex-col gap-3">
-          {/* <Switch value={discount} /> */}
           {discount !== undefined && <Tag color="gold">{discount * 100}%</Tag>}
         </div>
       ),

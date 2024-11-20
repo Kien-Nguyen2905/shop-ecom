@@ -11,7 +11,6 @@ export type TProductTableProps = {
   category: string;
   brand: string;
   thumbnail: string;
-  color: string;
   price: number;
   discount: number;
   rate: number;

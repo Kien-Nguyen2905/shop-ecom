@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import { FC } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -7,7 +7,7 @@ import { ProductItem } from '../../../../components';
 import { TFeaturedItemProps } from './tyings';
 import { Navigation, Pagination } from 'swiper/modules';
 
-const FeaturedItem: FC<TFeaturedItemProps> = ({ children, className }) => {
+const FeaturedItem: FC<TFeaturedItemProps> = ({ children, className = '' }) => {
   const slidesPerView = 4;
   return (
     <div className={`flex flex-col ${className}`}>
@@ -20,7 +20,7 @@ const FeaturedItem: FC<TFeaturedItemProps> = ({ children, className }) => {
           slidesPerView={slidesPerView}
           className="h-[460px]"
         >
-          {children.map((item: any) => (
+          {children.map((item) => (
             <SwiperSlide key={item.id} className="!min-w-[277px]">
               <ProductItem item={item} />
             </SwiperSlide>
