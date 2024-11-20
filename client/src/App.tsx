@@ -32,6 +32,7 @@ const ReviewAdminPage = lazy(
 const ForgotPasswordPage = lazy(
   () => import('./pages/ForgotPasswordPage/ForgotPasswordPage'),
 );
+const HomePage = lazy(() => import('./pages/HomePage/HomePage'));
 function App() {
   return (
     <Suspense>
@@ -42,6 +43,7 @@ function App() {
             path={CUSTOMER_PATHS.FORGOT_PASSWORD}
             element={<ForgotPasswordPage />}
           />
+          <Route path={CUSTOMER_PATHS.ROOT} element={<HomePage />} />
 
           <Route element={<CustomerRoute redirectPath={CUSTOMER_PATHS.ROOT} />}>
             <Route

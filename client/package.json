@@ -30,6 +30,7 @@
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
     "sass": "^1.79.5",
+    "swiper": "^11.1.15",
     "yup": "^1.4.0"
   },
   "devDependencies": {

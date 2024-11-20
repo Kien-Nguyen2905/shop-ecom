@@ -33,6 +33,7 @@ export const { reducer: authReducer, actions: authActions } = createSlice({
     logout: (state) => {
       localStorage.removeItem(LOCAL_STORAGE.ACCESS_TOKEN);
       localStorage.removeItem(LOCAL_STORAGE.REFRESH_TOKEN);
+      localStorage.removeItem(LOCAL_STORAGE.ROLE);
       state.profile = null;
     },
     setProfile: (state, action: PayloadAction<Profile>) => {
