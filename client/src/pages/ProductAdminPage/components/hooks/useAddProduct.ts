@@ -134,7 +134,6 @@ export const useAddProduct = () => {
 
   const handleSaveProduct = async (values: any) => {
     try {
-      console.log(values);
       if (variants.length >= 1) {
         values.variants = variants;
         values.featured.isRated = false;

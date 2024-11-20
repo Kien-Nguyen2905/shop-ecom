@@ -16,6 +16,7 @@ import {
   TResetPasswordPayload,
   TResetPasswordResponse,
   TForgotPasswordPayload,
+  TLogoutPayload,
 } from './typings';
 
 const authServices = {
@@ -63,6 +64,9 @@ const authServices = {
       `/users/reset-password`,
       payload,
     );
+  },
+  logout: (payload: TLogoutPayload) => {
+    return instance.post<SuccessResponse<{}>>(`/users/logout`, payload);
   },
 };
 

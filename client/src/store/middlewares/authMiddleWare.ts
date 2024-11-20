@@ -1,5 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { TLoginPayload, TProfileResponse } from '../../services/Auth/typings';
+import {
+  TLoginPayload,
+  TLogoutPayload,
+  TProfileResponse,
+} from '../../services/Auth/typings';
 import { authServices } from '../../services/Auth';
 import { LOCAL_STORAGE } from '../../constants';
 import { authActions } from '../reducers';
@@ -33,6 +37,24 @@ export const login = createAsyncThunk<
   }
 });
 
+export const logout = createAsyncThunk<
+  void,
+  TLogoutPayload,
+  { rejectValue: string }
+>('auth/logout', async (payload, thunkAPI) => {
+  try {
+    const res = await authServices.logout(payload);
+    if (res.data.status === 200) {
+      localStorage.removeItem(LOCAL_STORAGE.ACCESS_TOKEN);
+      localStorage.removeItem(LOCAL_STORAGE.REFRESH_TOKEN);
+      localStorage.removeItem(LOCAL_STORAGE.ROLE);
+      thunkAPI.dispatch(authActions.setProfile(null));
+    }
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error);
+  }
+});
+
 export const profileUser = createAsyncThunk<
   SuccessResponse<TProfileResponse>, // The return type should be the profile data
   void,
@@ -49,7 +71,6 @@ export const profileUser = createAsyncThunk<
     // Return the profile data (TProfileResponse)
     return profileData;
   } catch (error: any) {
-    console.error('Fetching profile failed:', error);
     return thunkAPI.rejectWithValue(error);
   }
 });

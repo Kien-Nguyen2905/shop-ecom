@@ -58,3 +58,7 @@ export type TResetPasswordPayload = {
   password_token: string;
 };
 export type TResetPasswordResponse = {};
+
+export type TLogoutPayload = {
+  refresh_token: string;
+};

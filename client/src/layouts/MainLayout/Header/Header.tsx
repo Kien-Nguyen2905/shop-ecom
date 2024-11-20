@@ -2,20 +2,12 @@ import { LuUser2 } from 'react-icons/lu';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 import useHeader from './userHeader';
-import { authActions } from '../../../store/reducers';
 import { FaShopify } from 'react-icons/fa';
 import { CUSTOMER_PATHS } from '../../../constants';
 
 const Header = () => {
-  const {
-    showModal,
-    setShowModal,
-    openModal,
-    closeModal,
-    isOpen,
-    profile,
-    dispatch,
-  } = useHeader();
+  const { showModal, setShowModal, openModal, profile, handleLogout } =
+    useHeader();
   return (
     <div className="p-[14px] border-b-bBottom border ">
       <div className="container relative flex items-center justify-between font-light font-PpLight text-darkGrey">
@@ -68,7 +60,7 @@ const Header = () => {
               </Link>
               <button
                 className="text-left hover:text-primary"
-                onClick={() => dispatch(authActions.logout())}
+                onClick={handleLogout}
               >
                 Sign Out
               </button>
