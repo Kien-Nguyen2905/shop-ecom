@@ -31,18 +31,31 @@ const ProductItem: FC<TProductItemProps> = ({ className = '', item }) => {
           <BsCartCheck />
           Add To Cart
         </button>
-      </div>
-      <div className="absolute z-20 flex flex-col w-full gap-2 px-5 py-5 bg-white">
-        <Link
-          to={'/'}
-          className="text-[16px] font-PpMd font-bold text-backFont"
-        >
-          {item?.name}
-        </Link>
-        <div className="text-primary text-[16px]">$19</div>
-        <div className="">
-          <Rate disabled value={item.rate} />
-          {/* <span className="ratings-text">( 4 Reviews )</span> */}
+        <div className="relative flex flex-col w-full gap-2 px-5 py-5 bg-white z-100">
+          <Link
+            to={'/'}
+            className="text-[16px] font-PpMd font-bold text-backFont"
+          >
+            {item?.name}
+          </Link>
+          <div className="flex gap-2">
+            <div
+              className={`text-primary text-[16px] ${
+                item.variants[0].discount > 0 ? 'line-through' : ''
+              }`}
+            >
+              {item.variants[0].price}
+            </div>
+            {item.variants[0].discount > 0 && (
+              <div className="text-primary text-[16px]">
+                {(1 - item.variants[0].discount) * item.variants[0].price}
+              </div>
+            )}
+          </div>
+          <div className="">
+            <Rate disabled value={item.rate} />
+            {/* <span className="ratings-text">( 4 Reviews )</span> */}
+          </div>
         </div>
       </div>
     </div>

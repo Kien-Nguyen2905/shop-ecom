@@ -13,13 +13,13 @@ const Navigation = () => {
         </Link>
         <div className="cursor-pointer ">
           <ul className="flex items-center justify-center">
-            <Link to={'/'} className="px-4 py-7">
+            <Link to={CUSTOMER_PATHS.ROOT} className="px-4 py-7">
               HOME
             </Link>
             <Link to={'/'} className="px-4 py-7">
               ABOUT US
             </Link>
-            <Link to={'/'} className="px-4 py-7">
+            <Link to={CUSTOMER_PATHS.PRODUCT} className="px-4 py-7">
               PRODUCT
             </Link>
             <Link to={'/'} className="px-4 py-7">

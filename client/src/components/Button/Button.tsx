@@ -10,6 +10,7 @@ const Button: React.FC<TButtonProps> = ({
   onClick,
   loading = false,
   children,
+  type = false,
 }) => {
   return (
     <button
@@ -25,7 +26,7 @@ const Button: React.FC<TButtonProps> = ({
       ) : (
         children || (
           <>
-            {text} <IoIosArrowRoundForward size={20} />
+            {text} {type ? '' : <IoIosArrowRoundForward size={20} />}
           </>
         )
       )}

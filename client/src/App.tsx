@@ -32,6 +32,7 @@ const ReviewAdminPage = lazy(
 const ForgotPasswordPage = lazy(
   () => import('./pages/ForgotPasswordPage/ForgotPasswordPage'),
 );
+const ProductPage = lazy(() => import('./pages/ProductPage/ProductPage'));
 const HomePage = lazy(() => import('./pages/HomePage/HomePage'));
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
             element={<ForgotPasswordPage />}
           />
           <Route path={CUSTOMER_PATHS.ROOT} element={<HomePage />} />
+          <Route path={CUSTOMER_PATHS.PRODUCT} element={<ProductPage />} />
 
           <Route element={<CustomerRoute redirectPath={CUSTOMER_PATHS.ROOT} />}>
             <Route

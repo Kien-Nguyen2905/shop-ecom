@@ -291,3 +291,37 @@
   width: 275px !important;
   height: 205px !important;
 }
+/* Customize Slider track, handle, and other elements */
+.custom-slider .ant-slider-track {
+  background-color: #facc15 !important; /* Yellow track */
+}
+
+.custom-slider .ant-slider-handle {
+  border-color: #facc15 !important; /* Yellow handle */
+}
+
+.custom-slider .ant-slider:hover .ant-slider-track {
+  background-color: #eab308 !important; /* Darker yellow on hover */
+}
+
+.custom-slider .ant-slider:hover .ant-slider-handle {
+  border-color: #eab308 !important; /* Darker yellow handle on hover */
+}
+:where(.css-dev-only-do-not-override-apn68).ant-slider
+  .ant-slider-handle::before {
+  border-color: #eab308 !important; /* Darker yellow handle on hover */
+}
+:where(.css-dev-only-do-not-override-apn68).ant-slider
+  .ant-slider-handle::after {
+  background-color: #eab308;
+  box-shadow: 0 0 0 2px #eab308;
+}
+:where(.css-dev-only-do-not-override-apn68).ant-slider
+  .ant-slider-handle:hover::after,
+:where(.css-dev-only-do-not-override-apn68).ant-slider
+  .ant-slider-handle:active::after,
+:where(.css-dev-only-do-not-override-apn68).ant-slider
+  .ant-slider-handle:focus::after {
+  box-shadow: 0 0 0 2.5px #eab308;
+  outline: none;
+}

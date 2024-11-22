@@ -11,7 +11,7 @@ import {
 const productServices = {
   getProduct: (queryString: string = '') => {
     return instance.get<SuccessResponse<TProductResponse>>(
-      `/product${queryString ? '?' : ''}${queryString}`,
+      `/product${queryString ? `${queryString}` : ''}`,
     );
   },
   getProductById: (id: string) => {

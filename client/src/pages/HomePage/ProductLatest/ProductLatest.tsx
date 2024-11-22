@@ -12,7 +12,7 @@ import { FC } from 'react';
 const ProductLatest: FC<TTBrandPropsProps> = ({ listProduct }) => {
   return (
     <div className="">
-      <h2 className="mb-10 ml-5 text-[36px] font-bold text-primary uppercase border-b-[3px] border-primary w-max">
+      <h2 className="mb-10 ml-5 text-[36px] font-bold uppercase text-primary border-b-[1.5px] border-primary w-max">
         The newest product
       </h2>
       <Swiper

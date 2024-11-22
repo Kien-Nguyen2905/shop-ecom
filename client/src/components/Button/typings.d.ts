@@ -7,4 +7,5 @@ export type TButtonProps = {
   disabled?: boolean;
   children?: React.ReactNode;
   loading?: boolean;
+  type?: boolean;
 };

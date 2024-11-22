@@ -1,0 +1,8 @@
+/* .swiper-button-prev {
+  position: absolute;
+  left: -10%;
+  z-index: 10;
+} */
+.swiper-pagination-bullet-active {
+  background-color: #fcb941;
+}
