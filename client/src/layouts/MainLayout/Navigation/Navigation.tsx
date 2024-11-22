@@ -1,10 +1,12 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { CiSearch } from 'react-icons/ci';
 import { AiOutlineShoppingCart } from 'react-icons/ai';
 import { FaShopify } from 'react-icons/fa';
 import { CUSTOMER_PATHS } from '../../../constants';
+import Input from '../../../components/Input/Input';
+import { useNavigation } from './useNavigation';
 const Navigation = () => {
+  const { onSearch } = useNavigation();
   return (
     <div className="border border-b-bBottom">
       <div className="container flex items-center justify-between text-black font-PpMd">
@@ -32,7 +34,18 @@ const Navigation = () => {
         </div>
         <div className="cursor-pointer ">
           <div className="flex items-center justify-center">
-            <CiSearch size={25} />
+            <div className="relative ">
+              <Input
+                className="py-[3px] pl-[10px] pr-[25px]"
+                type="text"
+                variant="normal"
+                onChange={onSearch}
+              />
+              <CiSearch
+                className="absolute right-0 -translate-y-1/2 top-1/2"
+                size={25}
+              />
+            </div>
             <div className="flex items-center justify-center gap-1 pl-5">
               <AiOutlineShoppingCart size={25} />
               <span className="flex items-center justify-center w-5 h-5 text-[9px] text-center text-white rounded-full bg-primary">

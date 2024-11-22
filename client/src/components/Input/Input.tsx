@@ -6,25 +6,39 @@ import { RULES } from '../../constants';
 const Input: React.FC<TInputProps> = ({
   lable,
   required,
+  onChange,
   control,
-  name,
+  name = '',
   type = 'text',
+  variant = 'default',
   className = '',
   ...props
 }) => {
+  if (variant === 'normal') {
+    return (
+      <input
+        type={type}
+        onChange={(e) => onChange?.(e.target.value)}
+        className={`w-full py-2 px-3 border outline-none bg-transparent focus:border-primary ${className}`}
+        {...props}
+      />
+    );
+  }
+
   const {
     field,
     fieldState: { invalid, error },
   } = useController({
     control,
     name,
-    rules: control.rules || RULES[name],
+    rules: props.rules || RULES[name],
     defaultValue: '',
   });
+
   return (
     <div className={`${className} flex flex-col w-full`}>
       <label
-        htmlFor=""
+        htmlFor={name}
         className="w-full mb-2 font-light text-textGrey font-PpLight"
       >
         {lable}
