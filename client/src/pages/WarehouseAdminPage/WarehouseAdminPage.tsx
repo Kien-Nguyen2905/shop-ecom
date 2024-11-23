@@ -3,7 +3,7 @@ import { useWarehouseAdminPage } from './useWarehouseAdminPage';
 import { EllipsisOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { DrawerWarehouse } from './components';
-
+import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
 const WarehouseAdminPage = () => {
   const {
     warehouseData,
@@ -22,54 +22,30 @@ const WarehouseAdminPage = () => {
   const columns = [
     {
       title: 'Product',
-      dataIndex: 'product_id',
-      render: (_: any, record: any) => (
-        <p>
-          {
-            productData?.products.find((item) => item._id === record.product_id)
-              ?.name
-          }
-        </p>
-      ),
+      dataIndex: 'product_name',
     },
     {
       title: 'Variant',
-      dataIndex: 'variant_id',
-      key: 'variant_id',
-      render: (_: any, record: any) => (
-        <p>
-          {productData?.products
-            ?.find((product) =>
-              product.variants.some(
-                (variant) => variant._id === record.variant_id,
-              ),
-            )
-            ?.variants.find((variant) => variant._id === record.variant_id)
-            ?.color || 'N/A'}
-        </p>
-      ),
+      dataIndex: 'variant',
     },
     {
       title: 'Sold',
       dataIndex: 'sold',
-      key: 'sold',
       sorter: (a: any, b: any) => a.sold - b.sold,
     },
     {
       title: 'Stock',
       dataIndex: 'stock',
-      key: 'stock',
       sorter: (a: any, b: any) => a.stock - b.stock,
     },
     {
-      title: 'Minimum',
+      title: 'Min',
       dataIndex: 'minimum_stock',
-      key: 'minimum_stock',
+      className: 'text-center',
       sorter: (a: any, b: any) => a.minimum_stock - b.minimum_stock,
     },
     {
       title: 'Restock',
-      key: 'restock_status',
       filters: [
         { text: 'Restock', value: 'restock' },
         { text: 'Sufficient', value: 'sufficient' },
@@ -91,29 +67,48 @@ const WarehouseAdminPage = () => {
       ),
     },
     {
-      title: 'Created',
+      title: 'Import',
       dataIndex: 'created_at',
-      key: 'created_at',
       sorter: (a: any, b: any) =>
         dayjs(a.created_at).isBefore(b.created_at) ? -1 : 1,
-      render: (text: string) => dayjs(text).format('DD-MM-YYYY HH:mm:ss'),
+      render: (text: string) => (
+        <div className="flex flex-col gap-2">
+          <span>
+            <CalendarOutlined style={{ marginRight: 4 }} />
+            {dayjs(text).format('DD-MM-YYYY')}
+          </span>
+          <span>
+            <ClockCircleOutlined style={{ marginRight: 4 }} />
+            {dayjs(text).format('HH:mm:ss')}
+          </span>
+        </div>
+      ),
     },
     {
       title: 'Latest Import',
       dataIndex: 'updated_at',
-      key: 'updated_at',
       sorter: (a: any, b: any) =>
         dayjs(a.updated_at).isBefore(b.updated_at) ? -1 : 1,
-      render: (text: string) => dayjs(text).format('DD-MM-YYYY HH:mm:ss'),
+      render: (text: string) => (
+        <div className="flex flex-col gap-2">
+          <span>
+            <CalendarOutlined style={{ marginRight: 4 }} />
+            {dayjs(text).format('DD-MM-YYYY')}
+          </span>
+          <span>
+            <ClockCircleOutlined style={{ marginRight: 4 }} />
+            {dayjs(text).format('HH:mm:ss')}
+          </span>
+        </div>
+      ),
     },
     {
       title: 'Status',
-      key: 'isDeleted',
       filters: [
         { text: 'Active', value: false }, // isDeleted: false indicates active
         { text: 'Deleted', value: true }, // isDeleted: true indicates deleted
       ],
-      filterMultiple: false, // Enable multi-select filtering
+      filterMultiple: false,
       onFilter: (value: any, record: any) => record.isDeleted === value,
       render: (_: any, record: any) => (
         <Tag color={record.isDeleted ? 'red' : 'green'}>
@@ -132,11 +127,13 @@ const WarehouseAdminPage = () => {
             onClick: () =>
               openDrawer({ warehouseId: record._id, isView: true }),
           },
-          {
-            key: 'import',
-            label: 'Import',
-            onClick: () => openDrawer({ warehouseId: record._id }),
-          },
+          !record.isDeleted
+            ? {
+                key: 'import',
+                label: 'Import',
+                onClick: () => openDrawer({ warehouseId: record._id }),
+              }
+            : null,
         ];
 
         return (
@@ -162,12 +159,9 @@ const WarehouseAdminPage = () => {
         isOpen={isOpen}
       />
       <Table
-        rowKey="_id"
         columns={columns}
         dataSource={warehouseData}
-        bordered
         pagination={{ pageSize: 5 }}
-        rowClassName={(record) => (record.isDeleted ? 'deleted-row' : '')}
       />
     </>
   );

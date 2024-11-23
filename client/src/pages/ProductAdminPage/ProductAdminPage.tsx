@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Table, Button, Input, Dropdown, Tag, Rate, Modal } from 'antd';
-import { EllipsisOutlined } from '@ant-design/icons';
+import { EllipsisOutlined, CalendarOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { ViewProduct, AddProduct } from './components';
 import { useProductAdminPage } from './useProductAdminPage';
@@ -34,7 +34,7 @@ const ProductAdminPage: React.FC = () => {
       discount: item.variants[0]?.discount || 0, // Default discount to 0
       thumbnail: item.thumbnail || '', // Provide a placeholder thumbnail
       rate: item.rate || 0, // Default rate to 0
-      created_at: dayjs(item.created_at).format('DD/MM/YYYY'), // Format created date
+      created_at: dayjs(item.created_at).format('DD-MM-YYYY'), // Format created date
     }));
 
   const handleViewDetail = (record: TProductTableProps) => {
@@ -66,7 +66,7 @@ const ProductAdminPage: React.FC = () => {
     {
       title: 'Image',
       dataIndex: 'thumbnail',
-      width: '15%',
+      width: '10%',
       render: (url: string) => (
         <img src={url} alt="Thumbnail" className="w-[70px] h-[70px]" />
       ),
@@ -74,7 +74,7 @@ const ProductAdminPage: React.FC = () => {
     {
       title: 'Price',
       dataIndex: 'price',
-      width: '15%',
+      width: '10%',
       className: 'text-left',
       render: (price: number) => price,
     },
@@ -99,11 +99,16 @@ const ProductAdminPage: React.FC = () => {
       ),
     },
     {
-      title: 'Created',
+      title: 'Date',
       dataIndex: 'created_at',
-      width: '5%',
+      width: '15%',
       className: 'text-left',
-      render: (date: string) => date,
+      render: (text: string) => (
+        <div className="flex">
+          <CalendarOutlined style={{ marginRight: 4 }} />
+          <div className="">{text}</div>
+        </div>
+      ),
     },
     {
       title: 'Actions',

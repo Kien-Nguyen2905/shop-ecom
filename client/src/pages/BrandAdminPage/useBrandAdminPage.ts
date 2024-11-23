@@ -20,7 +20,7 @@ export const useBrandAdminPage = () => {
   const createBrand = useCreateBrandMutation();
   const deleteBrand = useDeleteBrandMutation();
   const updateBrand = useUpdateBrandMutation();
-  const [errors, setErrors] = useState<Record<string, string>>({}); // Change to an object to handle errors per Brand
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [dataBrand, setDataBrand] = useState<TBrandResponse[]>(data!);
   const [editingKey, setEditingKey] = useState<string>('');
   const [isInserting, setIsInserting] = useState<boolean>(false);

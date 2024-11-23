@@ -1,11 +1,10 @@
 import React from 'react';
-import { Table, Form, Typography, Popconfirm, Button, Input } from 'antd';
+import { Table, Form, Typography, Popconfirm, Button } from 'antd';
 import TableCell from './TableCell';
 import dayjs from 'dayjs';
 import { TEditableTableProps } from './tyings';
-import { SearchOutlined } from '@ant-design/icons';
 import { TBrandResponse } from '../../../services/Brand/tyings';
-
+import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
 const TableBrand: React.FC<TEditableTableProps> = ({
   handleQueryProps,
   handleTableProps,
@@ -29,46 +28,6 @@ const TableBrand: React.FC<TEditableTableProps> = ({
       dataIndex: 'name',
       width: '35%',
       editable: true,
-      // filterDropdown: ({
-      //   setSelectedKeys,
-      //   selectedKeys,
-      //   confirm,
-      //   clearFilters,
-      // }: {
-      //   setSelectedKeys: (selectedKeys: React.Key[]) => void;
-      //   selectedKeys: React.Key[];
-      //   confirm: () => void;
-      //   clearFilters?: () => void;
-      // }) => (
-      //   <div className="p-[8px]">
-      //     <Input
-      //       placeholder="Search Category"
-      //       value={selectedKeys[0]}
-      //       onChange={(e) =>
-      //         setSelectedKeys(e.target.value ? [e.target.value] : [])
-      //       }
-      //       onPressEnter={() => confirm()}
-      //       style={{ width: 188, marginBottom: 8, display: 'block' }}
-      //     />
-      //     <div className="flex items-center gap-5">
-      //       <Button
-      //         type="primary"
-      //         icon={<SearchOutlined />}
-      //         onClick={() => confirm()}
-      //         size="small"
-      //         style={{ width: 90 }}
-      //       >
-      //         Search
-      //       </Button>
-      //       <Button onClick={clearFilters} size="small" style={{ width: 90 }}>
-      //         Reset
-      //       </Button>
-      //     </div>
-      //   </div>
-      // ),
-      // onFilter: (value: any, record: any) =>
-      //   record.name.toString().toLowerCase().includes(value.toLowerCase()),
-      // sorter: (a: any, b: any) => a.name.length - b.name.length,
     },
     {
       title: 'Created',
@@ -77,8 +36,18 @@ const TableBrand: React.FC<TEditableTableProps> = ({
       editable: false,
       sorter: (a: TBrandResponse, b: TBrandResponse) =>
         dayjs(a.created_at).unix() - dayjs(b.created_at).unix(),
-      render: (created_at: string) =>
-        dayjs(created_at).format('DD-MM-YYYY | HH:mm:ss'),
+      render: (text: string) => (
+        <div className="flex gap-2">
+          <span>
+            <CalendarOutlined style={{ marginRight: 4 }} />
+            {dayjs(text).format('DD-MM-YYYY')}
+          </span>
+          <span>
+            <ClockCircleOutlined style={{ marginRight: 4 }} />
+            {dayjs(text).format('HH:mm:ss')}
+          </span>
+        </div>
+      ),
     },
     {
       title: 'Updated',
@@ -87,8 +56,18 @@ const TableBrand: React.FC<TEditableTableProps> = ({
       editable: false,
       sorter: (a: TBrandResponse, b: TBrandResponse) =>
         dayjs(a.updated_at).unix() - dayjs(b.updated_at).unix(),
-      render: (updated_at: string) =>
-        dayjs(updated_at).format('DD-MM-YYYY | HH:mm:ss'),
+      render: (text: string) => (
+        <div className="flex gap-2">
+          <span>
+            <CalendarOutlined style={{ marginRight: 4 }} />
+            {dayjs(text).format('DD-MM-YYYY')}
+          </span>
+          <span>
+            <ClockCircleOutlined style={{ marginRight: 4 }} />
+            {dayjs(text).format('HH:mm:ss')}
+          </span>
+        </div>
+      ),
     },
     {
       title: 'Operation',
@@ -167,7 +146,6 @@ const TableBrand: React.FC<TEditableTableProps> = ({
         components={{
           body: { cell: TableCell },
         }}
-        bordered
         dataSource={dataBrand}
         columns={mergedColumns}
         pagination={{ pageSize: 8, onChange: cancelRecord }}

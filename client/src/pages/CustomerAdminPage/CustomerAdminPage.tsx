@@ -1,7 +1,7 @@
 import { Table, Typography } from 'antd';
-import React from 'react';
 import { useCustomerAdminPage } from './useCustomerAdminPage';
 import dayjs from 'dayjs';
+import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
 
 const CustomerAdminPage = () => {
   const { userAllData } = useCustomerAdminPage();
@@ -25,22 +25,38 @@ const CustomerAdminPage = () => {
       title: 'Points',
       dataIndex: 'earn_point',
       key: 'earn_point',
+      sorter: (a: any, b: any) => a.earn_point - b.earn_point,
     },
     {
       title: 'Orders',
       dataIndex: 'total_order',
       key: 'total_order',
+      sorter: (a: any, b: any) => a.total_order - b.total_order,
     },
     {
       title: 'Paid',
       dataIndex: 'total_paid',
       key: 'total_paid',
+      sorter: (a: any, b: any) => a.total_paid - b.total_paid,
     },
     {
-      title: 'Created At',
+      title: 'Date',
       dataIndex: 'created_at',
       key: 'created_at',
-      render: (created_at: string) => dayjs(created_at).format('DD-MM-YYYY'),
+      sorter: (a: any, b: any) =>
+        dayjs(a.created_at).isBefore(b.created_at) ? -1 : 1,
+      render: (text: string) => (
+        <div className="flex flex-col gap-2">
+          <span>
+            <CalendarOutlined style={{ marginRight: 4 }} />
+            {dayjs(text).format('DD-MM-YYYY')}
+          </span>
+          <span>
+            <ClockCircleOutlined style={{ marginRight: 4 }} />
+            {dayjs(text).format('HH:mm:ss')}
+          </span>
+        </div>
+      ),
     },
     {
       title: 'Action',

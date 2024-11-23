@@ -102,7 +102,7 @@ export const useCategoryAdminPage = () => {
     setNewFieldName('');
     setFieldValues([]);
     setSingleAttribute('');
-    reset(); // Reset form state
+    reset();
     navigate(ADMIN_PATHS.CATEGORY);
   };
 

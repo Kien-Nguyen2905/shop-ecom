@@ -2,6 +2,7 @@ import { useReviewAdminPage } from './useReviewAdminPage';
 import { Rate, Table } from 'antd';
 import dayjs from 'dayjs';
 import { TCreateReviewResponse } from '../../services/Review/tyings';
+import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
 
 const ReviewAdminPage = () => {
   const { reviewData } = useReviewAdminPage();
@@ -55,11 +56,20 @@ const ReviewAdminPage = () => {
       title: 'Date',
       dataIndex: 'created_at',
       width: '10%',
-      render: (record: TCreateReviewResponse) => {
-        return dayjs(record.created_at).format('DD/MM/YYYY');
-      },
       sorter: (a: TCreateReviewResponse, b: TCreateReviewResponse) =>
         dayjs(a.created_at).isBefore(dayjs(b.created_at)) ? 1 : -1,
+      render: (_: any, record: TCreateReviewResponse) => (
+        <div className="flex flex-col gap-2">
+          <span>
+            <CalendarOutlined style={{ marginRight: 4 }} />
+            {dayjs(record.created_at).format('DD-MM-YYYY')}
+          </span>
+          <span>
+            <ClockCircleOutlined style={{ marginRight: 4 }} />
+            {dayjs(record.created_at).format('HH:mm:ss')}
+          </span>
+        </div>
+      ),
     },
   ];
   return (

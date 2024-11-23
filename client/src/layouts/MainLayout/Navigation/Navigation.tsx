@@ -13,7 +13,7 @@ const Navigation = () => {
         <Link to={CUSTOMER_PATHS.ROOT} className="w-12 h-12 cursor-pointer">
           <FaShopify className="object-cover w-full h-full text-primary" />
         </Link>
-        <div className="cursor-pointer ">
+        <div className="cursor-pointer">
           <ul className="flex items-center justify-center">
             <Link to={CUSTOMER_PATHS.ROOT} className="px-4 py-7">
               HOME
@@ -24,9 +24,9 @@ const Navigation = () => {
             <Link to={CUSTOMER_PATHS.PRODUCT} className="px-4 py-7">
               PRODUCT
             </Link>
-            <Link to={'/'} className="px-4 py-7">
+            {/* <Link to={'/'} className="px-4 py-7">
               BLOG
-            </Link>
+            </Link> */}
             <Link to={'/'} className="px-4 py-7">
               CONTACT US
             </Link>
@@ -34,7 +34,7 @@ const Navigation = () => {
         </div>
         <div className="cursor-pointer ">
           <div className="flex items-center justify-center">
-            <div className="relative ">
+            <div className="absolute right-[15%]">
               <Input
                 className="py-[3px] pl-[10px] pr-[25px]"
                 type="text"

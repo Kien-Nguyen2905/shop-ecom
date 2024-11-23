@@ -6,6 +6,8 @@ export type TWarehouseUpdateResponse = TWarehouseItem;
 export type TWarehouseItem = {
   _id: string;
   product_id: string;
+  product_name: string;
+  variant: string;
   variant_id: string;
   sold: number;
   import_quantity: number;

@@ -2,16 +2,19 @@ import React from 'react';
 import {
   Table,
   Typography,
-  Popconfirm,
   Button,
   Input,
   Drawer,
   Tag,
+  Dropdown,
+  Modal,
 } from 'antd';
+import { EllipsisOutlined } from '@ant-design/icons';
 import { Controller } from 'react-hook-form';
 import dayjs from 'dayjs';
 import { TEditableTableProps } from './tyings';
 import { TCategoryResponse } from '../../../services/Category/tyings';
+import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
 
 const TableCategory: React.FC<TEditableTableProps> = ({
   handleQueryProps,
@@ -56,8 +59,18 @@ const TableCategory: React.FC<TEditableTableProps> = ({
       editable: false,
       sorter: (a: TCategoryResponse, b: TCategoryResponse) =>
         dayjs(a.created_at).unix() - dayjs(b.created_at).unix(),
-      render: (created_at: string) =>
-        dayjs(created_at).format('DD-MM-YYYY | HH:mm:ss'),
+      render: (text: string) => (
+        <div className="flex gap-2">
+          <span>
+            <CalendarOutlined style={{ marginRight: 4 }} />
+            {dayjs(text).format('DD-MM-YYYY')}
+          </span>
+          <span>
+            <ClockCircleOutlined style={{ marginRight: 4 }} />
+            {dayjs(text).format('HH:mm:ss')}
+          </span>
+        </div>
+      ),
     },
     {
       title: 'Updated',
@@ -66,42 +79,64 @@ const TableCategory: React.FC<TEditableTableProps> = ({
       editable: false,
       sorter: (a: TCategoryResponse, b: TCategoryResponse) =>
         dayjs(a.updated_at).unix() - dayjs(b.updated_at).unix(),
-      render: (updated_at: string) =>
-        dayjs(updated_at).format('DD-MM-YYYY | HH:mm:ss'),
-    },
-    {
-      title: 'Operation',
-      dataIndex: 'operation',
-      render: (_: any, record: TCategoryResponse) => (
-        <div className="flex gap-5">
-          <button
-            onClick={() => {
-              openDrawer({ categoryId: record._id, isEdit: true });
-            }}
-            className="text-blue-500"
-          >
-            Edit
-          </button>
-          <button>
-            <Popconfirm
-              className="text-red-500"
-              title="Sure to delete?"
-              okText="Yes"
-              cancelText="No"
-              onConfirm={() => handleDelete(record._id)}
-            >
-              <a className="text-red-500 hover:text-red-500">Delete</a>
-            </Popconfirm>
-          </button>
-          <button
-            onClick={() => {
-              openDrawer({ categoryId: record._id });
-            }}
-          >
-            <a className="text-green-500 hover:text-green-500">View</a>
-          </button>
+      render: (text: string) => (
+        <div className="flex gap-2">
+          <span>
+            <CalendarOutlined style={{ marginRight: 4 }} />
+            {dayjs(text).format('DD-MM-YYYY')}
+          </span>
+          <span>
+            <ClockCircleOutlined style={{ marginRight: 4 }} />
+            {dayjs(text).format('HH:mm:ss')}
+          </span>
         </div>
       ),
+    },
+    {
+      title: 'Actions',
+      width: '10%',
+      dataIndex: 'actions',
+      render: (_: any, record: TCategoryResponse) => {
+        const handleDeleteConfirm = () => {
+          Modal.confirm({
+            title: 'Are you sure you want to delete this category?',
+            content: 'This action cannot be undone.',
+            okText: 'Yes, Delete it',
+            okType: 'danger',
+            cancelText: 'No',
+            onOk: () => handleDelete(record._id),
+          });
+        };
+
+        const menuItems = [
+          {
+            key: 'view',
+            label: 'View',
+            onClick: () => openDrawer({ categoryId: record._id }),
+          },
+          {
+            key: 'edit',
+            label: 'Edit',
+            onClick: () => openDrawer({ categoryId: record._id, isEdit: true }),
+          },
+          {
+            key: 'delete',
+            label: 'Delete',
+            danger: true,
+            onClick: handleDeleteConfirm,
+          },
+        ];
+
+        return (
+          <Dropdown
+            menu={{ items: menuItems }}
+            trigger={['click']}
+            overlayStyle={{ minWidth: '150px' }}
+          >
+            <Button type="text" icon={<EllipsisOutlined />} />
+          </Dropdown>
+        );
+      },
     },
   ];
 
@@ -114,7 +149,6 @@ const TableCategory: React.FC<TEditableTableProps> = ({
       </div>
 
       <Table
-        bordered
         dataSource={dataCategory}
         columns={columns}
         pagination={{ pageSize: 8 }}
