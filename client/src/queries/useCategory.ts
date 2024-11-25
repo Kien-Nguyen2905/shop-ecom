@@ -9,11 +9,10 @@ export const useCategoryQuery = () => {
       const response = await categoryServices.getCategory();
       return Array.isArray(response.data?.data) ? response.data?.data : [];
     },
-    refetchOnWindowFocus: false, // Không tự động refetch khi focus vào window
   });
 };
 
-export const useCategoryByIdQuery = (id: string) => {
+export const useCategoryByIdQuery = (id: string = '') => {
   return useQuery<TCategoryResponse>({
     queryKey: ['category', id],
     queryFn: async () => {
@@ -34,6 +33,7 @@ export const useCreateCategoryMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['category'],
+        exact: true,
       });
     },
   });
@@ -47,6 +47,7 @@ export const useDeleteCategoryMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['category'],
+        exact: true,
       });
     },
   });
@@ -60,6 +61,7 @@ export const useUpdateCategoryMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['category'],
+        exact: true,
       });
     },
   });

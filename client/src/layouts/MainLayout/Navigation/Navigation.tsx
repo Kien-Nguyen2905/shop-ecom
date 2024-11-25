@@ -5,8 +5,17 @@ import { FaShopify } from 'react-icons/fa';
 import { CUSTOMER_PATHS } from '../../../constants';
 import Input from '../../../components/Input/Input';
 import { useNavigation } from './useNavigation';
+import { DropdownCart } from './components';
+
 const Navigation = () => {
-  const { onSearch } = useNavigation();
+  const {
+    onSearch,
+    cartInfo,
+    handleRemoveCart,
+    isDropdownVisible,
+    setDropdownVisible,
+  } = useNavigation();
+
   return (
     <div className="border border-b-bBottom">
       <div className="container flex items-center justify-between text-black font-PpMd">
@@ -24,34 +33,40 @@ const Navigation = () => {
             <Link to={CUSTOMER_PATHS.PRODUCT} className="px-4 py-7">
               PRODUCT
             </Link>
-            {/* <Link to={'/'} className="px-4 py-7">
-              BLOG
-            </Link> */}
             <Link to={'/'} className="px-4 py-7">
               CONTACT US
             </Link>
           </ul>
         </div>
-        <div className="cursor-pointer ">
-          <div className="flex items-center justify-center">
-            <div className="absolute right-[15%]">
-              <Input
-                className="py-[3px] pl-[10px] pr-[25px]"
-                type="text"
-                variant="normal"
-                onChange={onSearch}
+        <div className="flex items-center justify-center">
+          <div className="absolute right-[15%]">
+            <Input
+              className="py-[3px] pl-[10px] pr-[25px]"
+              type="text"
+              variant="normal"
+              onChange={onSearch}
+            />
+            <CiSearch
+              className="absolute right-0 -translate-y-1/2 top-1/2"
+              size={25}
+            />
+          </div>
+          <div
+            className="relative cursor-pointer flex items-center justify-center gap-1 pl-5 py-[20px]"
+            onMouseEnter={() => setDropdownVisible(true)}
+            onMouseLeave={() => setDropdownVisible(false)}
+          >
+            <AiOutlineShoppingCart size={25} />
+            <span className="flex items-center justify-center w-5 h-5 text-[9px] text-center text-white rounded-full bg-primary">
+              {cartInfo?.products.length}
+            </span>
+
+            {isDropdownVisible && (
+              <DropdownCart
+                handleRemoveCart={handleRemoveCart}
+                {...cartInfo!}
               />
-              <CiSearch
-                className="absolute right-0 -translate-y-1/2 top-1/2"
-                size={25}
-              />
-            </div>
-            <div className="flex items-center justify-center gap-1 pl-5">
-              <AiOutlineShoppingCart size={25} />
-              <span className="flex items-center justify-center w-5 h-5 text-[9px] text-center text-white rounded-full bg-primary">
-                2
-              </span>
-            </div>
+            )}
           </div>
         </div>
       </div>

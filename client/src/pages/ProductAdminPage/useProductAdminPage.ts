@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import {
   useBrandQuery,
   useCategoryQuery,
-  useCreateProductMutation,
   useDeleteProductMutation,
   useProductByIdQuery,
   useProductQuery,
@@ -11,18 +10,21 @@ import { debounce } from 'lodash';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ADMIN_PATHS } from '../../constants';
 import { showToast } from '../../libs';
-import { TCreateProductPayload } from '../../services/Product/tyings';
 
 export const useProductAdminPage = () => {
+  const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [queryString, setQueryString] = useState('');
-  const { data: productData, isLoading } = useProductQuery(queryString);
+  const {
+    data: productData,
+    isLoading,
+    refetch,
+  } = useProductQuery(queryString);
   const categoryList = useCategoryQuery().data;
   const brandList = useBrandQuery().data;
 
   const deleteProduct = useDeleteProductMutation();
-  const createProduct = useCreateProductMutation();
 
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
@@ -48,29 +50,18 @@ export const useProductAdminPage = () => {
     setIsOpen(false);
     navigate(ADMIN_PATHS.PRODUCT);
   };
+  const closeModalAdd = () => {
+    setIsAddProductModalOpen(false);
+  };
+  const openModelAdd = () => {
+    setIsAddProductModalOpen(true); // Open the modal to add a new product
+  };
 
   const handleDelete = async (productId: string) => {
     try {
       const res = await deleteProduct.mutateAsync(productId);
       if (res.status === 200) {
-        showToast({
-          type: 'success',
-          message: res?.data.message,
-        });
-        closeModalView();
-      }
-    } catch (error: any) {
-      showToast({
-        type: 'error',
-        message: error?.response?.data?.message,
-      });
-    }
-  };
-
-  const handleCreate = async (values: TCreateProductPayload) => {
-    try {
-      const res = await createProduct.mutateAsync(values);
-      if (res.data.data._id) {
+        refetch();
         showToast({
           type: 'success',
           message: res?.data.message,
@@ -97,6 +88,9 @@ export const useProductAdminPage = () => {
     productDetails,
     isProductLoading,
     handleDelete,
-    handleCreate,
+    refetch,
+    closeModalAdd,
+    openModelAdd,
+    isAddProductModalOpen,
   };
 };

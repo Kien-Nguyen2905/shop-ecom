@@ -9,7 +9,7 @@ import { handleError, showToast } from '../../../../libs';
 import { useProductAdminPage } from '../../useProductAdminPage';
 
 export const useAddProduct = () => {
-  const { closeModalView } = useProductAdminPage();
+  const { refetch } = useProductAdminPage();
   const uploadImage = useUploadImageMutation();
   const createProduct = useCreateProductMutation();
   const [activeKey, setActiveKey] = useState<string[]>(['0']);
@@ -74,6 +74,7 @@ export const useAddProduct = () => {
       });
     }
   }, [dataInformation?.attributes, reset, getValues]);
+
   const showAttributeByCategory = (categoryId: string) => {
     setCategoryId(categoryId);
   };
@@ -132,7 +133,7 @@ export const useAddProduct = () => {
     }
   };
 
-  const handleSaveProduct = async (values: any) => {
+  const handleSaveProduct = async (values: any, onSuccess?: () => void) => {
     try {
       if (variants.length >= 1) {
         values.variants = variants;
@@ -147,20 +148,16 @@ export const useAddProduct = () => {
             values.thumbnail = res.data.data[0];
           }
         }
-
         // Duyệt qua từng variant và upload ảnh cho mỗi variant
         if (uploadedImages) {
           for (const [index, files] of Object.entries(uploadedImages)) {
             const formData = new FormData();
-
             // Duyệt qua các file trong mỗi variant
             files.forEach((file: any) => {
               formData.append('image', file.originFileObj); // Append từng file vào formData
             });
-
             // Upload ảnh cho mỗi variant
             const res = await uploadImage.mutateAsync(formData);
-
             // Giả sử trả về đường dẫn ảnh, gán vào values.variants[index]
             if (res.data.data) {
               // Cập nhật lại values.variants[index] với ảnh đã upload
@@ -168,10 +165,10 @@ export const useAddProduct = () => {
             }
           }
         }
-
         const res = await createProduct.mutateAsync(values);
         if (res.data.data._id) {
-          closeModalView();
+          refetch();
+          onSuccess?.();
           showToast({
             type: 'success',
             message: res.data.message,
@@ -188,7 +185,6 @@ export const useAddProduct = () => {
         error,
         setError,
       });
-      console.error('Error saving product:', error);
     }
   };
 

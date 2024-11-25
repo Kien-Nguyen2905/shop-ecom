@@ -8,3 +8,5 @@ export { ReviewAdminPage } from './ReviewAdminPage';
 export { ForgotPasswordPage } from './ForgotPasswordPage';
 export { HomePage } from './HomePage';
 export { ProductPage } from './ProductPage';
+export { ProductDetailPage } from './ProductDetailPage';
+export { CartPage } from './CartPage';

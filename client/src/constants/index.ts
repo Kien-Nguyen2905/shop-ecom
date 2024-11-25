@@ -3,3 +3,4 @@ export * from './environment';
 export * from './localStorage';
 export * from './rules';
 export * from './home';
+export * from './statusAction';

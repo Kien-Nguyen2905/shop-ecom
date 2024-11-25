@@ -15,7 +15,7 @@ export const useProductQuery = (queryString = '') => {
   });
 };
 
-export const useProductByIdQuery = (id = '') => {
+export const useProductByIdQuery = (id: string = '') => {
   return useQuery<TProductByIdResponse>({
     queryKey: ['product', id],
     queryFn: async () => {

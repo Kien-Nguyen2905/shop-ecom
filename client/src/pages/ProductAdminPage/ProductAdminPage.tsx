@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Table, Button, Input, Dropdown, Tag, Rate, Modal } from 'antd';
 import { EllipsisOutlined, CalendarOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
@@ -18,9 +18,10 @@ const ProductAdminPage: React.FC = () => {
     handleSearch,
     productDetails,
     handleDelete,
+    closeModalAdd,
+    openModelAdd,
+    isAddProductModalOpen,
   } = useProductAdminPage();
-
-  const [isAddProductModalOpen, setAddProductModalOpen] = useState(false);
 
   const mappedProductData: TProductTableProps[] | undefined =
     productData?.products.map((item: TProductItem) => ({
@@ -41,9 +42,6 @@ const ProductAdminPage: React.FC = () => {
     openModalView(record.key);
   };
 
-  const handleAddProduct = () => {
-    setAddProductModalOpen(true); // Open the modal to add a new product
-  };
   const columns = [
     {
       title: 'Product',
@@ -151,12 +149,11 @@ const ProductAdminPage: React.FC = () => {
       },
     },
   ];
-
   return (
     <div className="p-4">
       <AddProduct
         isOpen={isAddProductModalOpen}
-        closeModalView={() => setAddProductModalOpen(false)} // Close modal function
+        closeModalAdd={closeModalAdd}
         brandList={brandList!}
         categoryList={categoryList!}
       />
@@ -179,7 +176,7 @@ const ProductAdminPage: React.FC = () => {
         />
         <Button
           type="primary"
-          onClick={handleAddProduct} // Open AddProduct Modal
+          onClick={openModelAdd} // Open AddProduct Modal
         >
           Insert
         </Button>

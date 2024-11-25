@@ -3,5 +3,6 @@ export { CustomerRoute } from './CustomerRoute';
 export { Modal } from './Modal';
 export { Button } from './Button';
 export { ProductItem } from './ProductItem';
+export { QuantityInput } from './QuantityInput';
 
 export * as Loading from './Loading';

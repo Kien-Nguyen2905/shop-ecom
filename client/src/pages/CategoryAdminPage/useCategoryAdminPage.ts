@@ -9,7 +9,6 @@ import {
 } from '../../queries';
 import {
   TCategoryPayload,
-  TCategoryResponse,
   TUpdateCategoryPayload,
 } from '../../services/Category/tyings';
 import {
@@ -34,7 +33,7 @@ export const useCategoryAdminPage = () => {
         attributes: undefined,
       },
     });
-  const { data } = useCategoryQuery();
+  const { data: dataCategory, refetch } = useCategoryQuery();
 
   const [isOpen, setIsOpen] = useState(false);
   const [isMultipleMode, setIsMultipleMode] = useState(false);
@@ -48,8 +47,6 @@ export const useCategoryAdminPage = () => {
   const updateCategory = useUpdateCategoryMutation();
   const updadetInformation = useUpdateInformationMutation();
 
-  const [dataCategory, setDataCategory] = useState<TCategoryResponse[]>(data!);
-
   const [attributes, setAttributes] = useState<Record<string, any>>({});
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
@@ -61,9 +58,6 @@ export const useCategoryAdminPage = () => {
   const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
-    if (data) {
-      setDataCategory(data);
-    }
     if (isOpen) {
       if (informationData?.attributes) {
         setAttributes(informationData?.attributes);
@@ -72,7 +66,7 @@ export const useCategoryAdminPage = () => {
         setValue('name', categoryData.name);
       }
     }
-  }, [isOpen, informationData, categoryData, data]);
+  }, [isOpen, informationData, categoryData]);
 
   const openDrawer = async ({
     categoryId,
@@ -119,6 +113,7 @@ export const useCategoryAdminPage = () => {
         attributes: payload.attributes,
       });
       if (res?.data?.data._id && resInformation.data.data._id) {
+        refetch();
         closeDrawer();
         showToast({
           type: 'success',
@@ -137,7 +132,7 @@ export const useCategoryAdminPage = () => {
     try {
       const res = await deleteCategory.mutateAsync(id);
       if (res?.data.status === 200) {
-        closeDrawer();
+        refetch();
         showToast({
           type: 'success',
           message: res?.data.message,
@@ -247,7 +242,7 @@ export const useCategoryAdminPage = () => {
     setFieldValues(newAttibute);
   };
   const handleQueryProps = {
-    dataCategory,
+    dataCategory: dataCategory!,
   };
   const handleTableProps = {
     handleAddAttribute,

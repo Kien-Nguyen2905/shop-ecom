@@ -16,7 +16,6 @@ const DrawerWarehouse: FC<TDrawerWarehouseProps> = ({
   handleClose,
   isOpen,
   warehouseDetail,
-  productData,
   isView,
   isImport,
   handleImport,
@@ -44,25 +43,12 @@ const DrawerWarehouse: FC<TDrawerWarehouseProps> = ({
           <div className="mb-4">
             <label>Product</label>
             <Controller
-              name="product_id"
+              name="product_name"
               control={control}
-              defaultValue={warehouseDetail.product_id}
-              render={({ field, fieldState }) => (
+              defaultValue={warehouseDetail.product_name}
+              render={({ field }) => (
                 <>
-                  <Input
-                    {...field}
-                    value={
-                      productData?.products.find(
-                        (item: any) => item._id === warehouseDetail.product_id,
-                      )?.name
-                    }
-                    readOnly
-                  />
-                  {fieldState.error && (
-                    <Typography.Text type="danger">
-                      {fieldState.error.message}
-                    </Typography.Text>
-                  )}
+                  <Input {...field} readOnly />
                 </>
               )}
             />
@@ -70,33 +56,12 @@ const DrawerWarehouse: FC<TDrawerWarehouseProps> = ({
           <div className="mb-4">
             <label>Variant</label>
             <Controller
-              name="variant_id"
+              name="variant"
               control={control}
-              defaultValue={warehouseDetail.variant_id}
-              render={({ field, fieldState }) => (
+              defaultValue={warehouseDetail.variant}
+              render={({ field }) => (
                 <>
-                  <Input
-                    {...field}
-                    value={
-                      productData?.products
-                        ?.find((product: any) =>
-                          product.variants.some(
-                            (variant: any) =>
-                              variant._id === warehouseDetail.variant_id,
-                          ),
-                        )
-                        ?.variants.find(
-                          (variant: any) =>
-                            variant._id === warehouseDetail.variant_id,
-                        )?.color
-                    }
-                    readOnly
-                  />
-                  {fieldState.error && (
-                    <Typography.Text type="danger">
-                      {fieldState.error.message}
-                    </Typography.Text>
-                  )}
+                  <Input {...field} readOnly />
                 </>
               )}
             />

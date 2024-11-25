@@ -22,7 +22,7 @@ export type TCreateReviewResponse = {
   created_at?: string;
   updated_at?: string;
 };
-
+export type TReviewByProductIdResponse = TCreateReviewResponse;
 export type TCreateReviewPayload = {
   user_id: string;
   order_id: string;

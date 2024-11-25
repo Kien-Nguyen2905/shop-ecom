@@ -4,7 +4,6 @@ export type TDrawerWarehouseProps = {
   handleClose: () => void;
   isOpen: boolean;
   warehouseDetail: TWarehouseItem;
-  productData: TProductResponse;
   isView: boolean;
   isImport: boolean;
   handleImport: (value?: boolean) => void;

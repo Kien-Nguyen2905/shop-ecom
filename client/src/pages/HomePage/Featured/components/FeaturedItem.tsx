@@ -38,7 +38,7 @@ const FeaturedItem: FC<TFeaturedItemProps> = ({ children, className = '' }) => {
           pagination={{ clickable: true }}
           loop
           spaceBetween={20}
-          slidesPerView={1}
+          slidesPerView={slidesPerView}
           onSwiper={(swiper) => (swiperRef.current = swiper)}
           className="h-[410px]"
         >

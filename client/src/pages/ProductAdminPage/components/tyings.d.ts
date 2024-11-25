@@ -12,7 +12,7 @@ export type TViewProductProps = {
 
 export type TAddProductProps = {
   isOpen: boolean; // Determines if the Add Product drawer is open
-  closeModalView: () => void; // Function to close the drawer
+  closeModalAdd: () => void; // Function to close the drawer
   brandList: { _id: string; name: string }[]; // List of brands, each with an id and name
   categoryList: { _id: string; name: string }[]; // List of categories, each with an id and name
 };

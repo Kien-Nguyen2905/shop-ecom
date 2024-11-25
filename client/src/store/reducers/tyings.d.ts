@@ -1,3 +1,5 @@
+import { TGetCartResponse } from '../../services/Cart/tyings';
+
 export type TProfile = {
   _id: string;
   email: string;
@@ -12,4 +14,15 @@ export type TProfile = {
 export type TAuthState = {
   profile: Profile | null;
   listOrder: any;
+};
+
+export type TCart = TGetCartResponse & {
+  subTotal: number;
+  total: number;
+  totalProduct: number;
+};
+export type TCartState = {
+  cartInfo?: TCart;
+  updateStatus: string;
+  getStatus: string;
 };

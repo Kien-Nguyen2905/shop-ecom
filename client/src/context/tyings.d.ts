@@ -5,4 +5,6 @@ export type TMainContextProviderProps = {
   setIsOpen: React.Dispatch<SetStateAction<boolean>>;
   openModal: () => void;
   closeModal: () => void;
+  checkAuthen: boolean;
+  setCheckAuthen: React.Dispatch<SetStateAction<boolean>>;
 };

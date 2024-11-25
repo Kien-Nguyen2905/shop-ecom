@@ -17,13 +17,13 @@ import { useVerifyEmailMutation } from '../../queries';
 import { handleError, showToast } from '../../libs';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { Dispatch } from 'redux';
 import { login } from '../../store/middlewares/authMiddleWare';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { SuccessResponse } from '../../services/tyings';
+import { AppDispatch } from '../../store/store';
 
 export const useModal = () => {
-  const dispatch = useDispatch<Dispatch<any>>();
+  const dispatch = useDispatch<AppDispatch>();
   const verifyEmail = useVerifyEmailMutation();
   const { handleSubmit, control, setError, reset } =
     useForm<TVerifyEmailPayload>({ mode: 'onChange' });
@@ -49,7 +49,7 @@ export const useModal = () => {
       const dataUser: SuccessResponse<TProfileResponse> =
         unwrapResult<any>(res);
       if (dataUser?.data._id) {
-        dataUser?.data.role
+        dataUser?.data?.role !== 1
           ? navigate(CUSTOMER_PATHS.ROOT)
           : navigate(ADMIN_PATHS.ROOT);
         closeModal();

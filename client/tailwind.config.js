@@ -12,6 +12,7 @@ export default {
         bBottom: '#ebebeb',
         backFont: '#1A1A1A',
         textGrey: '#666666',
+        borderGrey: '#f4f4f4',
       },
       backgroundColor: {
         bgWhite: 'fff',

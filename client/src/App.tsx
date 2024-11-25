@@ -1,6 +1,5 @@
 import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import './assets/styles/index.scss';
 import { ADMIN_PATHS, CUSTOMER_PATHS } from './constants';
 const MainLayout = lazy(() => import('./layouts/MainLayout/MainLayout'));
 const AdminLayout = lazy(() => import('./layouts/AdminLayout/AdminLayout'));
@@ -33,6 +32,11 @@ const ForgotPasswordPage = lazy(
   () => import('./pages/ForgotPasswordPage/ForgotPasswordPage'),
 );
 const ProductPage = lazy(() => import('./pages/ProductPage/ProductPage'));
+const ProductDetailPage = lazy(
+  () => import('./pages/ProductDetailPage/ProductDetailPage'),
+);
+const CartPage = lazy(() => import('./pages/CartPage/CartPage'));
+
 const HomePage = lazy(() => import('./pages/HomePage/HomePage'));
 function App() {
   return (
@@ -46,12 +50,16 @@ function App() {
           />
           <Route path={CUSTOMER_PATHS.ROOT} element={<HomePage />} />
           <Route path={CUSTOMER_PATHS.PRODUCT} element={<ProductPage />} />
-
+          <Route
+            path={CUSTOMER_PATHS.PRODUCT_DETAIL}
+            element={<ProductDetailPage />}
+          />
           <Route element={<CustomerRoute redirectPath={CUSTOMER_PATHS.ROOT} />}>
             <Route
               path={CUSTOMER_PATHS.VERIFY_EMAIL}
               element={<VerifyEmailPage />}
             />
+            <Route path={CUSTOMER_PATHS.CART} element={<CartPage />} />
           </Route>
         </Route>
         <Route path={ADMIN_PATHS.ROOT} element={<AdminLayout />}>

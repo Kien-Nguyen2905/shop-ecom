@@ -6,12 +6,14 @@ import { useHomePage } from './useHomePage';
 const HomePage = () => {
   const { hotProduct, products } = useHomePage();
   return (
-    <div className="">
+    <>
       <Banner />
-      <Featured {...hotProduct} />
-      <ProductLatest listProduct={products!} />
-      <div className="h-10"></div>
-    </div>
+      <div className="container">
+        <Featured {...hotProduct} />
+        <ProductLatest listProduct={products!} />
+        <div className="h-10"></div>
+      </div>
+    </>
   );
 };
 

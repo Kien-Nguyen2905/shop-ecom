@@ -325,3 +325,24 @@
   box-shadow: 0 0 0 2.5px #eab308;
   outline: none;
 }
+// --------------ẨN NUMBER TYPE NUMBER--------------
+/* Dành cho trình duyệt Webkit */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Dành cho Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  display: none; /* Ẩn thanh cuộn */
+}
+
+.custom-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

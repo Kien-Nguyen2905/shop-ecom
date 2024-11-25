@@ -4,6 +4,9 @@ type TCustomerPaths = {
   OAUTH: string;
   FORGOT_PASSWORD: string;
   PRODUCT: string;
+  PRODUCT_DETAIL: string;
+  CART: string;
+  CHECKOUT: string;
 };
 type TAdminPaths = {
   ROOT: string;
@@ -21,6 +24,9 @@ export const CUSTOMER_PATHS: TCustomerPaths = {
   OAUTH: '/oauth',
   FORGOT_PASSWORD: '/forgot-password',
   PRODUCT: '/product',
+  PRODUCT_DETAIL: '/product/:id',
+  CART: '/cart',
+  CHECKOUT: 'checkout',
 };
 export const ADMIN_PATHS: TAdminPaths = {
   ROOT: '/admin',

@@ -18,7 +18,7 @@ import { useAddProduct } from './hooks/useAddProduct';
 
 const AddProduct: FC<TAddProductProps> = ({
   isOpen,
-  closeModalView,
+  closeModalAdd,
   brandList,
   categoryList,
 }) => {
@@ -43,7 +43,6 @@ const AddProduct: FC<TAddProductProps> = ({
     dataInformation,
     showAttributeByCategory,
   } = useAddProduct();
-
   const columns = [
     {
       title: 'Color',
@@ -122,18 +121,23 @@ const AddProduct: FC<TAddProductProps> = ({
     <Drawer
       placement="right"
       size={'large'}
-      onClose={closeModalView}
+      onClose={closeModalAdd}
       open={isOpen}
       extra={
         <div className="flex gap-5">
-          <Button type="primary" onClick={handleSubmit(handleSaveProduct)}>
+          <Button
+            type="primary"
+            onClick={handleSubmit((data) =>
+              handleSaveProduct(data, closeModalAdd),
+            )}
+          >
             Save
           </Button>
-          <Button onClick={closeModalView}>Close</Button>
+          <Button onClick={closeModalAdd}>Close</Button>
         </div>
       }
     >
-      <form onSubmit={handleSubmit(handleSaveProduct)}>
+      <form>
         <div className="flex gap-10">
           <div className="flex-1">
             <div className="flex flex-col">
@@ -378,7 +382,6 @@ const AddProduct: FC<TAddProductProps> = ({
           <Controller
             name="variants" // Tên trường của bạn trong form
             control={control}
-            rules={{ required: 'Variants are required' }}
             render={({ field }) => (
               <>
                 <Collapse

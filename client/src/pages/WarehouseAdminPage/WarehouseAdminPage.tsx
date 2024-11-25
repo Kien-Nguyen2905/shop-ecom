@@ -7,7 +7,6 @@ import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
 const WarehouseAdminPage = () => {
   const {
     warehouseData,
-    productData,
     handleClose,
     isOpen,
     openDrawer,
@@ -153,7 +152,6 @@ const WarehouseAdminPage = () => {
         control={control}
         handleImport={handleImport}
         isView={isView}
-        productData={productData!}
         warehouseDetail={warehouseDetail!}
         handleClose={handleClose}
         isOpen={isOpen}

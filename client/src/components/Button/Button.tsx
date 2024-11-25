@@ -18,13 +18,17 @@ const Button: React.FC<TButtonProps> = ({
       onClick={onClick}
       className={`${className} ${
         loading ? 'cursor-not-allowed opacity-50 border-opacity-50' : ''
-      } flex w-[120px] flex-row justify-center gap-1 border text-primary border-primary py-[8.5px] px-[15px] 
+      } flex flex-row items-center w-max justify-center gap-1 border text-primary border-primary py-[8.5px] px-[15px] 
       bg-transparent hover:bg-primary hover:text-white transition`}
     >
       {loading ? (
-        <Spin size="small" className="text-primary" />
+        <Spin size="small" className="text-primary " />
       ) : (
-        children || (
+        (
+          <>
+            {children} {text}
+          </>
+        ) || (
           <>
             {text} {type ? '' : <IoIosArrowRoundForward size={20} />}
           </>

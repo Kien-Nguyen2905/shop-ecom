@@ -14,7 +14,6 @@ export const useWarehouseAdminPage = () => {
   const navigate = useNavigate();
   const { data: warehouseData } = useWarehouse();
   const importWarehouse = useUpdateWarehouseMutation();
-  const { productData } = useProductAdminPage();
   const [isOpen, setIsOpen] = useState(false);
   const [isView, setIsView] = useState(false);
 
@@ -84,7 +83,6 @@ export const useWarehouseAdminPage = () => {
   };
   return {
     warehouseData,
-    productData,
     handleClose,
     isOpen,
     openDrawer,

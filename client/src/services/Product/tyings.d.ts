@@ -13,6 +13,7 @@ export type TProductItem = {
   description: string;
   featured: TFeatured;
   variants: TVariant[];
+  attributes: Record<string, string | []>;
   rate: number;
   created_at?: Date;
   updated_at?: Date;
@@ -45,6 +46,7 @@ export type TProductByIdResponse = {
   description: string;
   featured: TFeatured;
   variants: TVariant[];
+  attributes: Record<string, string | []>;
   rate: number;
   created_at: string; // ISO date string
   updated_at: string; // ISO date string
@@ -83,6 +85,7 @@ export type TCreateProductResponse = {
   description: string;
   featured: TFeatured;
   variants: TVariant[];
+  attributes: Record<string, string | []>;
   rate: number;
   attributes: {};
   created_at?: Date;

@@ -11,6 +11,8 @@ import { LOCAL_STORAGE } from '../../constants';
 import { profileUser } from '../../store/middlewares/authMiddleWare';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/store';
+import { Footer } from './Footer';
+import { getCart } from '../../store/middlewares/cartMiddleware';
 const MainLayout = () => {
   const queryClient = new QueryClient();
   const [isLoading, setIsLoading] = useState(true);
@@ -26,6 +28,7 @@ const MainLayout = () => {
     }, 500);
     if (!!localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)) {
       dispatch(profileUser());
+      dispatch(getCart());
     }
     return () => {
       clearTimeout(timer);
@@ -41,6 +44,7 @@ const MainLayout = () => {
               <Navigation />
             </div>
             <Outlet />
+            <Footer />
           </div>
           <Modal />
         </animated.div>
