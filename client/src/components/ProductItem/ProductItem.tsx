@@ -9,7 +9,7 @@ import { useProductItem } from './useProductItem';
 import { formatCurrency } from '../../utils';
 
 const ProductItem: FC<TProductItemProps> = ({ className = '', item }) => {
-  const { onAddToCart } = useProductItem();
+  const { onAddToCart, onAddWishlist } = useProductItem();
   if (!item) return;
   return (
     <div
@@ -28,7 +28,10 @@ const ProductItem: FC<TProductItemProps> = ({ className = '', item }) => {
           alt=""
         />
       </Link>
-      <button className="absolute flex items-center justify-center w-8 h-8 gap-4 text-white transition-all transform translate-y-full rounded-full opacity-0 pointer-events-none btn-expandable group/item top-6 right-2 bg-primary group-hover:translate-y-0 group-hover:opacity-100 group-hover:pointer-events-auto ">
+      <button
+        onClick={() => onAddWishlist({ product_id: item?._id! })}
+        className="absolute flex items-center justify-center w-8 h-8 gap-4 text-white transition-all transform translate-y-full rounded-full opacity-0 pointer-events-none btn-expandable group/item top-6 right-2 bg-primary group-hover:translate-y-0 group-hover:opacity-100 group-hover:pointer-events-auto "
+      >
         <span className="text-[10px]">Add to wishlist</span>
         <IoIosHeartEmpty size={15} className="w-full" />
       </button>

@@ -4,3 +4,4 @@ export * from './localStorage';
 export * from './rules';
 export * from './home';
 export * from './statusAction';
+export * from './account';

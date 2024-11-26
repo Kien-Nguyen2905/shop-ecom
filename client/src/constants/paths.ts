@@ -1,24 +1,4 @@
-type TCustomerPaths = {
-  ROOT: string;
-  VERIFY_EMAIL: string;
-  OAUTH: string;
-  FORGOT_PASSWORD: string;
-  PRODUCT: string;
-  PRODUCT_DETAIL: string;
-  CART: string;
-  CHECKOUT: string;
-};
-type TAdminPaths = {
-  ROOT: string;
-  CATEGORY: string;
-  BRAND: string;
-  PRODUCT: string;
-  WAREHOUSE: string;
-  CUSTOMER: string;
-  REVIEW: string;
-};
-
-export const CUSTOMER_PATHS: TCustomerPaths = {
+export const CUSTOMER_PATHS = {
   ROOT: '/',
   VERIFY_EMAIL: '/verify-email',
   OAUTH: '/oauth',
@@ -26,9 +6,14 @@ export const CUSTOMER_PATHS: TCustomerPaths = {
   PRODUCT: '/product',
   PRODUCT_DETAIL: '/product/:id',
   CART: '/cart',
-  CHECKOUT: 'checkout',
+  CHECKOUT: '/checkout',
+  DASHBOARD: {
+    INDEX: '/dashboard',
+    WISHLIST: '/dashboard/wishlist',
+    ORDER: '/dashboard/order',
+  },
 };
-export const ADMIN_PATHS: TAdminPaths = {
+export const ADMIN_PATHS = {
   ROOT: '/admin',
   CATEGORY: '/admin/category',
   BRAND: '/admin/brand',

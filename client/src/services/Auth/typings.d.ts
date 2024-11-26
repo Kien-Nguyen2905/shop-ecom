@@ -62,3 +62,15 @@ export type TResetPasswordResponse = {};
 export type TLogoutPayload = {
   refresh_token: string;
 };
+export type TAddress = {
+  province?: string;
+  district?: string;
+  ward?: string;
+  street_address?: string;
+};
+export type TUpdateProfilePayload = {
+  full_name: string;
+  email: string;
+  phone: string;
+  address: TAddress;
+};

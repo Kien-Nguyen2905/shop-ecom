@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { thunk } from 'redux-thunk';
-import { authReducer, cartReducer } from './reducers';
+import { authReducer, cartReducer, wishlistReducer } from './reducers';
 import {
   TypedUseSelectorHook,
   useSelector as rawUseSelector,
@@ -10,6 +10,7 @@ const store = configureStore({
   reducer: {
     auth: authReducer,
     cart: cartReducer,
+    wishlist: wishlistReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(thunk as any),

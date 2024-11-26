@@ -5,6 +5,8 @@ import { AppDispatch, useSelector } from '../../store/store';
 import { addToCart } from '../../store/middlewares/cartMiddleware';
 import { TAddcartPayload } from './tyings';
 import { showToast } from '../../libs';
+import { TAddWishlistPayload } from '../../services/Wishlist/tyings';
+import { addWishlist } from '../../store/middlewares/wishlistMiddleWare';
 
 export const useProductItem = () => {
   const { checkAuthen, openModal } = useMainContext();
@@ -27,5 +29,22 @@ export const useProductItem = () => {
       }
     }
   };
-  return { onAddToCart };
+  const onAddWishlist = async (payload: TAddWishlistPayload) => {
+    if (!checkAuthen) {
+      openModal();
+    } else if (payload && updateStatus !== THUNK_STATUS.pending) {
+      try {
+        const res = await dispatch(addWishlist(payload)).unwrap();
+        if (res._id) {
+          showToast({
+            type: 'success',
+            message: 'Successfully',
+          });
+        }
+      } catch (error) {
+        console.log('error', error);
+      }
+    }
+  };
+  return { onAddToCart, onAddWishlist };
 };

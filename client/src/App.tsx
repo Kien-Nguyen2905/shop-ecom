@@ -36,8 +36,10 @@ const ProductDetailPage = lazy(
   () => import('./pages/ProductDetailPage/ProductDetailPage'),
 );
 const CartPage = lazy(() => import('./pages/CartPage/CartPage'));
-
 const HomePage = lazy(() => import('./pages/HomePage/HomePage'));
+const DashboardPage = lazy(() => import('./pages/DashboardPage/DashboardPage'));
+const AccountPage = lazy(() => import('./pages/AccountPage/AccountPage'));
+
 function App() {
   return (
     <Suspense>
@@ -60,6 +62,12 @@ function App() {
               element={<VerifyEmailPage />}
             />
             <Route path={CUSTOMER_PATHS.CART} element={<CartPage />} />
+            <Route
+              path={CUSTOMER_PATHS.DASHBOARD.INDEX}
+              element={<DashboardPage />}
+            >
+              <Route index element={<AccountPage />} />
+            </Route>
           </Route>
         </Route>
         <Route path={ADMIN_PATHS.ROOT} element={<AdminLayout />}>

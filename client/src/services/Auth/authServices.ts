@@ -17,6 +17,7 @@ import {
   TResetPasswordResponse,
   TForgotPasswordPayload,
   TLogoutPayload,
+  TUpdateProfilePayload,
 } from './typings';
 
 const authServices = {
@@ -67,6 +68,12 @@ const authServices = {
   },
   logout: (payload: TLogoutPayload) => {
     return instance.post<SuccessResponse<{}>>(`/users/logout`, payload);
+  },
+  updateProfile: (payload: TUpdateProfilePayload) => {
+    return instance.put<SuccessResponse<TProfileResponse>>(
+      `/users/profile`,
+      payload,
+    );
   },
 };
 

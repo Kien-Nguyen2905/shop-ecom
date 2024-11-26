@@ -3,6 +3,7 @@ import {
   TLoginPayload,
   TLogoutPayload,
   TProfileResponse,
+  TUpdateProfilePayload,
 } from '../../services/Auth/typings';
 import { authServices } from '../../services/Auth';
 import { LOCAL_STORAGE } from '../../constants';
@@ -62,9 +63,21 @@ export const profileUser = createAsyncThunk<
 
     const profileData = resProfile.data;
     thunkAPI.dispatch(authActions.setProfile(profileData.data));
-
     return profileData;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error);
   }
 });
+
+export const updateProfileUser = createAsyncThunk(
+  'auth/updateProfile',
+  async (actionPayload: TUpdateProfilePayload, thunkAPI) => {
+    try {
+      const resProfile = await authServices.updateProfile(actionPayload);
+      thunkAPI.dispatch(profileUser());
+      return resProfile.data.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  },
+);

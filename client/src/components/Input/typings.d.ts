@@ -8,4 +8,14 @@ export type TInputProps = {
   rules?: RegisterOptions;
   variant?: string;
   onChange?: (value: string) => void;
+  disabled?: boolean;
+  renderProp?: (
+    props: Omit<TInputProps<T>, 'renderProp'>,
+    invalid: boolean,
+    field: {
+      value: string;
+      onChange: (...event: any[]) => void;
+      onBlur: () => void;
+    },
+  ) => React.ReactNode; // Custom render function for advanced use cases
 };

@@ -34,26 +34,26 @@ export const handleError = ({
             });
           }
         } else {
-          toast.error(message || 'Lỗi không xác định', {
+          toast.error(message || 'Something went wrong', {
             autoClose: duration ?? 5000,
           });
         }
         return;
       } else {
         // Hiển thị lỗi chung nếu không có lỗi cho trường cụ thể
-        toast.error(message || 'Lỗi không xác định', {
+        toast.error(message || 'Something went wrong', {
           autoClose: duration ?? 5000,
         });
       }
     } else {
       // Hiển thị lỗi chung cho các lỗi không phải 422
-      toast.error(handledError.message || 'Lỗi không xác định', {
+      toast.error(handledError.message || 'Something went wrong', {
         autoClose: duration ?? 5000,
       });
     }
   } else {
     // Nếu không phải lỗi Axios, hiển thị lỗi chung
-    toast.error(error?.message ?? 'Lỗi không xác định', {
+    toast.error(error?.message ?? 'Something went wrong', {
       autoClose: duration ?? 5000,
     });
   }

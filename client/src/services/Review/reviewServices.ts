@@ -9,7 +9,7 @@ const reviewService = {
     );
   },
   getReviewByProductId: (productId: string = '') => {
-    return instance.get<SuccessResponse<TReviewByProductIdResponse[]>>(
+    return instance.get<SuccessResponse<TReviewByProductIdResponse>>(
       `/review${productId ? `/${productId}` : ''}`,
     );
   },

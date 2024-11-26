@@ -12,8 +12,10 @@ const Input: React.FC<TInputProps> = ({
   type = 'text',
   variant = 'default',
   className = '',
+  renderProp,
   ...props
 }) => {
+  // Render a normal input without using react-hook-form
   if (variant === 'normal') {
     return (
       <input
@@ -25,26 +27,32 @@ const Input: React.FC<TInputProps> = ({
     );
   }
 
+  // Use react-hook-form for controlled inputs
   const {
     field,
     fieldState: { invalid, error },
   } = useController({
     control,
     name,
-    rules: props.rules || RULES[name],
+    rules: props.rules || RULES[name] || {}, // Fallback to an empty object if no rules exist
     defaultValue: '',
   });
 
-  return (
+  return renderProp ? (
+    renderProp(props, invalid, field)
+  ) : (
     <div className={`${className} flex flex-col w-full`}>
-      <label
-        htmlFor={name}
-        className="w-full mb-2 font-light text-textGrey font-PpLight"
-      >
-        {lable}
-        {required ? ' *' : ''}
-      </label>
+      {lable && (
+        <label
+          htmlFor={name}
+          className="w-full mb-2 font-light text-textGrey font-PpLight"
+        >
+          {lable}
+          {required ? ' *' : ''}
+        </label>
+      )}
       <input
+        id={name}
         type={type}
         className={`w-full py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
           invalid ? 'border-red-600' : ''
@@ -52,7 +60,7 @@ const Input: React.FC<TInputProps> = ({
         {...field}
         {...props}
       />
-      {invalid && <p className="text-red-600">{error?.message}</p>}
+      {invalid && <p className="text-sm text-red-600">{error?.message}</p>}
     </div>
   );
 };

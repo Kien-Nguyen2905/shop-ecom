@@ -338,6 +338,7 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
+// --------------ẨN SCROLL CART--------------
 .custom-scrollbar::-webkit-scrollbar {
   display: none; /* Ẩn thanh cuộn */
 }
@@ -345,4 +346,14 @@ input[type='number'] {
 .custom-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+// --------------CUSTOME-SELECT PROFILE--------------
+.custome-select {
+  height: 40px !important;
+  & .ant-select-selector {
+    padding: 8.5px 12px !important;
+    background-color: #fafafa !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
 }

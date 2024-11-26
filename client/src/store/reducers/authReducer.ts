@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TAuthState, TProfile } from './tyings';
+import { TAuthState } from './tyings';
 
 // Define the initial state with the correct types
 const initialState: TAuthState = {
-  profile: null,
-  listOrder: null,
+  profile: undefined,
+  listOrder: undefined,
 };
 
 // Create the slice
@@ -12,7 +12,7 @@ export const { reducer: authReducer, actions: authActions } = createSlice({
   initialState,
   name: 'auth',
   reducers: {
-    setProfile: (state, action: PayloadAction<TProfile | null>) => {
+    setProfile: (state, action) => {
       state.profile = action.payload;
     },
     setOrder: (state, action: PayloadAction<any>) => {

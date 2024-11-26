@@ -49,13 +49,22 @@ const Header = () => {
             onMouseLeave={() => setShowModal(false)}
           >
             <ul className="flex flex-col gap-2">
-              <Link to={'/'} className="hover:text-primary">
+              <Link
+                to={CUSTOMER_PATHS.DASHBOARD.INDEX}
+                className="hover:text-primary"
+              >
                 Account Details
               </Link>
-              <Link to={'/'} className="hover:text-primary">
+              <Link
+                to={CUSTOMER_PATHS.DASHBOARD.ORDER}
+                className="hover:text-primary"
+              >
                 Your Orders
               </Link>
-              <Link to={'/'} className="hover:text-primary">
+              <Link
+                to={CUSTOMER_PATHS.DASHBOARD.WISHLIST}
+                className="hover:text-primary"
+              >
                 Wishlist
               </Link>
               <button
