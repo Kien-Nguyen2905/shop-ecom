@@ -27,6 +27,9 @@ export type TCart = TGetCartResponse & {
   subTotal: number;
   total: number;
   totalProduct: number;
+  earnPoint?: number;
+  appliedPoint?: number;
+  discount: number;
 };
 export type TCartState = {
   cartInfo?: TCart;

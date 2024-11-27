@@ -9,6 +9,9 @@ export type TInputProps = {
   variant?: string;
   onChange?: (value: string) => void;
   disabled?: boolean;
+  value?: string | number;
+  checked?: boolean;
+  defaultValue?: string | number;
   renderProp?: (
     props: Omit<TInputProps<T>, 'renderProp'>,
     invalid: boolean,

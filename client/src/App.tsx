@@ -39,6 +39,8 @@ const CartPage = lazy(() => import('./pages/CartPage/CartPage'));
 const HomePage = lazy(() => import('./pages/HomePage/HomePage'));
 const DashboardPage = lazy(() => import('./pages/DashboardPage/DashboardPage'));
 const AccountPage = lazy(() => import('./pages/AccountPage/AccountPage'));
+const CheckoutPage = lazy(() => import('./pages/CheckoutPage/CheckoutPage'));
+const PaymentPage = lazy(() => import('./pages/PaymentPage/PaymentPage'));
 
 function App() {
   return (
@@ -68,6 +70,8 @@ function App() {
             >
               <Route index element={<AccountPage />} />
             </Route>
+            <Route path={CUSTOMER_PATHS.CHECKOUT} element={<CheckoutPage />} />
+            <Route path={CUSTOMER_PATHS.PAYMENT} element={<PaymentPage />} />
           </Route>
         </Route>
         <Route path={ADMIN_PATHS.ROOT} element={<AdminLayout />}>

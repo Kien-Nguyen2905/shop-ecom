@@ -10,3 +10,4 @@ export * as Review from './Review';
 export * as Cart from './Cart';
 export * as Wishlist from './Wishlist';
 export * as Address from './Address';
+export * as Transaction from './Transaction';

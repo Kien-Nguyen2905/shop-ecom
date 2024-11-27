@@ -10,7 +10,7 @@ const DropdownCart: FC<TDropdownCartProps> = (dropdownCart) => {
   const cart = dropdownCart.products;
   return (
     <div className="z-10 top-[100%] px-[10px] pb-[15px] right-0 absolute w-[270px] h-max bg-white">
-      <div className="h-[270px] overflow-hidden overflow-y-auto custom-scrollbar">
+      <div className="max-h-[270px] overflow-hidden overflow-y-auto custom-scrollbar">
         {cart?.length > 0 &&
           cart?.map((item) => (
             <DropdownCartItem
@@ -27,7 +27,6 @@ const DropdownCart: FC<TDropdownCartProps> = (dropdownCart) => {
             />
           ))}
       </div>
-
       <div className="pt-[10px]">
         <div className="flex justify-between pb-[10px] ">
           <span>Total</span>
@@ -39,7 +38,7 @@ const DropdownCart: FC<TDropdownCartProps> = (dropdownCart) => {
           <Link to={CUSTOMER_PATHS.CART}>
             <Button className="px-[25px]" text="View cart" />
           </Link>
-          <Link to={CUSTOMER_PATHS.CART}>
+          <Link to={CUSTOMER_PATHS.CHECKOUT}>
             <Button className="px-[25px]" text="Check out" />
           </Link>
         </div>

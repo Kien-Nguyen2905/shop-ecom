@@ -10,13 +10,50 @@ const Input: React.FC<TInputProps> = ({
   control,
   name = '',
   type = 'text',
-  variant = 'default',
+  variant = '',
   className = '',
   renderProp,
   ...props
 }) => {
   // Render a normal input without using react-hook-form
-  if (variant === 'normal') {
+  if (variant === '') {
+    // Use react-hook-form for controlled inputs
+    const {
+      field,
+      fieldState: { invalid, error },
+    } = useController({
+      control,
+      name,
+      rules: props.rules || RULES[name] || {}, // Fallback to an empty object if no rules exist
+      defaultValue: '',
+    });
+
+    return renderProp ? (
+      renderProp(props, invalid, field)
+    ) : (
+      <div className={`${className} flex flex-col w-full`}>
+        {lable && (
+          <label
+            htmlFor={name}
+            className="w-full mb-2 font-light text-textGrey font-PpLight"
+          >
+            {lable}
+            {required ? ' *' : ''}
+          </label>
+        )}
+        <input
+          id={name}
+          type={type}
+          className={`w-full py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
+            invalid ? 'border-red-600' : ''
+          }`}
+          {...field}
+          {...props}
+        />
+        {invalid && <p className="text-sm text-red-600">{error?.message}</p>}
+      </div>
+    );
+  } else {
     return (
       <input
         type={type}
@@ -26,43 +63,6 @@ const Input: React.FC<TInputProps> = ({
       />
     );
   }
-
-  // Use react-hook-form for controlled inputs
-  const {
-    field,
-    fieldState: { invalid, error },
-  } = useController({
-    control,
-    name,
-    rules: props.rules || RULES[name] || {}, // Fallback to an empty object if no rules exist
-    defaultValue: '',
-  });
-
-  return renderProp ? (
-    renderProp(props, invalid, field)
-  ) : (
-    <div className={`${className} flex flex-col w-full`}>
-      {lable && (
-        <label
-          htmlFor={name}
-          className="w-full mb-2 font-light text-textGrey font-PpLight"
-        >
-          {lable}
-          {required ? ' *' : ''}
-        </label>
-      )}
-      <input
-        id={name}
-        type={type}
-        className={`w-full py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
-          invalid ? 'border-red-600' : ''
-        }`}
-        {...field}
-        {...props}
-      />
-      {invalid && <p className="text-sm text-red-600">{error?.message}</p>}
-    </div>
-  );
 };
 
 export default Input;

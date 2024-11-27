@@ -12,3 +12,5 @@ export { ProductDetailPage } from './ProductDetailPage';
 export { CartPage } from './CartPage';
 export { DashboardPage } from './DashboardPage';
 export { AccountPage } from './AccountPage';
+export { CheckoutPage } from './CheckoutPage';
+export { PaymentPage } from './PaymentPage';

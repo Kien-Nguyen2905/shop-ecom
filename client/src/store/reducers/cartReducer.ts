@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { THUNK_STATUS } from '../../constants';
-import { addToCart, getCart } from '../middlewares/cartMiddleware';
+import { addToCart, getCart, updateCart } from '../middlewares/cartMiddleware';
 import { TCartState } from './tyings';
 const initialState: TCartState = {
   cartInfo: undefined,
@@ -40,6 +40,17 @@ export const { reducer: cartReducer, actions: cartActions } = createSlice({
       state.updateStatus = THUNK_STATUS.fullfilled;
     });
     builder.addCase(addToCart.rejected, (state) => {
+      state.updateStatus = THUNK_STATUS.rejected;
+    });
+    //UpdateCart;
+    builder.addCase(updateCart.pending, (state) => {
+      state.updateStatus = THUNK_STATUS.pending;
+    });
+    builder.addCase(updateCart.fulfilled, (state, action) => {
+      state.getStatus = THUNK_STATUS.fullfilled;
+      state.cartInfo = action.payload;
+    });
+    builder.addCase(updateCart.rejected, (state) => {
       state.updateStatus = THUNK_STATUS.rejected;
     });
   },

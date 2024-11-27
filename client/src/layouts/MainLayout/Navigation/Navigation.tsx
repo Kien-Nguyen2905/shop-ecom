@@ -61,7 +61,7 @@ const Navigation = () => {
               {cartInfo?.products.length}
             </span>
 
-            {isDropdownVisible && (
+            {isDropdownVisible && cartInfo?.products?.length! > 0 && (
               <DropdownCart
                 handleRemoveCart={handleRemoveCart}
                 {...cartInfo!}

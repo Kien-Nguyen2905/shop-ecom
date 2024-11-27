@@ -1,22 +1,17 @@
-import { FC } from 'react';
-import { TCartInvoice } from './tyings';
+import React, { FC } from 'react';
 import { formatCurrency } from '../../../utils';
-import { CUSTOMER_PATHS } from '../../../constants';
-import { Link } from 'react-router-dom';
+import { TSummaryCheckoutProps } from './tyings';
 import { Button } from '../../../components';
+import Input from '../../../components/Input/Input';
 
-const CartInvoice: FC<TCartInvoice> = ({
+const SummaryCheckout: FC<TSummaryCheckoutProps> = ({
   total,
   subTotal,
   products,
+  appliedPoint,
+  earnPoint,
   discount,
 }) => {
-  // const [earnPoint, setEarnPoint] = useState<number>(0);
-
-  // const handleApplyEarnPoint = (appliedEarnPoint: number) => {
-  //   setEarnPoint(appliedEarnPoint * 1000);
-  // };
-
   return (
     <div className="">
       <div className="p-[30px] w-[400px] border border-dashed border-darkGrey">
@@ -43,11 +38,23 @@ const CartInvoice: FC<TCartInvoice> = ({
             <h3 className="text-black font-PpBold">SubTotal</h3>
             <p className="text-black font-PpBold">{formatCurrency(subTotal)}</p>
           </div>
-          {discount > 0 && (
+          {discount && (
             <div className="flex justify-between pb-3 border-b border-darkGrey">
               <h3 className="text-black font-PpBold">Discount</h3>
               <p className="text-black font-PpBold">
                 {formatCurrency(discount)}
+              </p>
+            </div>
+          )}
+          {appliedPoint !== undefined && (
+            <div className="flex justify-between pb-3 border-b border-darkGrey">
+              <h3 className="text-black font-PpBold w-[200px]">
+                Applied Point
+              </h3>
+              <p className="text-black font-PpBold">{earnPoint}</p>
+              <p className="text-black font-PpBold">
+                {'- '}
+                {formatCurrency(appliedPoint)}
               </p>
             </div>
           )}
@@ -57,11 +64,8 @@ const CartInvoice: FC<TCartInvoice> = ({
           </div>
         </div>
       </div>
-      <Link to={CUSTOMER_PATHS.CHECKOUT} className="block pt-5 ml-auto w-max">
-        <Button className="px-10" text="PROCEED TO CHECKOUT" />
-      </Link>
     </div>
   );
 };
 
-export default CartInvoice;
+export default SummaryCheckout;

@@ -71,4 +71,7 @@ export const RULES: Record<string, {}> = {
   ward: {
     required: { value: true, message: 'Please choose ward' },
   },
+  // type_payment: {
+  //   required: { value: true, message: 'Please choose method payment' },
+  // },
 };

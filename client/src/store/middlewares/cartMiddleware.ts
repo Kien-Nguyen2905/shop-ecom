@@ -33,6 +33,7 @@ export const getCart = createAsyncThunk('cart/get', async (_, thunkAPI) => {
     const modCartInfo = {
       ...cartData,
       subTotal,
+      discount: total - subTotal,
       total,
       totalProduct,
     };
@@ -69,6 +70,55 @@ export const removeCart = createAsyncThunk(
     } catch (error) {
       thunkAPI.rejectWithValue(error);
       throw error;
+    }
+  },
+);
+
+export const updateCart = createAsyncThunk(
+  'cart/update',
+  async (actionPayload: number, thunkAPI) => {
+    try {
+      // Gọi API lấy thông tin giỏ hàng
+      const res = await cartServices.getCart();
+      const cartData = res.data.data;
+
+      // Tính toán tổng giá trị từng phần
+      const subTotal =
+        cartData.products?.reduce((curr, product) => {
+          return curr + product.price * product.quantity;
+        }, 0) || 0;
+
+      const totalDiscount =
+        cartData.products?.reduce((curr, product) => {
+          return (
+            curr + product.price * (1 - product.discount) * product.quantity
+          );
+        }, 0) || 0;
+      let total = subTotal;
+      if (subTotal > totalDiscount) {
+        total = totalDiscount;
+      }
+      const totalProduct =
+        cartData.products?.reduce((curr, product) => {
+          return curr + product.quantity;
+        }, 0) || 0;
+      const appliedPoint = actionPayload * 1000;
+
+      const modCartInfo = {
+        ...cartData,
+        subTotal,
+        total: total - appliedPoint,
+        discount: total - subTotal,
+        totalProduct,
+        earnPoint: actionPayload,
+        appliedPoint,
+      };
+      console.log(modCartInfo);
+      // Trả dữ liệu qua thunkAPI
+      thunkAPI.fulfillWithValue(modCartInfo);
+      return modCartInfo;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error);
     }
   },
 );
