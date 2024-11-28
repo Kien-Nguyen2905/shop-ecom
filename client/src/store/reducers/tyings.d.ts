@@ -1,4 +1,5 @@
 import { TGetCartResponse } from '../../services/Cart/tyings';
+import { TOrderResponse } from '../../services/Order/tyings';
 import { TWishlistResponse } from '../../services/Wishlist/tyings';
 
 export type TAddessProps = {
@@ -39,4 +40,9 @@ export type TCartState = {
 
 export type TWishlistState = {
   wishlist?: TWishlistResponse;
+};
+
+export type TOrderState = {
+  orderInfo?: TOrderResponse;
+  checkoutStatus: string;
 };

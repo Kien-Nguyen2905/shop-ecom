@@ -32,3 +32,19 @@ export type TCreateOrderResponse = {
   created_at?: Date;
   updated_at?: Date;
 };
+
+type TProductOrderResponse = TProductOrder & { isReviewed: boolean };
+export type TOrderResponseItem = {
+  _id?: string;
+  user_id: string;
+  products: TProductOrderResponse[];
+  total: number;
+  type_payment: number;
+  note?: string;
+  address: TAddress;
+  status: number;
+  transaction_id: string;
+  created_at?: Date;
+  updated_at?: Date;
+};
+export type TOrderResponse = TOrderResponseItem[];

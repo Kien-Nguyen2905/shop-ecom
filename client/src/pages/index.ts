@@ -14,3 +14,5 @@ export { DashboardPage } from './DashboardPage';
 export { AccountPage } from './AccountPage';
 export { CheckoutPage } from './CheckoutPage';
 export { PaymentPage } from './PaymentPage';
+export { OrderPage } from './OrderPage';
+export { CheckoutSuccessPage } from './CheckoutSuccessPage';

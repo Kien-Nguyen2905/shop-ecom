@@ -14,6 +14,7 @@ import { AppDispatch } from '../../store/store';
 import { Footer } from './Footer';
 import { getCart } from '../../store/middlewares/cartMiddleware';
 import { getWishlist } from '../../store/middlewares/wishlistMiddleWare';
+import { getOrder } from '../../store/middlewares/orderMiddleWare';
 const MainLayout = () => {
   const queryClient = new QueryClient();
   const [isLoading, setIsLoading] = useState(true);
@@ -31,6 +32,7 @@ const MainLayout = () => {
       dispatch(profileUser());
       dispatch(getCart());
       dispatch(getWishlist());
+      dispatch(getOrder());
     }
     return () => {
       clearTimeout(timer);

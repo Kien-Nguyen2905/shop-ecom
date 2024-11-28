@@ -3,7 +3,6 @@ import { useCheckoutPage } from './useChecoutPage';
 import SummaryCheckout from './components/SummaryCheckout';
 import { Button } from '../../components';
 import Input from '../../components/Input/Input';
-import { useForm } from 'react-hook-form';
 
 const CheckoutPage = () => {
   const {

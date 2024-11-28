@@ -4,7 +4,7 @@ import { Sidebar } from './components';
 const DashboardPage = () => {
   return (
     <div className="container">
-      <div className="flex gap-[100px] pt-[100px]">
+      <div className="flex gap-[100px] h-screen pt-[100px]">
         <Sidebar />
         <div className="flex-1">
           <Outlet />

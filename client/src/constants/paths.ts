@@ -7,6 +7,7 @@ export const CUSTOMER_PATHS = {
   PRODUCT_DETAIL: '/product/:id',
   CART: '/cart',
   CHECKOUT: '/checkout',
+  CHECKOUT_SUCCESS: '/checkout-success',
   DASHBOARD: {
     INDEX: '/dashboard',
     WISHLIST: '/dashboard/wishlist',

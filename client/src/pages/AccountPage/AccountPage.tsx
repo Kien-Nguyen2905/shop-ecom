@@ -67,6 +67,7 @@ const AccountPage = () => {
                   }
                   value={valueProvince || null}
                   options={dataProvince}
+                  disabled={!dataProvince || dataProvince.length === 0}
                   className={`w-full custome-select py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
                     invalid ? 'border-red-600' : ''
                   }`}
@@ -103,6 +104,7 @@ const AccountPage = () => {
                   }
                   value={valueDistrict || null}
                   options={dataDistrict}
+                  disabled={!dataDistrict || dataDistrict.length === 0}
                   className={`w-full custome-select py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
                     invalid ? 'border-red-600' : ''
                   }`}
@@ -137,8 +139,11 @@ const AccountPage = () => {
                         ((optionB?.label as string) ?? '').toLowerCase(),
                       )
                   }
-                  value={valueWard || null}
+                  value={
+                    !dataWard || dataWard.length === 0 ? '' : valueWard || null
+                  }
                   options={dataWard}
+                  disabled={!dataWard || dataWard.length === 0}
                   className={`w-full custome-select py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
                     invalid ? 'border-red-600' : ''
                   }`}

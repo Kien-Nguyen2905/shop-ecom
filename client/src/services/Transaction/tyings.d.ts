@@ -10,7 +10,7 @@ export type TTransactionResponse = {
 };
 
 export type TCreateTransactionPayload = {
-  type_payment: string;
+  type_payment: number;
   value: number;
   content?: string;
 };

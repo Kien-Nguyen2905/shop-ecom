@@ -2,23 +2,30 @@ import { useEffect, useMemo, useState } from 'react';
 import { AppDispatch, useSelector } from '../../store/store';
 import { useAccountPage } from '../AccountPage/useAccountPage';
 import { useDispatch } from 'react-redux';
-import { getCart, updateCart } from '../../store/middlewares/cartMiddleware';
+import { updateCart } from '../../store/middlewares/cartMiddleware';
 import { message } from 'antd';
 import { handleError } from '../../libs';
 import { useForm } from 'react-hook-form';
-import { TCheckoutForm, TValueForm } from './tyings';
-import { transactionServices } from '../../services/Transaction';
-import orderServices from '../../services/Order/orderServices';
+import { TCheckoutForm, TValueFormBanking } from './tyings';
 import { generateDesc } from '../../utils';
+import {
+  createOrderByBanking,
+  createOrderByCOD,
+} from '../../store/middlewares/orderMiddleWare';
+import { useNavigate } from 'react-router-dom';
+import { CUSTOMER_PATHS, THUNK_STATUS } from '../../constants';
 
 export const useCheckoutPage = () => {
+  const navigate = useNavigate();
   const { control, setError, handleSubmit, reset } = useForm<any>();
   const dispatch = useDispatch<AppDispatch>();
   const { profile } = useSelector((state) => state.auth);
   const { cartInfo } = useSelector((state) => state.cart);
+  const { checkoutStatus } = useSelector((state) => state.order);
   const [appliedPoints, setAppliedPoints] = useState<number>(0);
+  const [isConfirmVisible, setIsConfirmVisible] = useState<boolean>(false);
+  const [valueForm, setValueForm] = useState<TValueFormBanking>();
   const desc = useMemo(() => generateDesc(), []);
-  const [valueForm, setValueForm] = useState<TValueForm | undefined>();
   const {
     valueProvince,
     dataProvince,
@@ -32,6 +39,15 @@ export const useCheckoutPage = () => {
   } = useAccountPage();
   const [isOpen, setIsOpen] = useState(false);
 
+  const handleCancel = () => {
+    setIsConfirmVisible(true);
+  };
+
+  const handleConfirmClose = () => {
+    setIsConfirmVisible(false);
+    onClose();
+  };
+
   const onOpen = () => {
     setIsOpen(true);
   };
@@ -39,6 +55,7 @@ export const useCheckoutPage = () => {
   const onClose = () => {
     setIsOpen(false);
   };
+
   const applyEarnPoint = async (points: number) => {
     try {
       const res = await dispatch(updateCart(points)).unwrap();
@@ -57,34 +74,32 @@ export const useCheckoutPage = () => {
     try {
       if (!value.type_payment) {
         message.error('Please choose method payment');
-      } else if (value.type_payment === '0') {
-        const { data } = await transactionServices.createTransactionCOD({
-          type_payment: value.type_payment,
-          value: cartInfo?.total!,
-        });
-        if (data.data._id) {
-          const res = await orderServices.createOrder({
-            products: cartInfo?.products!,
-            transaction_id: data.data._id!,
+      } else if (
+        value.type_payment === '0' &&
+        checkoutStatus !== THUNK_STATUS.pending
+      ) {
+        const dataCOD = await dispatch(
+          createOrderByCOD({
+            ...value,
             address: {
               province: value.province,
               district: value.district,
               ward: value.ward,
               street_address: value.street_address,
             },
+            total: cartInfo?.total!,
+            products: cartInfo?.products!,
             earn_point: appliedPoints || 0,
-            note: value.note || '',
             type_payment: 0,
-          });
-          if (res.data.data._id) {
-            await dispatch(getCart());
-            message.success('Order successfully');
-          }
+          }),
+        ).unwrap();
+        if (dataCOD?._id) {
+          message.success('Order successfully');
+          navigate(CUSTOMER_PATHS.CHECKOUT_SUCCESS);
         }
       } else {
         setValueForm({
           products: cartInfo?.products!,
-          transaction_id: '',
           address: {
             province: value.province,
             district: value.district,
@@ -105,30 +120,20 @@ export const useCheckoutPage = () => {
     }
   };
 
-  const [isConfirmVisible, setIsConfirmVisible] = useState(false);
-
-  const handleCancel = () => {
-    setIsConfirmVisible(true);
-  };
-
-  const handleConfirmClose = () => {
-    setIsConfirmVisible(false);
-    onClose();
-  };
   const handleTransactionSePay = async () => {
     try {
-      const { data } = await transactionServices.getTransactionSePay(
-        `?content=${desc}&value=${cartInfo?.total}`,
-      );
-      if (data.data._id) {
-        const res = await orderServices.createOrder({
-          ...valueForm!,
-          transaction_id: data.data._id!,
-        });
-        if (res.data.data._id) {
-          await dispatch(getCart());
-          message.success('Order successfully');
+      if (cartInfo?.total && valueForm) {
+        const res = await dispatch(
+          createOrderByBanking({
+            desc,
+            value: cartInfo?.total,
+            order: valueForm,
+          }),
+        ).unwrap();
+        if (res?._id) {
           handleConfirmClose();
+          message.success('Order successfully');
+          navigate(CUSTOMER_PATHS.CHECKOUT_SUCCESS);
         }
       }
     } catch (error) {
@@ -149,6 +154,7 @@ export const useCheckoutPage = () => {
     dataWard,
     valueWard,
   };
+
   const paymentQrProps = {
     isOpen,
     total: cartInfo?.total!,
@@ -159,6 +165,7 @@ export const useCheckoutPage = () => {
     setIsConfirmVisible,
     handleTransactionSePay,
   };
+
   useEffect(() => {
     if (profile) {
       reset({

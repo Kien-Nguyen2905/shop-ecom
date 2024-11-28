@@ -8,7 +8,7 @@ import {
 
 const categoryServices = {
   getCategory: () => {
-    return instance.get<SuccessResponse<TCategoryResponse>>(`/category`);
+    return instance.get<SuccessResponse<TCategoryResponse[]>>(`/category`);
   },
   getCategoryById: (id: string) => {
     return instance.get<SuccessResponse<TCategoryResponse>>(`/category/${id}`);

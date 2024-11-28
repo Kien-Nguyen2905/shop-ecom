@@ -24,7 +24,7 @@ export type TCreateReviewResponse = {
 };
 export type TReviewByProductIdResponse = TCreateReviewResponse;
 export type TCreateReviewPayload = {
-  user_id: string;
+  user_id?: string;
   order_id: string;
   product_id: string;
   variant_id: string;

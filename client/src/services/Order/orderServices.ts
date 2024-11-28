@@ -1,6 +1,10 @@
 import { instance } from '../Interceptor';
 import { SuccessResponse } from '../tyings';
-import { TCreateOrderPayload, TCreateOrderResponse } from './tyings';
+import {
+  TCreateOrderPayload,
+  TCreateOrderResponse,
+  TOrderResponse,
+} from './tyings';
 
 const orderServices = {
   createOrder: (payload: TCreateOrderPayload) => {
@@ -8,6 +12,9 @@ const orderServices = {
       `/order`,
       payload,
     );
+  },
+  getOrder: () => {
+    return instance.get<SuccessResponse<TOrderResponse>>(`/order`);
   },
 };
 export default orderServices;
