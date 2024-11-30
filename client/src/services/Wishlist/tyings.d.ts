@@ -1,5 +1,6 @@
 export type TListItem = {
   product_id: string;
+  variant_id: string;
   image: string;
   name: string;
   price: number;
@@ -15,4 +16,6 @@ export type TWishlistResponse = {
 
 export type TAddWishlistPayload = {
   product_id: string;
+  variant_id: string;
+  quantity: number;
 };

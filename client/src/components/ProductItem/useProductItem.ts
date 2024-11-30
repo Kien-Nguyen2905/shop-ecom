@@ -6,12 +6,13 @@ import { addToCart } from '../../store/middlewares/cartMiddleware';
 import { TAddcartPayload } from './tyings';
 import { showToast } from '../../libs';
 import { TAddWishlistPayload } from '../../services/Wishlist/tyings';
-import { addWishlist } from '../../store/middlewares/wishlistMiddleWare';
+import { updateWishlist } from '../../store/middlewares/wishlistMiddleWare';
 
 export const useProductItem = () => {
   const { checkAuthen, openModal } = useMainContext();
   const dispatch = useDispatch<AppDispatch>();
   const { updateStatus } = useSelector((state) => state.cart);
+  const { wishlist } = useSelector((state) => state.wishlist);
   const onAddToCart = async (payload: TAddcartPayload) => {
     if (!checkAuthen) {
       openModal();
@@ -34,7 +35,7 @@ export const useProductItem = () => {
       openModal();
     } else if (payload && updateStatus !== THUNK_STATUS.pending) {
       try {
-        const res = await dispatch(addWishlist(payload)).unwrap();
+        const res = await dispatch(updateWishlist(payload)).unwrap();
         if (res._id) {
           showToast({
             type: 'success',
@@ -46,5 +47,5 @@ export const useProductItem = () => {
       }
     }
   };
-  return { onAddToCart, onAddWishlist };
+  return { onAddToCart, onAddWishlist, wishlist };
 };

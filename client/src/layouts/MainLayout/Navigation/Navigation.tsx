@@ -58,15 +58,17 @@ const Navigation = () => {
           >
             <AiOutlineShoppingCart size={25} />
             <span className="flex items-center justify-center w-5 h-5 text-[9px] text-center text-white rounded-full bg-primary">
-              {cartInfo?.products.length}
+              {cartInfo?.products?.length}
             </span>
 
-            {isDropdownVisible && cartInfo?.products?.length! > 0 && (
-              <DropdownCart
-                handleRemoveCart={handleRemoveCart}
-                {...cartInfo!}
-              />
-            )}
+            {isDropdownVisible &&
+              cartInfo?.products &&
+              cartInfo?.products?.length > 0 && (
+                <DropdownCart
+                  handleRemoveCart={handleRemoveCart}
+                  {...cartInfo!}
+                />
+              )}
           </div>
         </div>
       </div>

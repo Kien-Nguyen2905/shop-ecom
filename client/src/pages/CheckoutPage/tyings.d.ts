@@ -21,6 +21,7 @@ export type TValueFormBanking = {
     ward: string;
     street_address: string;
   };
+  phone: string;
   earn_point: number;
   note: string;
   type_payment: number;

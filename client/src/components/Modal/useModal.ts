@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMainContext } from '../../context/MainConTextProvider';
 import {
   TLoginPayload,
@@ -26,7 +26,15 @@ export const useModal = () => {
   const dispatch = useDispatch<AppDispatch>();
   const verifyEmail = useVerifyEmailMutation();
   const { handleSubmit, control, setError, reset } =
-    useForm<TVerifyEmailPayload>({ mode: 'onChange' });
+    useForm<TVerifyEmailPayload>({
+      mode: 'onChange',
+      defaultValues: {
+        email: '',
+        password: '',
+        confirm_password: '',
+        full_name: '',
+      },
+    });
   const navigate = useNavigate();
   const { isOpen, closeModal } = useMainContext();
   const [isLoading, setIsLoading] = useState(false);
@@ -49,7 +57,7 @@ export const useModal = () => {
       const dataUser: SuccessResponse<TProfileResponse> =
         unwrapResult<any>(res);
       if (dataUser?.data._id) {
-        dataUser?.data?.role !== 1
+        dataUser?.data?.role === 1
           ? navigate(CUSTOMER_PATHS.ROOT)
           : navigate(ADMIN_PATHS.ROOT);
         closeModal();
@@ -65,23 +73,25 @@ export const useModal = () => {
       });
     } finally {
       setIsLoading(false);
+      reset();
     }
   };
 
   const hanldeRegister = async (values: TVerifyEmailPayload) => {
     try {
       const res = await verifyEmail.mutateAsync(values);
-      if (res?.data.data.email_token) {
-        reset();
+      if (res?.data.data?.email_token) {
         closeModal();
-        localStorage.setItem(LOCAL_STORAGE.EMAIL, values.email);
         navigate(CUSTOMER_PATHS.VERIFY_EMAIL);
+        localStorage.setItem(LOCAL_STORAGE.EMAIL, values.email);
       }
     } catch (error) {
       handleError({
         error,
         setError,
       });
+    } finally {
+      reset();
     }
   };
 

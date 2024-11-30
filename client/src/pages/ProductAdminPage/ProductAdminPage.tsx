@@ -6,6 +6,7 @@ import { ViewProduct, AddProduct } from './components';
 import { useProductAdminPage } from './useProductAdminPage';
 import { TProductItem } from '../../services/Product/tyings';
 import { TProductTableProps } from './tying';
+import { formatCurrency } from '../../utils';
 
 const ProductAdminPage: React.FC = () => {
   const {
@@ -42,11 +43,11 @@ const ProductAdminPage: React.FC = () => {
     openModalView(record.key);
   };
 
-  const columns = [
+  const columns: any = [
     {
       title: 'Product',
       dataIndex: 'name',
-      width: '20%',
+      width: '15%',
       className: 'text-left font-medium',
     },
     {
@@ -72,9 +73,9 @@ const ProductAdminPage: React.FC = () => {
     {
       title: 'Price',
       dataIndex: 'price',
-      width: '10%',
+      width: '15%',
       className: 'text-left',
-      render: (price: number) => price,
+      render: (price: number) => <p>{formatCurrency(price)}</p>,
     },
     {
       title: 'Discount',
@@ -150,7 +151,7 @@ const ProductAdminPage: React.FC = () => {
     },
   ];
   return (
-    <div className="p-4">
+    <div className="pt-[60px]">
       <AddProduct
         isOpen={isAddProductModalOpen}
         closeModalAdd={closeModalAdd}

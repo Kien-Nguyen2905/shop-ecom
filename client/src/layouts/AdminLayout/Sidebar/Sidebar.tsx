@@ -1,13 +1,6 @@
-import { AiOutlineHome } from 'react-icons/ai';
-import { BiCommentDetail } from 'react-icons/bi';
-import { BsBox } from 'react-icons/bs';
-import { FaMoneyCheck, FaRegUser } from 'react-icons/fa';
-import { LiaProductHunt } from 'react-icons/lia';
-import { MdOutlineCategory } from 'react-icons/md';
-import { PiWarehouse } from 'react-icons/pi';
-import { TbBrandDatabricks } from 'react-icons/tb';
 import { NavLink } from 'react-router-dom';
 import { ADMIN_PATHS } from '../../../constants';
+import { NAV_LINKS } from '../../../constants/admin';
 
 const Sidebar = () => {
   return (
@@ -19,125 +12,25 @@ const Sidebar = () => {
       </div>
       <nav className="flex flex-col flex-wrap w-full p-6 hs-accordion-group">
         <ul className="space-y-1.5">
-          <li>
-            <NavLink
-              to={ADMIN_PATHS.ROOT}
-              className="hs-accordion-toggle justify-between hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-            >
-              <div className="flex gap-3">
-                <AiOutlineHome size={20} />
-                Dashboard
-              </div>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to={ADMIN_PATHS.CATEGORY}
-              className="hs-accordion-toggle justify-between hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-            >
-              <div className="flex gap-3">
-                <MdOutlineCategory size={20} />
-                Catgory
-              </div>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to={ADMIN_PATHS.BRAND}
-              className="hs-accordion-toggle justify-between hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-            >
-              <div className="flex gap-3">
-                <TbBrandDatabricks size={20} />
-                Brand
-              </div>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to={ADMIN_PATHS.PRODUCT}
-              className="hs-accordion-toggle justify-between hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-            >
-              <div className="flex gap-3">
-                <LiaProductHunt size={20} />
-                Product
-              </div>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to={ADMIN_PATHS.WAREHOUSE}
-              className="hs-accordion-toggle justify-between hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-            >
-              <div className="flex gap-3">
-                <PiWarehouse size={20} />
-                Warehouse
-              </div>
-            </NavLink>
-          </li>
-          <li>
-            <button
-              type="button"
-              className="hs-accordion-toggle justify-between hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-            >
-              <div className="flex gap-3">
-                <BsBox size={20} />
-                Order
-              </div>
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              className="hs-accordion-toggle justify-between hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-            >
-              <div className="flex gap-3">
-                <FaMoneyCheck size={20} />
-                Transaction
-              </div>
-            </button>
-          </li>
-          <li>
-            <NavLink
-              to={ADMIN_PATHS.CUSTOMER}
-              className="hs-accordion-toggle justify-between hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-            >
-              <div className="flex gap-3">
-                <FaRegUser size={20} />
-                Customer
-              </div>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to={ADMIN_PATHS.REVIEW}
-              className="hs-accordion-toggle justify-between hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-            >
-              <div className="flex gap-3">
-                <BiCommentDetail size={20} />
-                Review
-              </div>
-            </NavLink>
-            <div className="hs-accordion-content w-full overflow-hidden transition-[height] duration-300 hidden">
-              <ul className="pt-2 hs-accordion-group ps-3">
-                <li>
-                  <button
-                    type="button"
-                    className="hs-accordion-toggle hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                  >
-                    Sub Menu 1
-                  </button>
-                </li>
-                <li>
-                  <button
-                    type="button"
-                    className="hs-accordion-toggle hs-accordion-active:text-blue-600 hs-accordion-active:hover:bg-transparent w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                  >
-                    Sub Menu 2
-                  </button>
-                </li>
-              </ul>
-            </div>
-          </li>
+          {NAV_LINKS.map((item) => (
+            <li key={item.to}>
+              <NavLink
+                to={item.to}
+                className={({ isActive }) =>
+                  `hs-accordion-toggle justify-between w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg ${
+                    isActive ? 'bg-gray-100 text-blue-600' : 'text-gray-700'
+                  } hover:bg-gray-100 focus:outline-none focus:bg-gray-100`
+                }
+                // Add exact logic for the root route if necessary
+                end={item.to === ADMIN_PATHS.ROOT}
+              >
+                <div className="flex items-center gap-3">
+                  <item.icon></item.icon>
+                  {item.label}
+                </div>
+              </NavLink>
+            </li>
+          ))}
         </ul>
       </nav>
     </div>

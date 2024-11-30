@@ -145,7 +145,7 @@ const WarehouseAdminPage = () => {
   ];
 
   return (
-    <>
+    <div className="pt-[100px]">
       <DrawerWarehouse
         shipmentColumns={shipmentColumns}
         isImport={isImport}
@@ -161,7 +161,7 @@ const WarehouseAdminPage = () => {
         dataSource={warehouseData}
         pagination={{ pageSize: 5 }}
       />
-    </>
+    </div>
   );
 };
 

@@ -15,7 +15,7 @@ const AdminLayout = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (!role && role !== '0') {
+    if (role === '1') {
       navigate(CUSTOMER_PATHS.ROOT);
     }
   }, [pathname]);
@@ -31,7 +31,7 @@ const AdminLayout = () => {
         <Header />
         <div className="flex w-full h-full">
           <Sidebar />
-          <div className="flex-1 px-10 pt-[100px]">
+          <div className="flex-1 px-10">
             <Outlet />
           </div>
         </div>

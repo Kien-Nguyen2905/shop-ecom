@@ -9,7 +9,7 @@ import { useProductItem } from './useProductItem';
 import { formatCurrency } from '../../utils';
 
 const ProductItem: FC<TProductItemProps> = ({ className = '', item }) => {
-  const { onAddToCart, onAddWishlist } = useProductItem();
+  const { onAddToCart, onAddWishlist, wishlist } = useProductItem();
   if (!item) return;
   return (
     <div
@@ -28,13 +28,31 @@ const ProductItem: FC<TProductItemProps> = ({ className = '', item }) => {
           alt=""
         />
       </Link>
-      <button
-        onClick={() => onAddWishlist({ product_id: item?._id! })}
-        className="absolute flex items-center justify-center w-8 h-8 gap-4 text-white transition-all transform translate-y-full rounded-full opacity-0 pointer-events-none btn-expandable group/item top-6 right-2 bg-primary group-hover:translate-y-0 group-hover:opacity-100 group-hover:pointer-events-auto "
-      >
-        <span className="text-[10px]">Add to wishlist</span>
-        <IoIosHeartEmpty size={15} className="w-full" />
-      </button>
+      {wishlist?.list_item.some(
+        (product) => product.product_id === item._id,
+      ) ? (
+        <Link
+          to={CUSTOMER_PATHS.DASHBOARD.WISHLIST}
+          className="absolute flex items-center justify-center w-8 h-8 gap-4 text-white transition-all transform translate-y-full bg-red-700 rounded-full opacity-0 pointer-events-none group/item top-6 right-2 group-hover:translate-y-0 group-hover:opacity-100 group-hover:pointer-events-auto"
+        >
+          <IoIosHeartEmpty size={15} className="w-full" />
+        </Link>
+      ) : (
+        <button
+          onClick={() =>
+            onAddWishlist({
+              product_id: item?._id!,
+              quantity: 1,
+              variant_id: item.variants[0]?._id,
+            })
+          }
+          className="absolute flex items-center justify-center w-8 h-8 gap-4 text-white transition-all transform translate-y-full rounded-full opacity-0 pointer-events-none btn-expandable group/item top-6 right-2 bg-primary group-hover:translate-y-0 group-hover:opacity-100 group-hover:pointer-events-auto "
+        >
+          <span className="text-[10px]">Add to wishlist</span>
+          <IoIosHeartEmpty size={15} className="w-full" />
+        </button>
+      )}
+
       {item.variants[0].discount > 0 && (
         <>
           <span className="absolute w-12 h-12 text-[13px] font-PpLight flex items-center justify-center text-white rounded-full top-6 left-2 bg-[#ef837b]">

@@ -11,12 +11,6 @@ const CartInvoice: FC<TCartInvoice> = ({
   products,
   discount,
 }) => {
-  // const [earnPoint, setEarnPoint] = useState<number>(0);
-
-  // const handleApplyEarnPoint = (appliedEarnPoint: number) => {
-  //   setEarnPoint(appliedEarnPoint * 1000);
-  // };
-
   return (
     <div className="">
       <div className="p-[30px] w-[400px] border border-dashed border-darkGrey">
@@ -57,8 +51,18 @@ const CartInvoice: FC<TCartInvoice> = ({
           </div>
         </div>
       </div>
-      <Link to={CUSTOMER_PATHS.CHECKOUT} className="block pt-5 ml-auto w-max">
-        <Button className="px-10" text="PROCEED TO CHECKOUT" />
+      <Link
+        to={
+          products.length > 0 ? CUSTOMER_PATHS.CHECKOUT : CUSTOMER_PATHS.PRODUCT
+        }
+        className="block pt-5 ml-auto w-max"
+      >
+        <Button
+          className="px-10"
+          text={
+            products.length > 0 ? 'PROCEED TO CHECKOUT' : 'BACK TO SHOPPING'
+          }
+        />
       </Link>
     </div>
   );

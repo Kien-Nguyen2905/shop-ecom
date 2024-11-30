@@ -9,10 +9,12 @@ const BrandAdminPage: React.FC = () => {
     return <h1>Loading...</h1>;
   }
   return (
-    <TableBrand
-      handleQueryProps={handleQueryProps}
-      handleTableProps={handleTableProps}
-    />
+    <div className="pt-[60px]">
+      <TableBrand
+        handleQueryProps={handleQueryProps}
+        handleTableProps={handleTableProps}
+      />
+    </div>
   );
 };
 

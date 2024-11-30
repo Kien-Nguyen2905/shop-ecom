@@ -16,3 +16,6 @@ export { CheckoutPage } from './CheckoutPage';
 export { PaymentPage } from './PaymentPage';
 export { OrderPage } from './OrderPage';
 export { CheckoutSuccessPage } from './CheckoutSuccessPage';
+export { OrderAdminPage } from './OrderAdminPage';
+export { TransactionAdminPage } from './TransactionAdminPage';
+export { WishlistPage } from './WishlistPage';

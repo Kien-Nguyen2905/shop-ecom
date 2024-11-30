@@ -43,7 +43,7 @@ const Header = () => {
             className={`w-[180px] z-10 cursor-pointer h-[140px] absolute bg-white top-full right-2 shadow-lg pt-5 pl-5 ${
               showModal
                 ? ' opacity-100 visible transition'
-                : 'opacity-0 hidden  transitions'
+                : 'opacity-0 hidden transitions'
             } }`}
             onMouseEnter={() => setShowModal(true)}
             onMouseLeave={() => setShowModal(false)}

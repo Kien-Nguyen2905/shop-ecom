@@ -2,14 +2,15 @@ import { Table, Typography } from 'antd';
 import { useCustomerAdminPage } from './useCustomerAdminPage';
 import dayjs from 'dayjs';
 import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { formatCurrency } from '../../utils';
 
 const CustomerAdminPage = () => {
   const { userAllData } = useCustomerAdminPage();
   const columns = [
     {
-      title: 'ID',
-      dataIndex: '_id',
-      key: '_id',
+      title: 'Name',
+      dataIndex: 'full_name',
+      key: 'full_name',
     },
     {
       title: 'Email',
@@ -17,9 +18,9 @@ const CustomerAdminPage = () => {
       key: 'email',
     },
     {
-      title: 'Name',
-      dataIndex: 'full_name',
-      key: 'full_name',
+      title: 'Phone',
+      dataIndex: 'phone',
+      key: 'phone',
     },
     {
       title: 'Points',
@@ -37,6 +38,7 @@ const CustomerAdminPage = () => {
       title: 'Paid',
       dataIndex: 'total_paid',
       key: 'total_paid',
+      render: (total_paid: number) => <p>{formatCurrency(total_paid)}</p>,
       sorter: (a: any, b: any) => a.total_paid - b.total_paid,
     },
     {
@@ -58,18 +60,18 @@ const CustomerAdminPage = () => {
         </div>
       ),
     },
-    {
-      title: 'Action',
-      render: () => (
-        <>
-          <Typography.Link style={{ marginInlineEnd: 8 }}>View</Typography.Link>
-        </>
-      ),
-    },
+    // {
+    //   title: 'Action',
+    //   render: () => (
+    //     <>
+    //       <Typography.Link style={{ marginInlineEnd: 8 }}>View</Typography.Link>
+    //     </>
+    //   ),
+    // },
   ];
 
   return (
-    <div>
+    <div className="pt-[100px]">
       <Table
         columns={columns}
         dataSource={userAllData}

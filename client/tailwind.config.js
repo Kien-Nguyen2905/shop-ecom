@@ -9,6 +9,7 @@ export default {
       colors: {
         darkGrey: '#777',
         primary: '#fcb941',
+        danger: '#FF4D4F',
         bBottom: '#ebebeb',
         backFont: '#1A1A1A',
         textGrey: '#666666',

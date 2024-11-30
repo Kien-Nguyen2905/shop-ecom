@@ -42,6 +42,7 @@ export const useForgotPasswordPage = () => {
           type: 'success',
           message: res.data.message,
         });
+        setIsFirstTimeSend(false);
       }
     } catch (error: any) {
       handleError({
@@ -50,7 +51,6 @@ export const useForgotPasswordPage = () => {
       });
     } finally {
       setIsLoading(false);
-      setIsFirstTimeSend(false);
     }
   };
 
@@ -60,7 +60,6 @@ export const useForgotPasswordPage = () => {
     try {
       setIsLoading(true);
       const res = await resendForgotPassword.mutateAsync(payload);
-      console.log(res);
       if (res?.data.data.forgot_password_token) {
         showToast({
           type: 'success',
@@ -122,7 +121,6 @@ export const useForgotPasswordPage = () => {
       if (isFirstTimeSend) {
         // Nếu là lần đầu, gửi forgot password
         await handlForgotPassword(payload as TForgotPasswordPayload);
-        setIsFirstTimeSend(false); // Chuyển sang trạng thái resend
       } else {
         // Nếu không phải lần đầu, gửi resend forgot password
         await handleResendForgotPassword(payload as TForgotPasswordPayload);

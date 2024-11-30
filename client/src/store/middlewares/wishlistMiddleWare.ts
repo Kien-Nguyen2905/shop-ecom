@@ -16,11 +16,11 @@ export const getWishlist = createAsyncThunk(
   },
 );
 
-export const addWishlist = createAsyncThunk(
-  'wishlist/add',
+export const updateWishlist = createAsyncThunk(
+  'wishlist/update',
   async (acctionPayload: TAddWishlistPayload, thunkAPI) => {
     try {
-      const res = await wishlistServices.addWishlist(acctionPayload);
+      const res = await wishlistServices.updateWishlist(acctionPayload);
       thunkAPI.dispatch(getWishlist());
       return res.data.data;
     } catch (error) {

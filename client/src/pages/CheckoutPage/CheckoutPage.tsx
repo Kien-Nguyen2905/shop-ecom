@@ -3,6 +3,8 @@ import { useCheckoutPage } from './useChecoutPage';
 import SummaryCheckout from './components/SummaryCheckout';
 import { Button } from '../../components';
 import Input from '../../components/Input/Input';
+import { Navigate } from 'react-router-dom';
+import { CUSTOMER_PATHS } from '../../constants';
 
 const CheckoutPage = () => {
   const {
@@ -16,7 +18,8 @@ const CheckoutPage = () => {
     handlCheckout,
     handleSubmit,
   } = useCheckoutPage();
-
+  if (cartInfo?.products?.length! <= 0)
+    return <Navigate to={CUSTOMER_PATHS.ROOT} />;
   return (
     <div className="container">
       <div className="flex h-screen gap-12 pt-10">

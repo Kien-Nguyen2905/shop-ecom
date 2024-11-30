@@ -23,4 +23,6 @@ export const ADMIN_PATHS = {
   WAREHOUSE: '/admin/warehouse',
   CUSTOMER: '/admin/customer',
   REVIEW: '/admin/review',
+  ORDER: '/admin/order',
+  TRANSACTION: '/admin/transaction',
 };

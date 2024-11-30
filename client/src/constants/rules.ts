@@ -19,6 +19,9 @@ export const RULES: Record<string, {}> = {
       message: 'You must agree with the policy',
     },
   },
+  street_address: {
+    required: { value: true, message: 'Please enter street address' },
+  },
   name: {
     required: { value: true, message: 'Please enter your name' },
   },

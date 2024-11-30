@@ -42,10 +42,16 @@ const AccountPage = lazy(() => import('./pages/AccountPage/AccountPage'));
 const CheckoutPage = lazy(() => import('./pages/CheckoutPage/CheckoutPage'));
 const PaymentPage = lazy(() => import('./pages/PaymentPage/PaymentPage'));
 const OrderPage = lazy(() => import('./pages/OrderPage/OrderPage'));
+const WishlistPage = lazy(() => import('./pages/WishlistPage/WishlistPage'));
 const CheckoutSuccessPage = lazy(
   () => import('./pages/CheckoutSuccessPage/CheckoutSuccessPage'),
 );
-
+const OrderAdminPage = lazy(
+  () => import('./pages/OrderAdminPage/OrderAdminPage'),
+);
+const TransactionAdminPage = lazy(
+  () => import('./pages/TransactionAdminPage/TransactionAdminPage'),
+);
 function App() {
   return (
     <Suspense>
@@ -62,11 +68,11 @@ function App() {
             path={CUSTOMER_PATHS.PRODUCT_DETAIL}
             element={<ProductDetailPage />}
           />
+          <Route
+            path={CUSTOMER_PATHS.VERIFY_EMAIL}
+            element={<VerifyEmailPage />}
+          />
           <Route element={<CustomerRoute redirectPath={CUSTOMER_PATHS.ROOT} />}>
-            <Route
-              path={CUSTOMER_PATHS.VERIFY_EMAIL}
-              element={<VerifyEmailPage />}
-            />
             <Route path={CUSTOMER_PATHS.CART} element={<CartPage />} />
             <Route
               path={CUSTOMER_PATHS.DASHBOARD.INDEX}
@@ -76,6 +82,10 @@ function App() {
               <Route
                 path={CUSTOMER_PATHS.DASHBOARD.ORDER}
                 element={<OrderPage />}
+              />
+              <Route
+                path={CUSTOMER_PATHS.DASHBOARD.WISHLIST}
+                element={<WishlistPage />}
               />
             </Route>
             <Route path={CUSTOMER_PATHS.CHECKOUT} element={<CheckoutPage />} />
@@ -97,6 +107,11 @@ function App() {
           />
           <Route path={ADMIN_PATHS.CUSTOMER} element={<CustomerAdminPage />} />
           <Route path={ADMIN_PATHS.REVIEW} element={<ReviewAdminPage />} />
+          <Route path={ADMIN_PATHS.ORDER} element={<OrderAdminPage />} />
+          <Route
+            path={ADMIN_PATHS.TRANSACTION}
+            element={<TransactionAdminPage />}
+          />
         </Route>
       </Routes>
     </Suspense>

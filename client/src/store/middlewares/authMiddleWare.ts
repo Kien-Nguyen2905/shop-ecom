@@ -25,10 +25,7 @@ export const login = createAsyncThunk<
       LOCAL_STORAGE.REFRESH_TOKEN,
       res.data?.data.refresh_token,
     );
-    localStorage.setItem(
-      LOCAL_STORAGE.REFRESH_TOKEN,
-      res.data.data.refresh_token,
-    );
+    localStorage.setItem(LOCAL_STORAGE.ROLE, res.data.data.role.toString());
     return await thunkAPI.dispatch(profileUser()).unwrap();
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error);

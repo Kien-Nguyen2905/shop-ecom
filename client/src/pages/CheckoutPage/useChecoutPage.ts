@@ -106,6 +106,7 @@ export const useCheckoutPage = () => {
             ward: value.ward,
             street_address: value.street_address,
           },
+          phone: value.phone,
           earn_point: appliedPoints || 0,
           note: value.note || '',
           type_payment: 1,

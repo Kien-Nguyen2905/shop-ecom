@@ -14,7 +14,7 @@ const ReviewAdminPage = () => {
       render: (record: TCreateReviewResponse['product']) => {
         return (
           <div className="flex items-center gap-2">
-            <img className="w-[100px] h-[100px]" src={record?.image} alt="" />
+            <img className="w-[70px] h-[70px]" src={record?.image} alt="" />
             <div className="">
               <p>{record?.name}</p>
               <p>{record?.color}</p>
@@ -73,8 +73,12 @@ const ReviewAdminPage = () => {
     },
   ];
   return (
-    <div>
-      <Table columns={columns} dataSource={reviewData}></Table>
+    <div className="pt-[100px]">
+      <Table
+        columns={columns}
+        pagination={{ pageSize: 6 }}
+        dataSource={reviewData}
+      ></Table>
     </div>
   );
 };

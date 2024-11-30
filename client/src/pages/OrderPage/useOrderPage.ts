@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useOrderByUserQuery } from '../../queries/useOrder';
 import { useForm } from 'react-hook-form';
 import { TModaOpenValue } from './tyings';
 import { handleError } from '../../libs';

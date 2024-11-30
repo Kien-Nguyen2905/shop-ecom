@@ -9,10 +9,12 @@ const CategoryAdminPage: React.FC = () => {
     return <h1>Loading...</h1>;
   }
   return (
-    <TableCategory
-      handleQueryProps={handleQueryProps}
-      handleTableProps={handleTableProps}
-    />
+    <div className="pt-[60px]">
+      <TableCategory
+        handleQueryProps={handleQueryProps}
+        handleTableProps={handleTableProps}
+      />
+    </div>
   );
 };
 

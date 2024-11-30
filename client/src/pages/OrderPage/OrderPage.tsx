@@ -13,7 +13,7 @@ const OrderPage = () => {
   return (
     <div>
       <h2>Orders</h2>
-      <Collapse accordion className="h-[420px] overflow-x-auto ">
+      <Collapse accordion className="max-h-[420px] overflow-x-auto ">
         {orderInfo?.map((order) => (
           <>
             <Panel key={order._id!} header={`Order ID: ${order._id}`}>

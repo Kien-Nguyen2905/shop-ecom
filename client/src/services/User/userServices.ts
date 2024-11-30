@@ -4,7 +4,7 @@ import { TUserAllResponse, TUserByIdResponse } from './tyings';
 
 const userServices = {
   getAllUser: (queryString: string = '') => {
-    return instance.get<SuccessResponse<TUserAllResponse>>(
+    return instance.get<SuccessResponse<TUserAllResponse[]>>(
       `/users/all${queryString ? '?' : ''}${queryString}`,
     );
   },

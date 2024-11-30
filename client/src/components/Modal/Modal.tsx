@@ -25,7 +25,6 @@ const Modal = () => {
   } = useModal();
   if (!isOpen) return null;
   const onSubmit = (values: TVerifyEmailPayload) => {
-    console.log(values);
     if (activeTab === 'signIn') {
       hanldeLogin?.(values);
     } else {

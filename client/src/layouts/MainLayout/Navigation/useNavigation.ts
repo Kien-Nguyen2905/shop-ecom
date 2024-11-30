@@ -5,7 +5,7 @@ import { AppDispatch, useSelector } from '../../../store/store';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { removeCart } from '../../../store/middlewares/cartMiddleware';
-import { handleError, showToast } from '../../../libs';
+import { handleError } from '../../../libs';
 
 export const useNavigation = () => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
@@ -17,13 +17,7 @@ export const useNavigation = () => {
   }, 700);
   const handleRemoveCart = async (variant_id: string) => {
     try {
-      const res = await dispatch(removeCart({ item_id: variant_id })).unwrap();
-      if (res._id) {
-        showToast({
-          type: 'success',
-          message: 'Successfully',
-        });
-      }
+      await dispatch(removeCart({ item_id: variant_id })).unwrap();
     } catch (error) {
       handleError({
         error,

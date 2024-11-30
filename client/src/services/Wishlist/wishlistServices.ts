@@ -6,7 +6,7 @@ const wishlistServices = {
   getWishlist: () => {
     return instance.get<SuccessResponse<TWishlistResponse>>(`/wishlist`);
   },
-  addWishlist: (payload: TAddWishlistPayload) => {
+  updateWishlist: (payload: TAddWishlistPayload) => {
     return instance.put<SuccessResponse<TWishlistResponse>>(
       `/wishlist`,
       payload,

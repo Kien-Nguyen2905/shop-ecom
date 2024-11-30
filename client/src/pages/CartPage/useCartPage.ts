@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch, useSelector } from '../../store/store';
 import { TAddcartPayload } from '../../components/ProductItem/tyings';
 import { addToCart, removeCart } from '../../store/middlewares/cartMiddleware';
-import { handleError, showToast } from '../../libs';
+import { handleError } from '../../libs';
 import { THUNK_STATUS } from '../../constants';
 
 export const useCartPage = () => {
@@ -21,13 +21,7 @@ export const useCartPage = () => {
   };
   const handleRemoveCart = async (variant_id: string) => {
     try {
-      const res = await dispatch(removeCart({ item_id: variant_id })).unwrap();
-      if (res._id) {
-        showToast({
-          type: 'success',
-          message: 'Successfully',
-        });
-      }
+      await dispatch(removeCart({ item_id: variant_id })).unwrap();
     } catch (error) {
       handleError({
         error,

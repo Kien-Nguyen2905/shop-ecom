@@ -3,7 +3,10 @@ import { SuccessResponse } from '../tyings';
 import {
   TCreateOrderPayload,
   TCreateOrderResponse,
+  TOrderAllResponse,
   TOrderResponse,
+  TUpdateStatusOrder,
+  TUpdateStatusOrderDetail,
 } from './tyings';
 
 const orderServices = {
@@ -15,6 +18,15 @@ const orderServices = {
   },
   getOrder: () => {
     return instance.get<SuccessResponse<TOrderResponse>>(`/order`);
+  },
+  getAllOrder: () => {
+    return instance.get<SuccessResponse<TOrderAllResponse>>(`/order/all`);
+  },
+  updateStatus: (payload: TUpdateStatusOrder) => {
+    return instance.put<SuccessResponse<TUpdateStatusOrderDetail>>(
+      `/order`,
+      payload,
+    );
   },
 };
 export default orderServices;

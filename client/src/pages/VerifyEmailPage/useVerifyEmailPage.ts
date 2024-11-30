@@ -10,13 +10,17 @@ import {
   TResendVerifyEmailPayload,
 } from '../../services/Auth/typings';
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../store/store';
+import { getCart } from '../../store/middlewares/cartMiddleware';
+import { profileUser } from '../../store/middlewares/authMiddleWare';
 
 export const useVerifyEmailPage = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const [time, setTime] = useState<number>(0);
   const register = useRegisterMutation();
   const resendVerifyEmail = useResendVerifyEmailMutation();
   const navigate = useNavigate();
-
   const handleRegisterByEmail = async (payload: TRegisterPayload) => {
     try {
       const res = await register.mutateAsync(payload);
@@ -32,6 +36,8 @@ export const useVerifyEmailPage = () => {
         localStorage.setItem(LOCAL_STORAGE.ROLE, res.data.data.role.toString());
         localStorage.removeItem(LOCAL_STORAGE.EMAIL);
         navigate(CUSTOMER_PATHS.ROOT);
+        await dispatch(profileUser());
+        await dispatch(getCart());
         showToast({
           type: 'success',
           message: res.data.message,

@@ -141,7 +141,7 @@ const ViewProduct: FC<TViewProductProps> = ({
                     rowKey="color" // Dùng color làm key cho mỗi hàng
                     size="small"
                   />
-                  <div className="h-[100px] w-full flex my-10 gap-10">
+                  <div className="h-[150px] w-full flex my-10 gap-10">
                     {variant.images.map((item) => (
                       <img
                         src={item}
