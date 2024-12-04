@@ -8,7 +8,11 @@ import {
 } from '~/controllers/products.controllers'
 
 import { adminAccessValidator } from '~/middlewares/admins/admins.middlewares'
-import { productParmaValidator, productValidator } from '~/middlewares/products/products.middlewares'
+import {
+  productParmaValidator,
+  updateProductValidator,
+  productValidator
+} from '~/middlewares/products/products.middlewares'
 import { wrapRequestHandler } from '~/utils/handlerError'
 
 const productRoute = Router()
@@ -22,7 +26,7 @@ productRoute.get('/:id', productParmaValidator, wrapRequestHandler(getProductByI
 productRoute.put(
   '/:id',
   productParmaValidator,
-  productValidator,
+  updateProductValidator,
   adminAccessValidator,
   wrapRequestHandler(updateProductController)
 )

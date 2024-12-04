@@ -8,7 +8,7 @@ import {
   transactionIdSchema,
   typePaymentSchema
 } from '~/middlewares/orders/param.schema'
-import { addressSchema } from '~/middlewares/users/param.schema'
+import { addressSchema, phoneSchema } from '~/middlewares/users/param.schema'
 import { validate } from '~/utils/validate'
 
 export const createOrderValidator = validate(
@@ -19,7 +19,8 @@ export const createOrderValidator = validate(
       note: noteSchema,
       type_payment: typePaymentSchema,
       earn_point: earnPointSchema,
-      transaction_id: transactionIdSchema
+      transaction_id: transactionIdSchema,
+      phone: phoneSchema
     },
     ['body']
   )

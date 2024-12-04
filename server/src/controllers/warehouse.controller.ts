@@ -19,7 +19,7 @@ export const getWareHouseController = async (
   next: NextFunction
 ) => {
   return new SuccessResponse({
-    data: await warehouseServices.getWarehouse()
+    data: await warehouseServices.getWarehouse(req.query.variantId as string)
   }).send(res)
 }
 

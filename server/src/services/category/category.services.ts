@@ -69,9 +69,11 @@ class CategoryServices {
     await this.checkCategoryBelongProduct(_id)
 
     await this.getCategoryById(_id)
-
-    const result = await databaseService.categories.deleteOne({ _id: new ObjectId(_id) })
-    if (!result.acknowledged || !result.deletedCount) {
+    const result = await Promise.all([
+      databaseService.categories.deleteOne({ _id: new ObjectId(_id) }),
+      databaseService.informations.deleteOne({ category_id: new ObjectId(_id) })
+    ])
+    if (!result) {
       throw new InternalServerError()
     }
   }

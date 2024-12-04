@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { SuccessResponse } from '~/models/success/success.response'
 import orderServices from '~/services/order/orders.services'
+import { TTokenPayload } from '~/services/user/type'
 
 export const createOrderController = async (
   req: Request<ParamsDictionary, any, any>,
@@ -20,5 +21,26 @@ export const updateOrderController = async (
 ) => {
   return new SuccessResponse({
     data: await orderServices.updateOrder(req.body)
+  }).send(res)
+}
+
+export const getOrderByUserController = async (
+  req: Request<ParamsDictionary, any, any>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { user_id } = req.decoded_token as TTokenPayload
+  return new SuccessResponse({
+    data: await orderServices.getOrderByUser(user_id)
+  }).send(res)
+}
+
+export const getOrderController = async (
+  req: Request<ParamsDictionary, any, any>,
+  res: Response,
+  next: NextFunction
+) => {
+  return new SuccessResponse({
+    data: await orderServices.getOrder()
   }).send(res)
 }

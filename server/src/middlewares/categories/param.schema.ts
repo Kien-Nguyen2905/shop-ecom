@@ -16,6 +16,23 @@ export const categoryIdSchema: ParamSchema = {
     }
   }
 }
+
+export const updateCategoryIdSchema: ParamSchema = {
+  notEmpty: {
+    errorMessage: CATEGORY_MESSAGES.CATEGORY_NAME_REQUIRED
+  },
+  isString: {
+    errorMessage: CATEGORY_MESSAGES.CATEGORY_ID_MUST_BE_STRING
+  },
+  trim: true,
+  custom: {
+    options: async (value) => {
+      idObjectInvalid({ id: value, validation: true })
+    }
+  },
+  optional: true
+}
+
 export const categoryNameSchema: ParamSchema = {
   notEmpty: {
     errorMessage: CATEGORY_MESSAGES.CATEGORY_NAME_REQUIRED

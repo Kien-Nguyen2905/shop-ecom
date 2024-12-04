@@ -10,7 +10,7 @@ export type TProductPayload = {
   featured: TFeatured
   variants: TVariant[]
   minimum_stock: number
-  attribute: TLapAttributes
+  attributes: Record<string, string | []>
 }
 
 export type TUpdateProductPayload = {
@@ -22,7 +22,7 @@ export type TUpdateProductPayload = {
   featured?: TFeatured
   variants?: TVariant[]
   minimum_stock?: number
-  attribute?: TLapAttributes
+  attributes?: Record<string, string | []>
   rate?: number
 }
 export type TProductQuery = {
@@ -34,7 +34,7 @@ export type TProductQuery = {
   dateTo?: string
   search?: string
   category?: string | string[]
-  featured?: 'true' | 'false'
+  popular?: 'true' | 'false'
   onSale?: 'true' | 'false'
   topRated?: 'true' | 'false'
   minPrice?: string

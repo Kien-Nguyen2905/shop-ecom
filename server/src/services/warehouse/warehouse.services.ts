@@ -1,13 +1,21 @@
 import { ObjectId } from 'mongodb'
 import { PRODUCT_MESSAGES } from '~/constants/message'
-import { BadRequestError, InternalServerError, NotFoundError } from '~/models/errors/errors'
+import { InternalServerError, NotFoundError } from '~/models/errors/errors'
 import Warehouse from '~/models/schemas/warehouse/warehouse.schemas'
 import databaseService from '~/services/database/database.services'
 import productServices from '~/services/product/product.services'
 import { TWarehousePayload, TWarehouseUpdatePayload } from '~/services/warehouse/type'
 
 class WarehouseServices {
-  async createWarehouse({ import_quantity, minimum_stock, product_id, shipments, variant_id }: TWarehousePayload) {
+  async createWarehouse({
+    import_quantity,
+    minimum_stock,
+    product_id,
+    shipments,
+    variant_id,
+    product_name,
+    variant
+  }: TWarehousePayload) {
     const _id = new ObjectId()
 
     const product = await productServices.getProductById(product_id)
@@ -19,6 +27,8 @@ class WarehouseServices {
     const warehouse = new Warehouse({
       _id,
       product_id: new ObjectId(product_id),
+      product_name,
+      variant,
       variant_id: new ObjectId(variant_id),
       import_quantity,
       minimum_stock,
@@ -92,8 +102,12 @@ class WarehouseServices {
     return (await databaseService.warehouse.findOne({ _id: new ObjectId(_id) })) || []
   }
 
-  async getWarehouse() {
-    return (await databaseService.warehouse.find().toArray()) || []
+  async getWarehouse(variantId: string) {
+    if (variantId) {
+      const warehouse = await databaseService.warehouse.findOne({ variant_id: new ObjectId(variantId) })
+      return warehouse ? [warehouse] : [{}] // Đảm bảo luôn trả về mảng
+    }
+    return (await databaseService.warehouse.find().toArray()).toReversed() || []
   }
 
   async updateIsDeleted(productId: string) {
@@ -101,8 +115,7 @@ class WarehouseServices {
       { product_id: new ObjectId(productId) },
       {
         $set: {
-          isDeleted: true,
-          updated_at: new Date()
+          isDeleted: true
         }
       }
     )

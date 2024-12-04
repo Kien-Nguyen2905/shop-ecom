@@ -22,7 +22,9 @@ export type TProductProps = {
   description: string
   featured: TFeatured
   variants: TVariant[]
+  minimum_stock: number
   rate: number
+  attributes: Record<string, string | []>
   created_at?: Date
   updated_at?: Date
 }

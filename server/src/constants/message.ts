@@ -12,7 +12,7 @@ export const USERS_MESSAGES = {
   PASSWORD_STRING: 'Password must be a string',
   PASSWORD_LENGTH: 'Password length must be from 6 to 50',
   PASSWORD_STRONG:
-    'Password must be 6-50 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
+    'Password must be 6 characters and contain at least 1 lowercase, 1 uppercase, 1 number, and 1 symbol',
   CONFIRM_PASSWORD_REQUIRED: 'Confirm password is required',
   CONFIRM_PASSWORD__STRING: 'Confirm password must be a string',
   CONFIRM_PASSWORD_LENGTH: 'Confirm password length must be from 6 to 50',
@@ -102,8 +102,10 @@ export const PRODUCT_MESSAGES = {
   VARIANT_COLOR_MUST_BE_STRING: 'Variant color must be a string',
   VARIANT_PRICE_POSITIVE: 'Variant price must be a positive number',
   VARIANT_STOCK_POSITIVE_INTEGER: 'Variant stock must be a positive integer',
+  VARIANT_STOCK_MINIMUM_STOCK: 'Variant stock must be large minimum stock',
+
   VARIANT_RATE_BETWEEN_0_AND_5: 'Variant rate must be an integer between 0 and 5',
-  VARIANT_IMAGES_INVALID: 'Variant images must be an array of valid URLs',
+  VARIANT_IMAGES_INVALID: 'Variant images must be with 3 images of valid URLs',
   VARIANT_DISCOUNT_BETWEEN_0_AND_1: 'Variant discount must be a number between 0 and 1',
   VARIANT_NOT_EXISTS: 'Variant does not exists.',
 
@@ -158,7 +160,7 @@ export const ORDER_MESSAGES = {
 
   ODER_ID_MUST_BE_STRING: 'Oder id must be string',
 
-  STATUS_MUST_BE_INTEGER: 'Status must be an integer and from 0 to 2'
+  STATUS_MUST_BE_INTEGER: 'Status must be an integer and from 0 to 1'
 }
 
 export const REVIEW_MESSAGES = {
@@ -175,4 +177,14 @@ export const POPULAR_MESSAGES = {
   ID_INVALID: 'Id is invalid',
   SUCCESS_MESSAGES: 'Successfully',
   ERROR_MESSAGES: 'Failed'
+}
+
+export const INFORMATION_MESSAGES = {
+  BRAND_NAME_REQUIRED: 'Brand name is required.',
+  INFORMATION_ID_STRING: 'Brand name must be a string.',
+  BRAND_NAME_EXISTS: 'Brand name already exist.',
+  BRAND_NOT_EXISTS: 'Brand does not exist.',
+  BRAND_BELONG_TO_EXIST_PRODUCT: 'Brand belong to exist product',
+  INFORMATION_ID_INVALID: 'Information id is invalid',
+  INFORMATION_ID_REQUIRED: 'Information id is required'
 }

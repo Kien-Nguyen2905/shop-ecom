@@ -7,7 +7,6 @@ export default class User {
   email: string
   password: string
   role?: ROLE
-  forgot_password?: string
   full_name?: string
   phone?: string
   address?: TAddessProps
@@ -22,7 +21,6 @@ export default class User {
     this.email = user.email
     this.password = user.password
     this.role = user.role || ROLE.User
-    this.forgot_password = user.forgot_password || ''
     this.full_name = user.full_name || ''
     this.phone = user.phone || ''
     this.address = user.address || {}

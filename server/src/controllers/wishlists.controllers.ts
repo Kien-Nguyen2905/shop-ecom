@@ -8,7 +8,7 @@ export const getWishListController = async (
   next: NextFunction
 ) => {
   return new SuccessResponse({
-    data: await wishlistServices.getWishList(req.decoded_authorization?.user_id!)
+    data: await wishlistServices.getWishList(req.decoded_token?.user_id!)
   }).send(res)
 }
 
@@ -19,7 +19,7 @@ export const updateWishListController = async (
 ) => {
   return new SuccessResponse({
     data: await wishlistServices.updateWishList({
-      product_id: req.body.product_id,
+      ...req.body,
       user_id: req.decoded_token?.user_id!
     })
   }).send(res)

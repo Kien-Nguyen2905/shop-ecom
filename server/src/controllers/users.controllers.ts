@@ -123,6 +123,17 @@ export const getAllUserController = async (
 export const oauthController = async (req: Request, res: Response) => {
   const { code } = req.query
   const result = await userServices.oauth(code as string)
-  const urlRedirect = `${env.CLIENT_REDIRECT}?access_token=${result.access_token}&refresh_token=${result.refresh_token}`
+  const urlRedirect = `${env.CLIENT_REDIRECT}?access_token=${result.access_token}&refresh_token=${result.refresh_token}&role=${result.role}`
   return res.redirect(urlRedirect)
+}
+
+export const getUserByIdController = async (
+  req: Request<ParamsDictionary, any, any>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id } = req.params
+  return new SuccessResponse({
+    data: await userServices.getProfile(id)
+  }).send(res)
 }

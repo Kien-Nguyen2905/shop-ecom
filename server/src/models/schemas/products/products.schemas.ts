@@ -10,7 +10,9 @@ export default class Product {
   description: string
   featured?: TFeatured
   variants: TVariant[]
+  minimum_stock: number
   rate: number
+  attributes?: Record<string, string | []>
   created_at: Date
   updated_at: Date
 
@@ -24,6 +26,8 @@ export default class Product {
     this.description = product.description || ''
     this.featured = product.featured || { isPopular: false, onSale: false, isRated: false }
     this.variants = product.variants || []
+    this.minimum_stock = product.minimum_stock
+    this.attributes = product.attributes || {}
     this.rate = product.rate || 0
     this.created_at = product.created_at || date
     this.updated_at = product.updated_at || date

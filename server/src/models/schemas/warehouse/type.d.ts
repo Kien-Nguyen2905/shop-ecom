@@ -6,6 +6,8 @@ export type TShipment = {
 export type TWarehouseProps = {
   _id?: ObjectId
   product_id: ObjectId
+  product_name: string
+  variant: string
   variant_id: ObjectId
   sold?: number
   import_quantity: number

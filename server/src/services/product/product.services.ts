@@ -2,7 +2,6 @@ import { TWarehousePayload } from '~/services/warehouse/type'
 import { ObjectId } from 'mongodb'
 import { BRAND_MESSAGES, CATEGORY_MESSAGES, PRODUCT_MESSAGES } from '~/constants/message'
 import { BadRequestError, ConflictRequestError, InternalServerError, NotFoundError } from '~/models/errors/errors'
-import Information from '~/models/schemas/informations/informations.schemas'
 import Product from '~/models/schemas/products/products.schemas'
 import databaseService from '~/services/database/database.services'
 import { TProductPayload, TProductQuery, TUpdateProductPayload } from '~/services/product/type'
@@ -16,7 +15,7 @@ class ProductServices {
     thumbnail,
     description,
     featured,
-    attribute,
+    attributes,
     name,
     minimum_stock,
     category_id,
@@ -40,14 +39,12 @@ class ProductServices {
       featured,
       rate: 0,
       thumbnail,
-      variants
+      variants,
+      attributes,
+      minimum_stock
     })
-    const information = new Information({ category_id: new ObjectId(category_id), product_id, attribute })
 
-    const resultInsert = await Promise.all([
-      databaseService.products.insertOne(product),
-      databaseService.informations.insertOne(information)
-    ])
+    const resultInsert = await Promise.all([databaseService.products.insertOne(product)])
     if (!resultInsert) {
       throw new InternalServerError()
     }
@@ -56,6 +53,8 @@ class ProductServices {
     for (const item of variants) {
       warehousePayload = {
         product_id: product_id.toString(),
+        product_name: name,
+        variant: item.color,
         variant_id: item._id.toString(),
         import_quantity: item.stock,
         minimum_stock,
@@ -73,20 +72,21 @@ class ProductServices {
   }
 
   async getProduct(queryProduct: TProductQuery) {
+    // Parse query parameters
     const options = {
-      page: Number(queryProduct.page) || 1,
-      limit: Number(queryProduct.limit) || 10,
+      page: queryProduct.page ? Number(queryProduct.page) : null,
+      limit: queryProduct.limit ? Number(queryProduct.limit) : null,
       orderBy: queryProduct.orderBy as string,
-      order: queryProduct.order as string,
+      order: queryProduct.order ? Number(queryProduct.order) : null,
       dateFrom: queryProduct.dateFrom as string,
       dateTo: queryProduct.dateTo as string,
       search: queryProduct.search as string,
       category: queryProduct.category as string,
-      featured: queryProduct.featured === 'true',
+      popular: queryProduct.popular === 'true',
       onSale: queryProduct.onSale === 'true',
       topRated: queryProduct.topRated === 'true',
-      minPrice: Number(queryProduct.minPrice),
-      maxPrice: Number(queryProduct.maxPrice),
+      minPrice: queryProduct.minPrice ? Number(queryProduct.minPrice) : null,
+      maxPrice: queryProduct.maxPrice ? Number(queryProduct.maxPrice) : null,
       outOfStockLimit: queryProduct.outOfStockLimit === 'true',
       inStock: queryProduct.inStock === 'true'
     }
@@ -100,7 +100,7 @@ class ProductServices {
       dateTo,
       search,
       category,
-      featured,
+      popular,
       onSale,
       topRated,
       minPrice,
@@ -109,17 +109,15 @@ class ProductServices {
       inStock
     } = options
 
-    const skip = (page - 1) * limit
     const query: any = {}
 
-    // Filter by creation date range
+    // Filter logic
     if (dateFrom || dateTo) {
       query.created_at = {}
       if (dateFrom) query.created_at.$gte = new Date(dateFrom)
       if (dateTo) query.created_at.$lte = new Date(dateTo)
     }
 
-    // Search by name (case-insensitive)
     if (search) {
       query.name = {
         $regex: search,
@@ -127,14 +125,12 @@ class ProductServices {
       }
     }
 
-    // Filter by category
     if (category) {
       query.category_id = new ObjectId(category)
     }
 
-    // Filter by featured and onSale status
-    if (featured) {
-      query['featured.isPopular'] = featured
+    if (popular) {
+      query['featured.isPopular'] = popular
     }
 
     if (onSale) {
@@ -144,65 +140,90 @@ class ProductServices {
     if (topRated) {
       query['featured.isRated'] = topRated
     }
+
     if (minPrice || maxPrice) {
-      // Filter by price range of first variant
-      query['variants.0.price'] = {} // Truy cập giá của phần tử đầu tiên trong variants
+      query['variants.0.price'] = {}
       if (minPrice !== undefined) query['variants.0.price'].$gte = minPrice
       if (maxPrice !== undefined) query['variants.0.price'].$lte = maxPrice
     }
 
     if (outOfStockLimit) {
-      query['variants.stock'] = { $lt: 10 } // Kiểm tra xem có variant nào tồn kho dưới 10 hay không
+      query['variants.stock'] = { $lt: 10 }
     }
+
     if (inStock) {
-      query['variants.stock'] = { $gt: 10 } // Kiểm tra xem có variant nào tồn kho lớn hơn 10 hay không
+      query['variants.stock'] = { $gt: 10 }
     }
-    // Sorting logic with first variant price
+
+    // Sorting logic
     const sort: any = {}
-    // Kiểm tra orderBy:
-    // Nếu orderBy là 'price', bạn sẽ sắp xếp theo firstVariantPrice.
-    // Nếu orderBy là 'rate', bạn sẽ sắp xếp theo rate.
-    // Nếu orderBy là một trường khác, bạn sử dụng trường đó.
-    // Mặc định: Nếu không có orderBy, bạn sẽ sắp xếp theo created_at theo thứ tự giảm dần.
     if (orderBy) {
       if (orderBy === 'price') {
-        // If orderBy is 'price', sort by the price of the first variant
         sort['firstVariantPrice'] = order
       } else if (orderBy === 'rate') {
-        // If orderBy is 'rate', sort by the rate field
         sort.rate = order
       } else {
-        // For other fields, use the provided order
         sort[orderBy] = order
       }
     } else {
-      // Default sorting by creation date if no orderBy is specified
       sort.created_at = -1
     }
 
-    // Fetch products with filters, sorting, and pagination
-    const products = await databaseService.products
-      .aggregate([
-        { $match: query },
-        { $addFields: { firstVariantPrice: { $first: '$variants.price' } } },
-        { $sort: sort },
-        { $skip: skip },
-        { $limit: limit }
-      ])
-      .toArray()
+    // Pagination and fetching data
+    if (page && limit) {
+      const skip = (page - 1) * limit
 
-    // Count total documents for pagination
-    const totalProducts = await databaseService.products.countDocuments(query)
-    const totalPages = Math.ceil(totalProducts / limit)
+      const products = await databaseService.products
+        .aggregate([
+          { $match: query },
+          {
+            $addFields: {
+              firstVariantPrice: {
+                $multiply: [
+                  { $arrayElemAt: ['$variants.price', 0] },
+                  { $subtract: [1, { $arrayElemAt: ['$variants.discount', 0] }] }
+                ]
+              }
+            }
+          },
+          { $sort: sort },
+          { $skip: skip },
+          { $limit: limit }
+        ])
+        .toArray()
 
-    return {
-      products,
-      pagination: {
-        totalProducts,
-        totalPages,
-        currentPage: page,
-        limit
+      const totalProducts = await databaseService.products.countDocuments(query)
+      const totalPages = Math.ceil(totalProducts / limit)
+
+      return {
+        products,
+        pagination: {
+          totalProducts,
+          totalPages,
+          currentPage: page,
+          limit
+        }
       }
+    } else {
+      // If no pagination, return all products
+      const products = await databaseService.products
+        .aggregate([
+          { $match: query },
+          {
+            $addFields: {
+              firstVariantPrice: {
+                $multiply: [
+                  { $arrayElemAt: ['$variants.price', 0] },
+                  { $subtract: [1, { $arrayElemAt: ['$variants.discount', 0] }] }
+                ]
+              }
+            }
+          },
+          { $sort: sort }
+        ])
+        .toArray()
+
+      return { products }
     }
   }
 
@@ -211,6 +232,7 @@ class ProductServices {
     if (!productExist) {
       throw new NotFoundError({ message: PRODUCT_MESSAGES.PRODUCT_NOT_EXISTS })
     }
+    return productExist
   }
 
   async checkProductandVariant(productId: string, variantId: string, quantity?: number) {
@@ -228,10 +250,11 @@ class ProductServices {
 
   async getProductById(productId: string) {
     const result = (await databaseService.products.findOne({ _id: new ObjectId(productId) })) as TProductProps
+    const attribute = await databaseService.informations.findOne({ product_id: new ObjectId(productId) })
     if (!result) {
       throw new NotFoundError()
     }
-    return result
+    return { ...result, attribute: attribute?.attributes }
   }
 
   async checkProductByName(name: string) {
@@ -275,6 +298,33 @@ class ProductServices {
     const result = await databaseService.products.updateOne(
       { _id: new ObjectId(productId) },
       { $set: { ...payload, category_id, brand_id, updated_at: new Date() } }
+    )
+    if (!result.acknowledged || result.modifiedCount) {
+      throw new InternalServerError()
+    }
+
+    const resultUpdateMinimumStock = await databaseService.warehouse.updateMany(
+      {
+        product_id: new ObjectId(productId)
+      },
+      {
+        minimum_stock: payload.minimum_stock
+      }
+    )
+
+    if (!resultUpdateMinimumStock.acknowledged || resultUpdateMinimumStock.modifiedCount) {
+      throw new InternalServerError()
+    }
+
+    return await this.getProductById(productId)
+  }
+
+  async updateRateProduct(productId: string, rate: number) {
+    const product = await this.checkProductById(productId)
+    const calculateRate = Math.round((product.rate + rate) / 2)
+    const result = await databaseService.products.updateOne(
+      { _id: new ObjectId(productId) },
+      { $set: { rate: calculateRate, updated_at: new Date(), 'featured.isRated': calculateRate >= 4 ? true : false } }
     )
     if (!result.acknowledged) {
       throw new InternalServerError()

@@ -13,9 +13,9 @@ import { wrapRequestHandler } from '~/utils/handlerError'
 const warehouseRoute = Router()
 warehouseRoute.post('/', createWrehouseValidator, adminAccessValidator, wrapRequestHandler(createWareHouseController))
 
-warehouseRoute.get('/', adminAccessValidator, wrapRequestHandler(getWareHouseController))
+warehouseRoute.get('/', wrapRequestHandler(getWareHouseController))
 
-warehouseRoute.get('/:id', adminAccessValidator, wrapRequestHandler(getWareHouseByIdController))
+warehouseRoute.get('/:id', wrapRequestHandler(getWareHouseByIdController))
 
 warehouseRoute.put(
   '/:id',

@@ -13,7 +13,6 @@ export type TUserProps = {
   email: string
   password: string
   role?: ROLE
-  forgot_password?: string
   full_name?: string
   phone?: string
   address?: TAddessProps

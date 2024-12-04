@@ -8,4 +8,6 @@ export type TItemWishList = {
 export type TUpdateWishListPayload = {
   user_id: string
   product_id: string
+  variant_id: string
+  quantity: number
 }

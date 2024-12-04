@@ -4,6 +4,8 @@ import { TShipment, TWarehouseProps } from '~/models/schemas/warehouse/type'
 export default class Warehouse {
   _id?: ObjectId
   product_id: ObjectId
+  product_name: string
+  variant: string
   variant_id: ObjectId
   sold?: number
   import_quantity: number
@@ -17,6 +19,8 @@ export default class Warehouse {
     const date = new Date()
     this._id = warehouse._id
     this.product_id = warehouse.product_id
+    this.product_name = warehouse.product_name
+    this.variant = warehouse.variant
     this.variant_id = warehouse.variant_id
     this.sold = warehouse.sold || 0
     this.import_quantity = warehouse.import_quantity

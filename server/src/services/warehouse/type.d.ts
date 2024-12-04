@@ -5,6 +5,8 @@ export type TShipment = {
 }
 export type TWarehousePayload = {
   product_id: string
+  product_name: string
+  variant: string
   variant_id: string
   import_quantity: number
   minimum_stock: number

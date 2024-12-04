@@ -4,7 +4,6 @@ import { idObjectInvalid } from '~/utils/checkValidObjectId'
 
 export const quantityCartSchema: ParamSchema = {
   isInt: {
-    options: { min: 1 },
     errorMessage: POPULAR_MESSAGES.QUANTITY_MIN
   },
   toInt: true
@@ -19,7 +18,7 @@ export const itemIdCartSchema: ParamSchema = {
   },
   trim: true,
   custom: {
-    options: (value) => {
+    options: async (value) => {
       idObjectInvalid({ id: value, validation: true })
     }
   }

@@ -17,6 +17,7 @@ import databaseService from '~/services/database/database.services'
 import { initFolder } from '~/utils/file'
 import transactionRoute from '~/routes/transactions.routes'
 import reviewRoute from '~/routes/reviews.routes'
+import informationRoute from '~/routes/information.routes'
 const app = express()
 const port = env.PORT || 8080
 app.use(
@@ -43,6 +44,7 @@ app.use(`${env.API_VERSION}/static`, staticRoute)
 app.use(`${env.API_VERSION}/order`, orderRoute)
 app.use(`${env.API_VERSION}/transaction`, transactionRoute)
 app.use(`${env.API_VERSION}/review`, reviewRoute)
+app.use(`${env.API_VERSION}/information`, informationRoute)
 
 app.use(defaultErrorHandler)
 app.listen(port, () => {

@@ -62,7 +62,7 @@ class CartServices {
     return (await databaseService.carts.findOne({ user_id: new ObjectId(user_id) })) || []
   }
   async removeCart({ user_id, item_id }: TRemoveItemCartPayload) {
-    const cart = databaseService.carts.findOne({ user_id: new ObjectId(user_id) })
+    const cart = await databaseService.carts.findOne({ user_id: new ObjectId(user_id) })
     if (!cart) {
       throw new NotFoundError()
     }
@@ -72,14 +72,14 @@ class CartServices {
       },
       {
         $pull: {
-          product: { _id: new ObjectId(item_id) }
+          products: { variant_id: new ObjectId(item_id) }
         },
         $set: {
           updated_at: new Date()
         }
       }
     )
-    if (!result.modifiedCount) {
+    if (!result.modifiedCount && !result.acknowledged) {
       throw new InternalServerError()
     }
     return (await this.getCart(user_id)) || {}

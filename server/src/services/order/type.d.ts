@@ -20,9 +20,9 @@ export type TCreateOrderPayload = {
   address?: TAddress
   earn_point?: number
   transaction_id: string
+  phone: string
 }
 export type TUpdateStatusOrderPayload = {
-  user_id: string
   order_id: string
   status: STATUS_ORDER
 }

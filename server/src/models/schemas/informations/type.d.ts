@@ -21,8 +21,7 @@ export type TLapAttributes = {
 export type TInformationProps = {
   _id?: ObjectId
   category_id: ObjectId
-  product_id: ObjectId
-  attribute: TLapAttributes
+  attributes: {}
   created_at?: Date
   updated_at?: Date
 }

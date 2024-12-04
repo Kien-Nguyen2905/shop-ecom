@@ -18,5 +18,13 @@ export const getReviewController = async (
   res: Response,
   next: NextFunction
 ) => {
-  return new SuccessResponse({ data: await reviewServices.getReview() }).send(res)
+  return new SuccessResponse({ data: await reviewServices.getReview(req.query.search as string) }).send(res)
+}
+
+export const getReviewByProductIdController = async (
+  req: Request<ParamsDictionary, any, any>,
+  res: Response,
+  next: NextFunction
+) => {
+  return new SuccessResponse({ data: await reviewServices.getReviewByProductId(req.params.id as string) }).send(res)
 }

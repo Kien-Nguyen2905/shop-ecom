@@ -21,6 +21,7 @@ export type TOrderProps = {
   type_payment: TYPE_PAYMENT
   note?: string
   address: TAddessProps
+  phone: string
   status: STATUS_ORDER
   transaction_id: ObjectId
   created_at?: Date

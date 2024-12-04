@@ -145,6 +145,10 @@ class UserServices {
 
   async register(email_token: string) {
     const user_id = new ObjectId()
+    const emailTokenExist = await databaseService.verifications.findOne({ email_token })
+    if (!emailTokenExist) {
+      throw new NotFoundError()
+    }
     const user_payload = await verifyToken<TDecodeEmailToken>({
       token: email_token,
       secretOrPublicKey: env.JWT_SECRET_EMAIL_VERIFY_TOKEN as string
@@ -353,8 +357,8 @@ class UserServices {
     if (!result) {
       throw new NotFoundError()
     }
-    const { email, role, full_name, phone, address, earn_point, total_paid } = result
-    return { email, role, full_name, phone, address, earn_point, total_paid }
+    const { _id, email, role, full_name, phone, address, earn_point, total_paid } = result
+    return { _id, email, role, full_name, phone, address, earn_point, total_paid }
   }
 
   async updateProfile({
@@ -375,7 +379,7 @@ class UserServices {
     if (phone) updateQuery.phone = phone
     if (address) updateQuery.address = address
     if (total_order) updateQuery.total_order = total_order
-    if (total_paid) updateQuery.total_paid = total_paid
+    if (total_paid) updateQuery.total_paid = total_paid + user.total_paid!
     if (earn_point) {
       const calculateEarnPoint = user.earn_point! + earn_point!
       updateQuery.earn_point = calculateEarnPoint

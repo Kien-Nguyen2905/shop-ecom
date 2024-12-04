@@ -11,6 +11,7 @@ export default class Order {
   type_payment: TYPE_PAYMENT
   note?: string
   address: TAddessProps
+  phone: string
   status: STATUS_ORDER
   transaction_id: ObjectId
   created_at?: Date
@@ -24,6 +25,7 @@ export default class Order {
     this.type_payment = order.type_payment
     this.note = order.note || ''
     this.address = order.address
+    this.phone = order.phone
     this.status = order.status
     this.transaction_id = order.transaction_id
     this.created_at = order.created_at || date

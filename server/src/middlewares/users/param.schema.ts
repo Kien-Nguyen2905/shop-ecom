@@ -69,24 +69,24 @@ export const passwordSchema: ParamSchema = {
   isString: {
     errorMessage: USERS_MESSAGES.PASSWORD_STRING
   },
-  trim: true
-  // isLength: {
-  //   options: {
-  //     min: 6,
-  //     max: 50
-  //   },
-  //   errorMessage: USERS_MESSAGES.PASSWORD_LENGTH
-  // },
-  // isStrongPassword: {
-  //   options: {
-  //     minLength: 6,
-  //     minLowercase: 1,
-  //     minUppercase: 1,
-  //     minNumbers: 1,
-  //     minSymbols: 1
-  //   },
-  //   errorMessage: USERS_MESSAGES.PASSWORD_STRONG
-  // }
+  trim: true,
+  isLength: {
+    options: {
+      min: 6,
+      max: 50
+    },
+    errorMessage: USERS_MESSAGES.PASSWORD_LENGTH
+  },
+  isStrongPassword: {
+    options: {
+      minLength: 6,
+      minLowercase: 1,
+      minUppercase: 1,
+      minNumbers: 1,
+      minSymbols: 1
+    },
+    errorMessage: USERS_MESSAGES.PASSWORD_STRONG
+  }
 }
 export const confirmPasswordSchema: ParamSchema = {
   notEmpty: {

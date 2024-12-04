@@ -1,5 +1,9 @@
 import { Router } from 'express'
-import { createReviewController, getReviewController } from '~/controllers/reviews.controllers'
+import {
+  createReviewController,
+  getReviewByProductIdController,
+  getReviewController
+} from '~/controllers/reviews.controllers'
 import { adminAccessValidator } from '~/middlewares/admins/admins.middlewares'
 import { createReviewValidator } from '~/middlewares/reviews/reviews.middlewares'
 import { accessTokenValidator } from '~/middlewares/users/users.middlwares'
@@ -10,6 +14,8 @@ const reviewRoute = Router()
 
 reviewRoute.post('/', createReviewValidator, accessTokenValidator, wrapRequestHandler(createReviewController))
 
-reviewRoute.get('/', adminAccessValidator, wrapRequestHandler(getReviewController))
+reviewRoute.get('/', wrapRequestHandler(getReviewController))
+
+reviewRoute.get('/:id', wrapRequestHandler(getReviewByProductIdController))
 
 export default reviewRoute

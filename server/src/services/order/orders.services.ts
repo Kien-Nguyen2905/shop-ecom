@@ -1,9 +1,9 @@
+import e from 'express'
 import { ObjectId } from 'mongodb'
 import { STATUS_ORDER, TYPE_PAYMENT } from '~/constants/enum'
 import { BadRequestError, InternalServerError, NotFoundError } from '~/models/errors/errors'
 import Order from '~/models/schemas/orders/orders.schemas'
 import { TOrderProps } from '~/models/schemas/orders/type'
-import Transaction from '~/models/schemas/transactions/transactions.schemas'
 import cartServices from '~/services/cart/cart.services'
 import databaseService from '~/services/database/database.services'
 import {
@@ -33,6 +33,7 @@ class OrderService {
       }
     }
   }
+
   async updateStockProduct(products: any) {
     for (let product of products) {
       const resultProduct = await databaseService.products.updateOne(
@@ -54,6 +55,7 @@ class OrderService {
       }
     }
   }
+
   async createOrder({
     user_id,
     products,
@@ -61,7 +63,8 @@ class OrderService {
     note,
     type_payment,
     earn_point,
-    transaction_id
+    transaction_id,
+    phone
   }: TCreateOrderPayload) {
     // Check quantity in stock
     await this.checkStockAvailability(products)
@@ -73,7 +76,7 @@ class OrderService {
       return total + discount
     }, 0)
     if (earn_point) {
-      total += total - earn_point * 1000
+      total = total - earn_point * 1000
     }
     const productEntity = products.map((product) => ({
       ...product,
@@ -82,39 +85,35 @@ class OrderService {
       isReviewed: false
     }))
     const orderId = new ObjectId()
-    const transactionId = new ObjectId()
+    const transactionId = new ObjectId(transaction_id)
     let order: any = {}
     if (type_payment === TYPE_PAYMENT.COD) {
       order = new Order({
+        _id: orderId,
         user_id: new ObjectId(user_id),
         products: productEntity,
         address: address!,
         note,
         total,
+        phone,
         status: STATUS_ORDER.WAITING,
         type_payment,
         transaction_id: transactionId
       })
-      const transaction = new Transaction({
-        _id: transactionId,
-        type_payment,
-        method_payment: type_payment ? 'BANKING' : 'COD',
+    } else {
+      order = new Order({
+        _id: orderId,
         user_id: new ObjectId(user_id),
-        value: total
+        products: productEntity,
+        address: address!,
+        note,
+        phone,
+        total,
+        status: STATUS_ORDER.WAITING,
+        type_payment: type_payment!,
+        transaction_id: new ObjectId(transaction_id)
       })
-      await databaseService.transactions.insertOne(transaction)
     }
-    order = new Order({
-      _id: orderId,
-      user_id: new ObjectId(user_id),
-      products: productEntity,
-      address: address!,
-      note,
-      total,
-      status: STATUS_ORDER.WAITING,
-      type_payment: type_payment!,
-      transaction_id: new ObjectId(transaction_id)
-    })
     const result = await databaseService.orders.insertOne(order)
     if (!result.acknowledged || !result.insertedId) {
       throw new InternalServerError()
@@ -153,13 +152,16 @@ class OrderService {
     })
     return (await databaseService.orders.findOne({ _id: orderId })) || {}
   }
+
   async getOrder() {
-    return (await databaseService.orders.find().toArray()) || []
+    return (await databaseService.orders.find().toArray()).reverse() || []
   }
+
   async getOrderDetail(orderId: string) {
     return ((await databaseService.orders.findOne({ _id: new ObjectId(orderId) })) as TOrderProps) || {}
   }
-  async updateOrder({ user_id, order_id, status }: TUpdateStatusOrderPayload) {
+
+  async updateOrder({ order_id, status }: TUpdateStatusOrderPayload) {
     const order = await this.getOrderDetail(order_id)
     if (!order) {
       throw new NotFoundError()
@@ -236,9 +238,11 @@ class OrderService {
 
     return (await this.getOrderDetail(order_id)) || {}
   }
+
   async getOrderByUser(user_id: string) {
-    return databaseService.orders.find({ user_id: new ObjectId(user_id) }).toArray() || []
+    return (await databaseService.orders.find({ user_id: new ObjectId(user_id) }).toArray()).reverse() || []
   }
+
   async findVariantUnreview({ order_id, variant_id }: TFindVariantUnreview) {
     const variantInOrder = await databaseService.orders.findOne({
       _id: new ObjectId(order_id),
@@ -255,6 +259,7 @@ class OrderService {
     }
     return variantInOrder
   }
+
   async updateIsReviewed(order_id: string, variant_id: string) {
     const order = await this.getOrderDetail(order_id)
     if (!order) {
