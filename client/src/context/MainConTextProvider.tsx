@@ -3,10 +3,12 @@ import {
   createContext,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { TMainContextProviderProps } from './tyings';
 import { LOCAL_STORAGE } from '../constants';
+import { generateDesc } from '../utils';
 
 const defaultValue: TMainContextProviderProps = {
   isOpen: false,
@@ -15,6 +17,7 @@ const defaultValue: TMainContextProviderProps = {
   closeModal: () => null,
   checkAuthen: false,
   setCheckAuthen: () => null,
+  desc: '',
 };
 const MainContext = createContext<TMainContextProviderProps>(defaultValue);
 
@@ -34,9 +37,11 @@ export const MainConTextProvider = ({ children }: { children: ReactNode }) => {
       setCheckAuthen(true);
     }
   }, []);
+  const desc = useMemo(() => generateDesc(), []);
   return (
     <MainContext.Provider
       value={{
+        desc,
         isOpen,
         checkAuthen,
         setCheckAuthen,

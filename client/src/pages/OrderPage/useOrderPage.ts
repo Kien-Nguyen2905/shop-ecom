@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { TModaOpenValue } from './tyings';
-import { handleError } from '../../libs';
+import { handleError, showToast } from '../../libs';
 import reviewService from '../../services/Review/reviewServices';
 import { TCreateReviewPayload } from '../../services/Review/tyings';
 import { message } from 'antd';
@@ -50,7 +50,9 @@ export const useOrderPage = () => {
       if (res.data.data._id) {
         closeModal();
         dispatch(getOrder());
-        message.success('Successfully');
+        message.success(
+          `Successfully! You have a 1 point, Let's use the point at checkout`,
+        );
       }
     } catch (error) {
       handleError({

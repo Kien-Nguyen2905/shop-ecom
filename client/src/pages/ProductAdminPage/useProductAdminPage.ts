@@ -28,7 +28,7 @@ export const useProductAdminPage = () => {
 
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
-  const productId = urlParams.get('productId') || '';
+  const productId = urlParams.get('productId') || undefined;
 
   const { data: productDetails, isLoading: isProductLoading } =
     useProductByIdQuery(productId);
@@ -36,11 +36,12 @@ export const useProductAdminPage = () => {
   const handleSearch = useMemo(
     () =>
       debounce((query: string) => {
-        setQueryString(`search=${query}`);
-        navigate(`?search=${query}`);
+        setQueryString(`?search=${query}&limit=6&page=1`);
+        navigate(`?search=${query}&limit=6&page=1`);
       }, 700),
     [], // Ensure the debounce function is memoized
   );
+
   const openModalView = (productId?: string) => {
     navigate(`?productId=${productId}` || '');
     setIsOpen(true);
@@ -56,7 +57,10 @@ export const useProductAdminPage = () => {
   const openModelAdd = () => {
     setIsAddProductModalOpen(true); // Open the modal to add a new product
   };
-
+  const openUpdateModal = (productId: string) => {
+    navigate(`?productId=${productId}` || '');
+    setIsAddProductModalOpen(true); // Open the modal to add a new product
+  };
   const handleDelete = async (productId: string) => {
     try {
       const res = await deleteProduct.mutateAsync(productId);
@@ -77,6 +81,7 @@ export const useProductAdminPage = () => {
   };
 
   return {
+    openUpdateModal,
     productData,
     openModalView,
     closeModalView,

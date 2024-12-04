@@ -1,26 +1,101 @@
-import { Table, Typography } from 'antd';
+import { Select, Table } from 'antd';
 import { useCustomerAdminPage } from './useCustomerAdminPage';
 import dayjs from 'dayjs';
-import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import {
+  CalendarOutlined,
+  ClockCircleOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { formatCurrency } from '../../utils';
+import { CiPhone } from 'react-icons/ci';
+const { Option } = Select;
 
 const CustomerAdminPage = () => {
   const { userAllData } = useCustomerAdminPage();
+
+  // Create phoneFilters from userAllData
+  const phoneFilters = userAllData?.map((user: any) => ({
+    label: user.phone,
+    value: user.phone,
+  }));
+  const emailFilters = userAllData?.map((user: any) => ({
+    label: user.email,
+    value: user.email,
+  }));
   const columns = [
     {
       title: 'Name',
       dataIndex: 'full_name',
       key: 'full_name',
+      sorter: (a: any, b: any) => a.full_name.localeCompare(b.full_name),
     },
     {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+      }: any) => (
+        <div style={{ padding: 8 }}>
+          <Select
+            showSearch
+            style={{ width: 200 }}
+            value={selectedKeys[0]}
+            placeholder="Select an email"
+            onChange={(value) => {
+              setSelectedKeys(value ? [value] : []);
+              confirm();
+            }}
+            onBlur={clearFilters}
+            allowClear
+          >
+            {emailFilters?.map((email) => (
+              <Option key={email.value} value={email.value}>
+                {email.label}
+              </Option>
+            ))}
+          </Select>
+        </div>
+      ),
+      filterIcon: () => <UserOutlined />,
+      onFilter: (value: any, record: any) => record.email.includes(value),
     },
     {
       title: 'Phone',
       dataIndex: 'phone',
       key: 'phone',
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+      }: any) => (
+        <div style={{ padding: 8 }}>
+          <Select
+            showSearch
+            style={{ width: 200 }}
+            value={selectedKeys[0]}
+            placeholder="Select a phone number"
+            onChange={(value) => {
+              setSelectedKeys(value ? [value] : []);
+              confirm();
+            }}
+            onBlur={clearFilters}
+            allowClear
+          >
+            {phoneFilters?.map((phone) => (
+              <Option key={phone.value} value={phone.value}>
+                {phone.label}
+              </Option>
+            ))}
+          </Select>
+        </div>
+      ),
+      filterIcon: () => <CiPhone />,
+      onFilter: (value: any, record: any) => record.phone.includes(value),
     },
     {
       title: 'Points',
@@ -60,14 +135,6 @@ const CustomerAdminPage = () => {
         </div>
       ),
     },
-    // {
-    //   title: 'Action',
-    //   render: () => (
-    //     <>
-    //       <Typography.Link style={{ marginInlineEnd: 8 }}>View</Typography.Link>
-    //     </>
-    //   ),
-    // },
   ];
 
   return (

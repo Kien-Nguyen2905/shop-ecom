@@ -1,6 +1,5 @@
 import { Modal, Rate } from 'antd';
-import React, { FC, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { FC } from 'react';
 import Input from '../../../components/Input/Input';
 import { Button } from '../../../components';
 import { TModalRiewProps } from './tyings';

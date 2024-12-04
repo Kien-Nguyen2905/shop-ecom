@@ -1,11 +1,16 @@
 import { TCategoryResponse } from '../../../services/Category/tyings';
-import { TProductItem } from '../../../services/Product/tyings';
+import {
+  TProductItem,
+  TProductResponse,
+} from '../../../services/Product/tyings';
 
 export type TProductListProps = {
-  listProduct: TProductItem[];
+  listProduct: TProductResponse;
+  onPageChange: (page: number) => void;
 };
 
 export type TFilterProductProps = {
+  setSortValue: Dispatch<SetStateAction<string>>;
   categories: TCategoryResponse[];
   onCategoryChange: (field: string, value: string) => void;
   onRangePriceChange: (value: number[]) => void;

@@ -10,6 +10,7 @@ const FilterProduct: FC<TFilterProductProps> = ({
   selectedFilters,
   handleCheckboxChange,
   setSelectedFilters,
+  setSortValue,
 }) => {
   const { search } = useLocation();
   const [_, setSearchParams] = useSearchParams();
@@ -17,6 +18,7 @@ const FilterProduct: FC<TFilterProductProps> = ({
   const [priceRange, setPriceRange] = useState<number[]>([0, 0]);
 
   const handleCleanAll = () => {
+    setSortValue('newest');
     setPriceRange([0, 0]);
     setIsChecked('');
     setSearchParams({});
@@ -77,7 +79,7 @@ const FilterProduct: FC<TFilterProductProps> = ({
   ];
 
   return (
-    <div className="w-[300px] h-max p-4 space-y-6 border rounded shadow">
+    <div className="max-w-[300px] h-max p-4 space-y-6 border rounded shadow">
       <div className="flex items-center justify-between">
         <p className="">Filters</p>
         <Button onClick={handleCleanAll} type text="Clear all"></Button>
@@ -106,7 +108,7 @@ const FilterProduct: FC<TFilterProductProps> = ({
             Sale
           </Checkbox>
           <Checkbox
-            checked={selectedFilters?.topRated || topRated === 'trues'}
+            checked={selectedFilters?.topRated || topRated === 'true'}
             onChange={() => handleCheckboxChange('topRated')}
           >
             Rate

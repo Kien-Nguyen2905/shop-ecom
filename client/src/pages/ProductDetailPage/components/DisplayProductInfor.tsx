@@ -1,4 +1,5 @@
-import { Descriptions, Rate } from 'antd';
+import { useState } from 'react';
+import { Modal, Descriptions, Rate } from 'antd';
 import Variant from './Variant';
 import { BsCartCheck } from 'react-icons/bs';
 import { IoIosHeartEmpty } from 'react-icons/io';
@@ -14,9 +15,21 @@ const DisplayProductInfor: FC<TDisplayProductInforProps> = ({
   quantityForm,
   categoryData,
   handleAddCart,
+  warehouseData,
+  onAddWishlist,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const variant = productData?.variants?.find((item) => item._id === variantId);
   if (!variant) return;
+
+  const handleShowMore = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="flex flex-col flex-1 gap-4">
       <h3 className="font-bold text-[24px]">{productData?.name}</h3>
@@ -59,34 +72,75 @@ const DisplayProductInfor: FC<TDisplayProductInforProps> = ({
       </div>
       <div className="flex gap-4">
         <Button
-          onClick={() =>
-            handleAddCart({
-              product_id: productData._id,
-              quantity: +quantityForm?.watch('quantity'),
-              variant_id: variant._id,
-            })
-          }
+          disabled={warehouseData?.[0].stock <= 0}
+          onClick={() => {
+            if (warehouseData?.[0].stock > 0) {
+              handleAddCart({
+                product_id: productData._id,
+                quantity: +quantityForm?.watch('quantity'),
+                variant_id: variant._id,
+              });
+            }
+          }}
           className="w-[160px]"
-          text="Add to cart"
+          text={`${
+            warehouseData?.[0].stock <= 0 ? 'Out of stock' : 'Add to cart'
+          }`}
         >
           <BsCartCheck />
         </Button>
-        <Button className="w-[160px]" text="Add to wishlist">
+        <Button
+          onClick={() =>
+            onAddWishlist({
+              product_id: productData?._id!,
+              quantity: 1,
+              variant_id: variant?._id,
+            })
+          }
+          className="w-[160px]"
+          text="Add to wishlist"
+        >
           <IoIosHeartEmpty />
         </Button>
       </div>
       <div className="">Category: {categoryData?.name}</div>
       {Object.keys(productData?.attributes).length > 0 && (
-        <Descriptions title="Product Details" bordered column={1}>
+        <div className="relative">
+          <Descriptions
+            title="Product Details"
+            bordered
+            column={1}
+            className="overflow-hidden"
+            style={{
+              maxHeight: '250px',
+              overflow: 'hidden',
+            }}
+          >
+            {Object.entries(productData?.attributes).map(([key, value]) => (
+              <Descriptions.Item key={key} label={key.toUpperCase()}>
+                {Array.isArray(value)
+                  ? value.map((item, index) => <p key={index}>{item}</p>)
+                  : value}
+              </Descriptions.Item>
+            ))}
+          </Descriptions>
+          <div className="flex justify-end mt-2">
+            <Button text="Show More" onClick={handleShowMore} />
+          </div>
+        </div>
+      )}
+
+      <Modal open={isModalOpen} footer={null} onCancel={handleCloseModal}>
+        <Descriptions title="Information" bordered column={1}>
           {Object.entries(productData?.attributes).map(([key, value]) => (
             <Descriptions.Item key={key} label={key.toUpperCase()}>
-              {typeof value === 'object'
-                ? value.map((item) => <p>{item}</p>)
+              {Array.isArray(value)
+                ? value.map((item, index) => <p key={index}>{item}</p>)
                 : value}
             </Descriptions.Item>
           ))}
         </Descriptions>
-      )}
+      </Modal>
     </div>
   );
 };

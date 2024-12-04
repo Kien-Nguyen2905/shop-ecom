@@ -26,7 +26,7 @@ export type TPaymentQRProps = {
   total: number;
   isConfirmVisible: boolean;
   desc: string;
-  handleCancel: () => void;
+  handleCancel: (isOutTime?: boolean) => void;
   handleConfirmClose: () => void;
   setIsConfirmVisible: any;
   handleTransactionSePay: () => void;

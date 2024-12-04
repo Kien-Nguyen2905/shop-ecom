@@ -46,6 +46,7 @@ const TransactionAdminPage = () => {
       title: 'Transaction ID',
       dataIndex: '_id',
       key: '_id',
+      sorter: (a: any, b: any) => a._id.localeCompare(b._id),
     },
     {
       title: 'Customer',
@@ -165,7 +166,7 @@ const TransactionAdminPage = () => {
           </Card>
         </Col>
         <Col span={6}>
-          <Card title="Transactions Today" bordered={false}>
+          <Card title="Total Transactions Today" bordered={false}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <MdOutlineAttachMoney size={24} style={{ marginRight: 8 }} />
               <p>{formatCurrency(todayRevenue)}</p>
@@ -173,7 +174,7 @@ const TransactionAdminPage = () => {
           </Card>
         </Col>
         <Col span={6}>
-          <Card title="Total Transactions" bordered={false}>
+          <Card title="Transactions All" bordered={false}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <GrTransaction size={24} style={{ marginRight: 8 }} />
               <p>{totalTransactions}</p>

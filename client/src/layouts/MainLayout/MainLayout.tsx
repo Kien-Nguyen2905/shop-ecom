@@ -24,6 +24,7 @@ const MainLayout = () => {
     opacity: isLoading ? 0 : 1,
     from: { opacity: 0 },
   });
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);

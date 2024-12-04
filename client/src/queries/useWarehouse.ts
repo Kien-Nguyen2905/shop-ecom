@@ -6,11 +6,11 @@ import {
 import { warehouseServices } from '../services/Warehouse';
 
 // Hook để lấy danh sách warehouse
-export const useWarehouse = () => {
+export const useWarehouse = (query?: string) => {
   return useQuery<TWarehouseResponse>({
     queryKey: ['warehouse'],
     queryFn: async () => {
-      const response = await warehouseServices.getWarehouse();
+      const response = await warehouseServices.getWarehouse(query);
       return response.data?.data || [];
     },
     refetchOnWindowFocus: false, // Không tự động refetch khi focus vào window

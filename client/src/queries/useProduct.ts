@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   TProductByIdResponse,
   TProductResponse,
+  TUpdateProductPayload,
 } from '../services/Product/tyings';
 import { productServices } from '../services/Product';
 
@@ -15,7 +16,7 @@ export const useProductQuery = (queryString = '') => {
   });
 };
 
-export const useProductByIdQuery = (id: string = '') => {
+export const useProductByIdQuery = (id: string | undefined) => {
   return useQuery<TProductByIdResponse>({
     queryKey: ['product', id],
     queryFn: async () => {
@@ -54,14 +55,16 @@ export const useCreateProductMutation = () => {
   });
 };
 
-export const useUpadteProductMutation = () => {
+export const useUpadteProductMutation = (id: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: productServices.updateCategory,
+    mutationFn: (payload: TUpdateProductPayload) =>
+      productServices.updateCategory(id, payload), // No need for 'return' here
+
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['product'],
+        queryKey: ['product', id],
       });
     },
   });

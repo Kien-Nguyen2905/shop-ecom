@@ -7,4 +7,5 @@ export type TMainContextProviderProps = {
   closeModal: () => void;
   checkAuthen: boolean;
   setCheckAuthen: React.Dispatch<SetStateAction<boolean>>;
+  desc: string;
 };

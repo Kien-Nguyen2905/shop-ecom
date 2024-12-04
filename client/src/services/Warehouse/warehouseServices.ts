@@ -7,8 +7,10 @@ import {
 } from './tyings';
 
 const warehouseServices = {
-  getWarehouse: () => {
-    return instance.get<SuccessResponse<TWarehouseResponse>>(`/warehouse`);
+  getWarehouse: (queryString?: string) => {
+    return instance.get<SuccessResponse<TWarehouseResponse>>(
+      `/warehouse${queryString ? `?variantId=${queryString}` : ''}`,
+    );
   },
   getWarehouseById: (id: string) => {
     return instance.get<SuccessResponse<TWarehouseByIdResponse>>(

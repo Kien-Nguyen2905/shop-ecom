@@ -32,10 +32,7 @@ export type TProductResponse = {
 export type TProductPayload = {
   name: string;
 };
-export type TUpdateProductPayload = {
-  id: string;
-  payload: TProductPayload;
-};
+export type TUpdateProductPayload = TProductPayload;
 
 export type TProductByIdResponse = {
   _id: string;

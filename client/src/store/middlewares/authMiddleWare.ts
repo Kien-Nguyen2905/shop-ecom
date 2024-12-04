@@ -7,7 +7,7 @@ import {
 } from '../../services/Auth/typings';
 import { authServices } from '../../services/Auth';
 import { LOCAL_STORAGE } from '../../constants';
-import { authActions } from '../reducers';
+import { authActions, cartActions } from '../reducers';
 import { SuccessResponse } from '../../services/tyings';
 
 export const login = createAsyncThunk<
@@ -44,6 +44,7 @@ export const logout = createAsyncThunk<
       localStorage.removeItem(LOCAL_STORAGE.REFRESH_TOKEN);
       localStorage.removeItem(LOCAL_STORAGE.ROLE);
       thunkAPI.dispatch(authActions.setProfile(null));
+      thunkAPI.dispatch(cartActions.clearCart());
     }
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error);

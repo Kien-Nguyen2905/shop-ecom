@@ -7,15 +7,16 @@ import { message } from 'antd';
 import { handleError } from '../../libs';
 import { useForm } from 'react-hook-form';
 import { TCheckoutForm, TValueFormBanking } from './tyings';
-import { generateDesc } from '../../utils';
 import {
   createOrderByBanking,
   createOrderByCOD,
 } from '../../store/middlewares/orderMiddleWare';
 import { useNavigate } from 'react-router-dom';
 import { CUSTOMER_PATHS, THUNK_STATUS } from '../../constants';
+import { useMainContext } from '../../context/MainConTextProvider';
 
 export const useCheckoutPage = () => {
+  const { desc } = useMainContext();
   const navigate = useNavigate();
   const { control, setError, handleSubmit, reset } = useForm<any>();
   const dispatch = useDispatch<AppDispatch>();
@@ -25,7 +26,6 @@ export const useCheckoutPage = () => {
   const [appliedPoints, setAppliedPoints] = useState<number>(0);
   const [isConfirmVisible, setIsConfirmVisible] = useState<boolean>(false);
   const [valueForm, setValueForm] = useState<TValueFormBanking>();
-  const desc = useMemo(() => generateDesc(), []);
   const {
     valueProvince,
     dataProvince,
@@ -39,8 +39,11 @@ export const useCheckoutPage = () => {
   } = useAccountPage();
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleCancel = () => {
+  const handleCancel = (isOutTime?: boolean) => {
     setIsConfirmVisible(true);
+    if (isOutTime) {
+      handleConfirmClose();
+    }
   };
 
   const handleConfirmClose = () => {

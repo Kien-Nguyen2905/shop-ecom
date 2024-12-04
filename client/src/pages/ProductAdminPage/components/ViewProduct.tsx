@@ -51,7 +51,7 @@ const ViewProduct: FC<TViewProductProps> = ({
       title: 'Discount',
       dataIndex: 'discount',
       key: 'discount',
-      render: (text: any) => (text ? `${text * 100}%` : 'N/A'),
+      render: (text: any) => (text ? `${text * 100}%` : '0'),
     },
   ];
 
@@ -122,7 +122,6 @@ const ViewProduct: FC<TViewProductProps> = ({
           </Form.Item>
         </div>
 
-        {/* Collapse for Variants */}
         <Form.Item label="Variants" name="variants">
           <Collapse
             activeKey={activeKey}

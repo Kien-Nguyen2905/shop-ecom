@@ -96,8 +96,8 @@ const OrderDetail: React.FC<TOrderDetailProps> = ({
                       {orderDetail.products.length}
                     </span>
                   </div>
-                  <div className="flex justify-between w-full pt-2 mt-4 border-t">
-                    <span className="font-semibold">Payment:</span>
+                  <div className="flex justify-between w-full gap-1 pt-2 mt-4 border-t">
+                    <p className="font-semibold">Payment:</p>
                     {orderDetail.type_payment === 1 ? (
                       <div className="flex items-center gap-2 text-gray-600">
                         BANKING

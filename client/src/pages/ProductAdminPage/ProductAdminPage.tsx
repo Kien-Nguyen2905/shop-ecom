@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, Button, Input, Dropdown, Tag, Rate, Modal } from 'antd';
 import { EllipsisOutlined, CalendarOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import { ViewProduct, AddProduct } from './components';
+import { ViewProduct, DrawerProduct } from './components';
 import { useProductAdminPage } from './useProductAdminPage';
 import { TProductItem } from '../../services/Product/tyings';
 import { TProductTableProps } from './tying';
@@ -21,6 +21,7 @@ const ProductAdminPage: React.FC = () => {
     handleDelete,
     closeModalAdd,
     openModelAdd,
+    openUpdateModal,
     isAddProductModalOpen,
   } = useProductAdminPage();
 
@@ -38,7 +39,6 @@ const ProductAdminPage: React.FC = () => {
       rate: item.rate || 0, // Default rate to 0
       created_at: dayjs(item.created_at).format('DD-MM-YYYY'), // Format created date
     }));
-
   const handleViewDetail = (record: TProductTableProps) => {
     openModalView(record.key);
   };
@@ -49,18 +49,24 @@ const ProductAdminPage: React.FC = () => {
       dataIndex: 'name',
       width: '15%',
       className: 'text-left font-medium',
+      sorter: (a: TProductTableProps, b: TProductTableProps) =>
+        a.name.localeCompare(b.name), // Sắp xếp theo tên sản phẩm
     },
     {
       title: 'Brand',
       dataIndex: 'brand',
       width: '10%',
       className: 'text-left',
+      sorter: (a: TProductTableProps, b: TProductTableProps) =>
+        a.brand.localeCompare(b.brand), // Sắp xếp theo brand
     },
     {
       title: 'Category',
       dataIndex: 'category',
       width: '10%',
       className: 'text-left',
+      sorter: (a: TProductTableProps, b: TProductTableProps) =>
+        a.category.localeCompare(b.category), // Sắp xếp theo category
     },
     {
       title: 'Image',
@@ -76,17 +82,21 @@ const ProductAdminPage: React.FC = () => {
       width: '15%',
       className: 'text-left',
       render: (price: number) => <p>{formatCurrency(price)}</p>,
+      sorter: (a: TProductTableProps, b: TProductTableProps) =>
+        a.price - b.price, // Sắp xếp theo price
     },
     {
       title: 'Discount',
       dataIndex: 'discount',
-      width: '5%',
+      width: '10%',
       className: 'text-left',
       render: (discount: number) => (
         <div className="flex flex-col gap-3">
           {discount !== undefined && <Tag color="gold">{discount * 100}%</Tag>}
         </div>
       ),
+      sorter: (a: TProductTableProps, b: TProductTableProps) =>
+        a.discount - b.discount, // Sắp xếp theo discount
     },
     {
       title: 'Rate',
@@ -96,6 +106,7 @@ const ProductAdminPage: React.FC = () => {
       render: (rate: number) => (
         <Rate allowHalf style={{ fontSize: 10 }} disabled value={rate} />
       ),
+      sorter: (a: TProductTableProps, b: TProductTableProps) => a.rate - b.rate, // Sắp xếp theo rate
     },
     {
       title: 'Date',
@@ -108,6 +119,8 @@ const ProductAdminPage: React.FC = () => {
           <div className="">{text}</div>
         </div>
       ),
+      sorter: (a: TProductTableProps, b: TProductTableProps) =>
+        dayjs(a.created_at).isBefore(b.created_at) ? -1 : 1, // Sắp xếp theo created_at
     },
     {
       title: 'Actions',
@@ -130,9 +143,11 @@ const ProductAdminPage: React.FC = () => {
             onClick: () => handleViewDetail(record),
           },
           {
-            key: 'update',
-            label: 'Update',
-            // onClick: () => handleUpdate(record),
+            key: 'Edit',
+            label: 'Edit',
+            onClick: () => {
+              openUpdateModal(record.key);
+            },
           },
           {
             key: 'delete',
@@ -150,9 +165,10 @@ const ProductAdminPage: React.FC = () => {
       },
     },
   ];
+
   return (
     <div className="pt-[60px]">
-      <AddProduct
+      <DrawerProduct
         isOpen={isAddProductModalOpen}
         closeModalAdd={closeModalAdd}
         brandList={brandList!}
@@ -185,7 +201,7 @@ const ProductAdminPage: React.FC = () => {
       <Table
         columns={columns}
         dataSource={mappedProductData}
-        pagination={{ pageSize: 8 }}
+        pagination={{ pageSize: 6 }}
         rowClassName={() => 'text-left'}
       />
     </div>

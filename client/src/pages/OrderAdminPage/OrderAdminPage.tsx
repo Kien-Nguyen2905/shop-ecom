@@ -1,4 +1,4 @@
-import { Button, Dropdown, Table, Card, Row, Col, Tag } from 'antd';
+import { Button, Dropdown, Table, Card, Row, Col, Tag, Select } from 'antd';
 import { useOrderAdminPage } from './useOrderAdminPage';
 import { formatCurrency } from '../../utils';
 import dayjs from 'dayjs';
@@ -8,12 +8,14 @@ import {
   ClockCircleOutlined,
   EllipsisOutlined,
   FileDoneOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import { MdOutlineLocalShipping } from 'react-icons/md';
 import { GoCheckbox } from 'react-icons/go';
 import { TOrderItem } from './tyings';
 import { OrderDetail } from './components';
-
+import { useCustomerAdminPage } from '../CustomerAdminPage/useCustomerAdminPage';
+const { Option } = Select;
 const OrderAdminPage = () => {
   const {
     orderData,
@@ -25,27 +27,62 @@ const OrderAdminPage = () => {
     openModal,
     orderDetailProps,
   } = useOrderAdminPage();
-
+  const emailFilters =
+    userData?.map((user) => ({
+      label: user.email,
+      value: user.email,
+    })) || [];
   const columns: any = [
     {
       title: 'Order ID',
       dataIndex: '_id',
+      sorter: (a: any, b: any) => a._id.localeCompare(b._id),
       render: (order: string) => <p>{order.slice(-5).toUpperCase()}</p>,
     },
     {
       title: 'Customer',
       dataIndex: 'user_id',
-      render: (user_id: string, record: any) => (
-        <div className="">
-          <p className="">
-            {userData?.find((item) => item?._id === user_id)?.full_name}
-          </p>
-          <p className="">{record?.phone}</p>
-          <p className="">
-            {userData?.find((item) => item?._id === user_id)?.email}
-          </p>
+      key: 'user_id',
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+      }: any) => (
+        <div style={{ padding: 8 }}>
+          <Select
+            showSearch
+            style={{ width: 200 }}
+            value={selectedKeys[0]}
+            placeholder="Select an email"
+            onChange={(value) => {
+              setSelectedKeys(value ? [value] : []);
+              confirm();
+            }}
+            onBlur={clearFilters}
+            allowClear
+          >
+            {emailFilters.map((email) => (
+              <Option key={email.value} value={email.value}>
+                {email.label}
+              </Option>
+            ))}
+          </Select>
         </div>
       ),
+      filterIcon: () => <UserOutlined />,
+      onFilter: (value: string, record: any) =>
+        userData?.find((item) => item?._id === record.user_id)?.email === value,
+      render: (user_id: string, record: any) => {
+        const user = userData?.find((item) => item?._id === user_id);
+        return (
+          <div>
+            <p>{user?.full_name}</p>
+            <p>{record?.phone}</p>
+            <p>{user?.email}</p>
+          </div>
+        );
+      },
     },
     {
       title: 'Total',
@@ -60,6 +97,7 @@ const OrderAdminPage = () => {
         { text: 'BANKING', value: 1 },
         { text: 'COD', value: 0 },
       ],
+      filterMultiple: false,
       onFilter: (value: number, record: any) => record.type_payment === value,
       render: (type: number) => (
         <div>
@@ -80,9 +118,15 @@ const OrderAdminPage = () => {
     {
       title: 'Status',
       dataIndex: 'status',
+      filters: [
+        { text: 'Pending', value: 0 },
+        { text: 'Accepted', value: 1 },
+      ],
+      filterMultiple: false,
+      onFilter: (value: number, record: any) => record.status === value,
       render: (status: number) => (
-        <Tag color={!status ? 'orange' : 'green'}>
-          {!status ? 'Pending' : 'Accepted'}
+        <Tag color={status === 0 ? 'orange' : 'green'}>
+          {status === 0 ? 'Pending' : 'Accepted'}
         </Tag>
       ),
     },

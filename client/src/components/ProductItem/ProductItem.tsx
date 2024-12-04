@@ -1,20 +1,19 @@
 import { Rate } from 'antd';
 import { FC } from 'react';
-import { BsCartCheck } from 'react-icons/bs';
 import { IoIosHeartEmpty } from 'react-icons/io';
 import { Link } from 'react-router-dom';
 import { TProductItemProps } from './tyings';
 import { CUSTOMER_PATHS } from '../../constants';
 import { useProductItem } from './useProductItem';
 import { formatCurrency } from '../../utils';
+import { updateWishlist } from '../../store/middlewares/wishlistMiddleWare';
 
 const ProductItem: FC<TProductItemProps> = ({ className = '', item }) => {
-  const { onAddToCart, onAddWishlist, wishlist } = useProductItem();
+  const { onAddToCart, onAddWishlist, wishlist, dispatch, profile } =
+    useProductItem();
   if (!item) return;
   return (
-    <div
-      className={`!max-w-[277px] border-[0.5px] relative group ${className}`}
-    >
+    <div className={`!w-[257px] border-[0.5px] relative group ${className}`}>
       <Link
         to={
           CUSTOMER_PATHS.PRODUCT +
@@ -28,15 +27,24 @@ const ProductItem: FC<TProductItemProps> = ({ className = '', item }) => {
           alt=""
         />
       </Link>
-      {wishlist?.list_item.some(
-        (product) => product.product_id === item._id,
+      {profile &&
+      wishlist?.list_item.some(
+        (product) => product.variant_id === item.variants[0]._id,
       ) ? (
-        <Link
-          to={CUSTOMER_PATHS.DASHBOARD.WISHLIST}
-          className="absolute flex items-center justify-center w-8 h-8 gap-4 text-white transition-all transform translate-y-full bg-red-700 rounded-full opacity-0 pointer-events-none group/item top-6 right-2 group-hover:translate-y-0 group-hover:opacity-100 group-hover:pointer-events-auto"
+        <div
+          onClick={() => {
+            dispatch(
+              updateWishlist({
+                product_id: item?._id!,
+                quantity: -1,
+                variant_id: item.variants[0]._id,
+              }),
+            );
+          }}
+          className="absolute flex items-center justify-center w-8 h-8 gap-4 text-white transition-all transform translate-y-full bg-red-700 rounded-full opacity-0 cursor-pointer pointer-events-none group/item top-6 right-2 group-hover:translate-y-0 group-hover:opacity-100 group-hover:pointer-events-auto"
         >
           <IoIosHeartEmpty size={15} className="w-full" />
-        </Link>
+        </div>
       ) : (
         <button
           onClick={() =>
@@ -60,7 +68,7 @@ const ProductItem: FC<TProductItemProps> = ({ className = '', item }) => {
           </span>
         </>
       )}
-      <button
+      {/* <button
         onClick={() =>
           onAddToCart({
             product_id: item._id!,
@@ -72,17 +80,18 @@ const ProductItem: FC<TProductItemProps> = ({ className = '', item }) => {
       >
         <BsCartCheck />
         Add To Cart
-      </button>
+      </button> */}
       <div className="relative flex flex-col w-full gap-2 px-5 py-4 bg-white z-100">
         <Link
           to={
             CUSTOMER_PATHS.PRODUCT +
             `/${item._id}?variant=${item.variants[0]?._id}`
           }
-          className="text-[16px] font-PpMd hover:text-primary transition-all font-bold text-backFont"
+          className="text-[16px] font-PpMd hover:text-primary transition-all font-bold text-backFont truncate"
         >
           {item?.name}
         </Link>
+
         <div className="flex gap-2">
           <div className="text-primary text-[16px]">
             {formatCurrency(
@@ -92,7 +101,6 @@ const ProductItem: FC<TProductItemProps> = ({ className = '', item }) => {
         </div>
         <div className="">
           <Rate disabled value={item.rate} />
-          {/* <span className="ratings-text">( 4 Reviews )</span> */}
         </div>
       </div>
     </div>

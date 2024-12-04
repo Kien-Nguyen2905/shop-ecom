@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useCreateProductMutation } from '../../../../queries';
+import {
+  useCreateProductMutation,
+  useUpadteProductMutation,
+} from '../../../../queries';
 import { useUploadImageMutation } from '../../../../queries/useImage';
 import { UploadFile, UploadProps } from 'antd';
 import { FormValues } from '../tyings';
@@ -7,11 +10,19 @@ import { useForm } from 'react-hook-form';
 import { useInformationByIdQuery } from '../../../../queries/useInformation';
 import { handleError, showToast } from '../../../../libs';
 import { useProductAdminPage } from '../../useProductAdminPage';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { isObject } from 'lodash';
+import { ADMIN_PATHS } from '../../../../constants';
 
 export const useAddProduct = () => {
+  const location = useLocation();
+  const urlParams = new URLSearchParams(location.search);
+  const productId = urlParams.get('productId') || undefined;
+  const navigate = useNavigate();
   const { refetch } = useProductAdminPage();
   const uploadImage = useUploadImageMutation();
   const createProduct = useCreateProductMutation();
+  const updateProduct = useUpadteProductMutation(productId!);
   const [activeKey, setActiveKey] = useState<string[]>(['0']);
   const [categoryId, setCategoryId] = useState('');
   const { data: dataInformation } = useInformationByIdQuery(categoryId);
@@ -29,6 +40,7 @@ export const useAddProduct = () => {
   const [uploadedImages, setUploadedImages] = useState<{
     [key: number]: any[];
   }>({});
+
   const {
     control,
     handleSubmit,
@@ -64,6 +76,46 @@ export const useAddProduct = () => {
       attributes: {},
     },
   });
+
+  const { productDetails } = useProductAdminPage();
+  useEffect(() => {
+    if (productDetails) {
+      // Cập nhật giá trị mặc định trong form khi `productDetails` có dữ liệu
+      setValue('name', productDetails.name);
+      setValue('category_id', productDetails.category_id);
+      setValue('brand_id', productDetails.brand_id);
+      setValue('description', productDetails.description);
+      setValue('thumbnail', productDetails.thumbnail);
+      setValue('featured', productDetails.featured);
+      setValue('minimum_stock', 10);
+      setValue('attributes', productDetails.attributes);
+      setFileList([
+        {
+          uid: '-1',
+          name: 'thumbnail',
+          status: 'done',
+          url: productDetails.thumbnail,
+        },
+      ]);
+      setVariants(productDetails.variants);
+      const images = productDetails.variants.map((variant, index) => ({
+        [index]: variant.images.map((item, imgIndex) => ({
+          uid: `${imgIndex}`, // uid cần phải là chuỗi để tương thích với fileList
+          name: 'image',
+          status: 'done',
+          url: item,
+        })),
+      }));
+
+      // Chuyển đổi mảng `images` thành đối tượng với key là index của variant
+      const imagesObject = images.reduce((acc, curr) => {
+        return { ...acc, ...curr };
+      }, {});
+
+      // Cập nhật state uploadedImages với imagesObject
+      setUploadedImages(imagesObject);
+    }
+  }, [productDetails, setValue]);
   useEffect(() => {
     // Reset the attributes to ensure it's updated with new keys and values
     if (dataInformation?.attributes) {
@@ -72,15 +124,41 @@ export const useAddProduct = () => {
         ...getValues(), // Keep existing values that are not related to attributes
         attributes: {}, // Update only the attributes
       });
+    } else {
+      reset({
+        name: '',
+        category_id: '',
+        brand_id: '',
+        description: '',
+        thumbnail: '',
+        variants: [
+          {
+            index: 0,
+            color: '',
+            price: 0,
+            stock: 0,
+            discount: 0,
+            images: [],
+          },
+        ],
+        featured: {
+          isPopular: false,
+          isRated: false,
+          onSale: false,
+        },
+        minimum_stock: 0,
+        attributes: {},
+      });
     }
   }, [dataInformation?.attributes, reset, getValues]);
 
   const showAttributeByCategory = (categoryId: string) => {
     setCategoryId(categoryId);
   };
+
   const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
-    setValue('thumbnail', newFileList[0].originFileObj);
+    setValue('thumbnail', newFileList[0]?.originFileObj);
   };
 
   const onChangeVariant = async (
@@ -138,41 +216,175 @@ export const useAddProduct = () => {
       if (variants.length >= 1) {
         values.variants = variants;
         values.featured.isRated = false;
-        Number(values.minimum_stock);
-        // Upload thumbnail nếu có
-        if (values.thumbnail) {
-          const formDataThumbnail = new FormData();
-          formDataThumbnail.append('image', values.thumbnail);
-          const res = await uploadImage.mutateAsync(formDataThumbnail);
-          if (res.data.data[0]) {
-            values.thumbnail = res.data.data[0];
-          }
-        }
-        // Duyệt qua từng variant và upload ảnh cho mỗi variant
-        if (uploadedImages) {
-          for (const [index, files] of Object.entries(uploadedImages)) {
-            const formData = new FormData();
-            // Duyệt qua các file trong mỗi variant
-            files.forEach((file: any) => {
-              formData.append('image', file.originFileObj); // Append từng file vào formData
-            });
-            // Upload ảnh cho mỗi variant
-            const res = await uploadImage.mutateAsync(formData);
-            // Giả sử trả về đường dẫn ảnh, gán vào values.variants[index]
-            if (res.data.data) {
-              // Cập nhật lại values.variants[index] với ảnh đã upload
-              values.variants[parseInt(index)].images = res.data.data;
+        values.minimum_stock = +values.minimum_stock;
+        const thumbNail = watch('thumbnail');
+        if (productId) {
+          if (isObject(thumbNail)) {
+            const formDataThumbnail = new FormData();
+            formDataThumbnail.append('image', values.thumbnail);
+            const res = await uploadImage.mutateAsync(formDataThumbnail);
+            if (res.data.data[0]) {
+              values.thumbnail = res.data.data[0];
             }
           }
-        }
-        const res = await createProduct.mutateAsync(values);
-        if (res.data.data._id) {
-          refetch();
-          onSuccess?.();
-          showToast({
-            type: 'success',
-            message: res.data.message,
-          });
+          if (Object.values(uploadedImages)) {
+            for (const [index, files] of Object.entries(uploadedImages)) {
+              const formData = new FormData();
+
+              // Lặp qua các file trong mỗi variant để tạo formData
+              files.forEach((file: any) => {
+                if (file.originFileObj) {
+                  formData.append('image', file.originFileObj); // Thêm file vào formData
+                }
+              });
+
+              try {
+                // Giả sử gọi API upload ảnh và nhận URL ảnh trả về từ BE (dạng mảng URL)
+                const res = await uploadImage.mutateAsync(formData);
+
+                // Kiểm tra nếu có dữ liệu trả về từ BE
+                if (res.data.data && Array.isArray(res.data.data)) {
+                  const updatedUrls = res.data.data; // Mảng URL ảnh trả về từ BE
+
+                  // Lấy ảnh cũ trước khi thay đổi
+                  const oldImages = files
+                    .filter((file: any) => !file.lastModified) // Lọc các file không có lastModified (đã được tải lên trước)
+                    .map((file: any) => file.url);
+
+                  console.log(oldImages);
+                  // Cập nhật lại variant với URL đã upload
+                  values.variants[parseInt(index)].images = oldImages
+                    .filter((image: any) => !updatedUrls.includes(image)) // Loại bỏ ảnh bị thay đổi
+                    .concat(updatedUrls); // Thêm ảnh mới từ BE vào cuối mảng
+                }
+              } catch (error: any) {
+                showToast({
+                  type: 'error',
+                  message: error,
+                });
+              }
+            }
+          }
+          const res = await updateProduct.mutateAsync(values);
+          if (res.data.data._id) {
+            navigate(ADMIN_PATHS.PRODUCT);
+            refetch();
+            setCategoryId('');
+            reset({
+              name: '',
+              category_id: '',
+              brand_id: '',
+              description: '',
+              thumbnail: '',
+              variants: [
+                {
+                  index: 0,
+                  color: '',
+                  price: 0,
+                  stock: 0,
+                  discount: 0,
+                  images: [],
+                },
+              ],
+              featured: {
+                isPopular: false,
+                isRated: false,
+                onSale: false,
+              },
+              minimum_stock: 0,
+              attributes: {},
+            });
+            setVariants([
+              {
+                index: 0,
+                color: '',
+                price: 0,
+                stock: 0,
+                discount: 0,
+                images: [],
+              },
+            ]);
+            setFileList([]);
+            setUploadedImages([]);
+            onSuccess?.();
+            showToast({
+              type: 'success',
+              message: res.data.message,
+            });
+          }
+        } else {
+          // Upload thumbnail nếu có
+          if (values.thumbnail) {
+            const formDataThumbnail = new FormData();
+            formDataThumbnail.append('image', values.thumbnail);
+            const res = await uploadImage.mutateAsync(formDataThumbnail);
+            if (res.data.data[0]) {
+              values.thumbnail = res.data.data[0];
+            }
+          }
+          // Duyệt qua từng variant và upload ảnh cho mỗi variant
+          if (uploadedImages) {
+            for (const [index, files] of Object.entries(uploadedImages)) {
+              const formData = new FormData();
+              // Duyệt qua các file trong mỗi variant
+              files.forEach((file: any) => {
+                formData.append('image', file.originFileObj); // Append từng file vào formData
+              });
+              // Upload ảnh cho mỗi variant
+              const res = await uploadImage.mutateAsync(formData);
+              // Giả sử trả về đường dẫn ảnh, gán vào values.variants[index]
+              if (res.data.data) {
+                // Cập nhật lại values.variants[index] với ảnh đã upload
+                values.variants[parseInt(index)].images = res.data.data;
+              }
+            }
+          }
+          const res = await createProduct.mutateAsync(values);
+          if (res.data.data._id) {
+            refetch();
+            setCategoryId('');
+            reset({
+              name: '',
+              category_id: '',
+              brand_id: '',
+              description: '',
+              thumbnail: '',
+              variants: [
+                {
+                  index: 0,
+                  color: '',
+                  price: 0,
+                  stock: 0,
+                  discount: 0,
+                  images: [],
+                },
+              ],
+              featured: {
+                isPopular: false,
+                isRated: false,
+                onSale: false,
+              },
+              minimum_stock: 0,
+              attributes: {},
+            });
+            setVariants([
+              {
+                index: 0,
+                color: '',
+                price: 0,
+                stock: 0,
+                discount: 0,
+                images: [],
+              },
+            ]);
+            setFileList([]);
+            setUploadedImages([]);
+            onSuccess?.();
+            showToast({
+              type: 'success',
+              message: res.data.message,
+            });
+          }
         }
       } else {
         showToast({
@@ -189,6 +401,8 @@ export const useAddProduct = () => {
   };
 
   return {
+    setCategoryId,
+    setUploadedImages,
     variants,
     setVariants,
     watch,
@@ -208,5 +422,6 @@ export const useAddProduct = () => {
     handleAddVariant,
     dataInformation,
     showAttributeByCategory,
+    productDetails,
   };
 };

@@ -3,28 +3,36 @@ import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CUSTOMER_PATHS, LOCAL_STORAGE } from '../../constants';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { profileUser } from '../../store/middlewares/authMiddleWare';
-import { AppDispatch } from '../../store/store';
+import { AppDispatch, useSelector } from '../../store/store';
 
 const AdminLayout = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const { profile } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-  const role = localStorage.getItem('role');
   const { pathname } = useLocation();
 
+  // Memoize the query client instance
+  const queryClient = useMemo(() => new QueryClient(), []);
+
   useEffect(() => {
-    if (role === '1') {
+    const role = localStorage.getItem(LOCAL_STORAGE.ROLE);
+    const token = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN);
+
+    // Redirect if not admin or no token
+    if (!token || role === '1') {
       navigate(CUSTOMER_PATHS.ROOT);
+      return;
     }
-  }, [pathname]);
-  useEffect(() => {
-    if (!!localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)) {
-      dispatch(profileUser());
-    }
-  }, []);
-  const queryClient = new QueryClient();
+    dispatch(profileUser());
+  }, [navigate, pathname]);
+
+  if (!profile) {
+    navigate(CUSTOMER_PATHS.ROOT);
+    return;
+  }
   return (
     <QueryClientProvider client={queryClient}>
       <div className="w-full h-screen">

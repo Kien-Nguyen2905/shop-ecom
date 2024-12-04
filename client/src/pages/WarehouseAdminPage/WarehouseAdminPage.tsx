@@ -4,6 +4,7 @@ import { EllipsisOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { DrawerWarehouse } from './components';
 import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
+
 const WarehouseAdminPage = () => {
   const {
     warehouseData,
@@ -22,10 +23,12 @@ const WarehouseAdminPage = () => {
     {
       title: 'Product',
       dataIndex: 'product_name',
+      sorter: (a: any, b: any) => a.product_name.localeCompare(b.product_name),
     },
     {
       title: 'Variant',
       dataIndex: 'variant',
+      sorter: (a: any, b: any) => a.variant.localeCompare(b.variant),
     },
     {
       title: 'Sold',
@@ -49,7 +52,7 @@ const WarehouseAdminPage = () => {
         { text: 'Restock', value: 'restock' },
         { text: 'Sufficient', value: 'sufficient' },
       ],
-      filterMultiple: false, // Enable multi-select filtering
+      filterMultiple: false,
       onFilter: (value: any, record: any) => {
         if (value === 'restock') {
           return record.stock < record.minimum_stock;
@@ -104,8 +107,8 @@ const WarehouseAdminPage = () => {
     {
       title: 'Status',
       filters: [
-        { text: 'Active', value: false }, // isDeleted: false indicates active
-        { text: 'Deleted', value: true }, // isDeleted: true indicates deleted
+        { text: 'Active', value: false },
+        { text: 'Deleted', value: true },
       ],
       filterMultiple: false,
       onFilter: (value: any, record: any) => record.isDeleted === value,

@@ -28,14 +28,16 @@ const TableBrand: React.FC<TEditableTableProps> = ({
       dataIndex: 'name',
       width: '35%',
       editable: true,
+      sorter: (a: TBrandResponse, b: TBrandResponse) =>
+        a.name.localeCompare(b.name),
     },
     {
       title: 'Created',
       dataIndex: 'created_at',
       width: '25%',
       editable: false,
-      sorter: (a: TBrandResponse, b: TBrandResponse) =>
-        dayjs(a.created_at).unix() - dayjs(b.created_at).unix(),
+      sorter: (a: any, b: any) =>
+        dayjs(a.created_at).isBefore(b.created_at) ? -1 : 1,
       render: (text: string) => (
         <div className="flex gap-2">
           <span>
@@ -54,8 +56,8 @@ const TableBrand: React.FC<TEditableTableProps> = ({
       dataIndex: 'updated_at',
       width: '25%',
       editable: false,
-      sorter: (a: TBrandResponse, b: TBrandResponse) =>
-        dayjs(a.updated_at).unix() - dayjs(b.updated_at).unix(),
+      sorter: (a: any, b: any) =>
+        dayjs(a.created_at).isBefore(b.created_at) ? -1 : 1,
       render: (text: string) => (
         <div className="flex gap-2">
           <span>

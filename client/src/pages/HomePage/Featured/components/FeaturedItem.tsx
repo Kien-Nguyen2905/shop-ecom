@@ -27,7 +27,7 @@ const FeaturedItem: FC<TFeaturedItemProps> = ({ children, className = '' }) => {
 
       <ArrowSlide
         onClick={() => swiperRef.current?.slideNext()}
-        className="absolute right-0 z-10 -translate-x-1/2 top-1/2 w-max"
+        className="absolute right-[-50px] z-10 -translate-x-1/2 top-1/2 w-max"
       >
         <SlArrowRight size={50} />
       </ArrowSlide>
@@ -40,7 +40,7 @@ const FeaturedItem: FC<TFeaturedItemProps> = ({ children, className = '' }) => {
           spaceBetween={20}
           slidesPerView={slidesPerView}
           onSwiper={(swiper) => (swiperRef.current = swiper)}
-          className="h-[410px]"
+          className="h-[440px]"
         >
           {children.map((item) => (
             <SwiperSlide key={item.id} className="!min-w-[277px]">

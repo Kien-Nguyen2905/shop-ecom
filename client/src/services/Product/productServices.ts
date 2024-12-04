@@ -14,7 +14,7 @@ const productServices = {
       `/product${queryString ? `${queryString}` : ''}`,
     );
   },
-  getProductById: (id: string) => {
+  getProductById: (id: string | undefined) => {
     return instance.get<SuccessResponse<TProductByIdResponse>>(
       `/product/${id}`,
     );
@@ -28,10 +28,10 @@ const productServices = {
   deleteProduct: (id: string) => {
     return instance.delete<SuccessResponse>(`/product/${id}`);
   },
-  updateCategory: (payload: TUpdateProductPayload) => {
+  updateCategory: (id: string, payload: TUpdateProductPayload) => {
     return instance.put<SuccessResponse<TCreateProductResponse>>(
-      `/product/${payload.id}`,
-      payload.payload,
+      `/product/${id}`,
+      payload,
     );
   },
 };

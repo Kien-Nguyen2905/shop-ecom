@@ -4,6 +4,7 @@ import {
   TRemoveCartPayload,
   TUpdateCartPayload,
 } from '../../services/Cart/tyings';
+import { message } from 'antd';
 
 export const getCart = createAsyncThunk('cart/get', async (_, thunkAPI) => {
   try {
@@ -51,6 +52,7 @@ export const addToCart = createAsyncThunk(
   async (actionPayload: TUpdateCartPayload, thunkAPI) => {
     try {
       const res = await cartServices.updateCart(actionPayload);
+      message.success(res.data.message);
       thunkAPI.dispatch(getCart());
       thunkAPI.fulfillWithValue(res.data.data);
       return res.data.data;
@@ -66,6 +68,7 @@ export const removeCart = createAsyncThunk(
   async (actionPayload: TRemoveCartPayload, thunkAPI) => {
     try {
       const res = await cartServices.removeCart(actionPayload);
+      message.success(res.data.message);
       thunkAPI.dispatch(getCart());
       return res.data.data;
     } catch (error) {
@@ -114,7 +117,6 @@ export const updateCart = createAsyncThunk(
         earnPoint: actionPayload,
         appliedPoint,
       };
-      console.log(modCartInfo);
       // Trả dữ liệu qua thunkAPI
       thunkAPI.fulfillWithValue(modCartInfo);
       return modCartInfo;

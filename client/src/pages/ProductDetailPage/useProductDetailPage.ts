@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useCategoryByIdQuery, useProductByIdQuery } from '../../queries';
+import {
+  useCategoryByIdQuery,
+  useProductByIdQuery,
+  useWarehouse,
+} from '../../queries';
 import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 import {
   TDisplayProductInforProps,
@@ -7,22 +11,34 @@ import {
 } from './components/tyings';
 import { useForm } from 'react-hook-form';
 import { TAddcartPayload } from '../../components/ProductItem/tyings';
-import { handleError, showToast } from '../../libs';
+import { handleError } from '../../libs';
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store/store';
-import { addToCart, removeCart } from '../../store/middlewares/cartMiddleware';
+import { AppDispatch, useSelector } from '../../store/store';
+import { addToCart } from '../../store/middlewares/cartMiddleware';
 import { useReviewByProductIdQuery } from '../../queries/useReview';
+import { useMainContext } from '../../context/MainConTextProvider';
+import { THUNK_STATUS } from '../../constants';
+import { TAddWishlistPayload } from '../../services/Wishlist/tyings';
+import { updateWishlist } from '../../store/middlewares/wishlistMiddleWare';
+import { message } from 'antd';
 
 export const useProductDetailPage = () => {
+  const { openModal } = useMainContext();
+  const { profile } = useSelector((state) => state.auth);
+  const { wishlist } = useSelector((state) => state.wishlist);
+
   const { id } = useParams();
-  const { data: productData, isLoading } = useProductByIdQuery(id);
-  const { data: categoryData } = useCategoryByIdQuery(productData?.category_id);
-  const { data: reviewData } = useReviewByProductIdQuery(id!);
   const { search } = useLocation();
   const [_, setSearchParams] = useSearchParams();
+  const { updateStatus } = useSelector((state) => state.cart);
   const [variantId, setVariantId] = useState<string>(
     new URLSearchParams(search).get('variant') as string,
   );
+  const { data: productData } = useProductByIdQuery(id);
+  const { data: categoryData } = useCategoryByIdQuery(productData?.category_id);
+  const { data: reviewData } = useReviewByProductIdQuery(id!);
+  const { data: warehouseData, refetch } = useWarehouse(variantId);
+
   const [listImage, setListImage] = useState<string[]>();
   const dispatch = useDispatch<AppDispatch>();
   const quantityForm = useForm({
@@ -30,11 +46,19 @@ export const useProductDetailPage = () => {
       quantity: '1',
     },
   });
+
   useEffect(() => {
-    if (productData?.variants && productData.variants[0]?.images) {
-      setListImage(productData.variants[0].images);
+    const variantIsActive = productData?.variants.find(
+      (item) => item._id === variantId,
+    );
+
+    if (variantIsActive) {
+      setListImage(variantIsActive.images);
     }
-  }, [productData]);
+  }, [productData, variantId]);
+  useEffect(() => {
+    refetch();
+  }, [variantId]);
   const onChangeVariant = (variantId: string) => {
     setVariantId(variantId);
     const variant = productData?.variants.find(
@@ -49,18 +73,36 @@ export const useProductDetailPage = () => {
     }
   };
   const handleAddCart = async (payload: TAddcartPayload) => {
-    try {
-      const res = await dispatch(addToCart(payload)).unwrap();
-      if (res._id) {
-        showToast({
-          type: 'success',
-          message: 'Successfully',
+    if (!profile) {
+      openModal();
+    } else if (payload && updateStatus !== THUNK_STATUS.pending) {
+      try {
+        dispatch(addToCart(payload)).unwrap();
+      } catch (error) {
+        handleError({
+          error,
         });
       }
-    } catch (error) {
-      handleError({
-        error,
-      });
+    }
+  };
+  const onAddWishlist = async (payload: TAddWishlistPayload) => {
+    if (!profile) {
+      openModal();
+    } else if (payload && updateStatus !== THUNK_STATUS.pending) {
+      try {
+        const wishListItemExist = wishlist?.list_item.some(
+          (item) => item.variant_id === payload.variant_id,
+        );
+        if (wishListItemExist) {
+          message.warning('Exist item in wishlist');
+        } else {
+          await dispatch(updateWishlist(payload)).unwrap();
+        }
+      } catch (error) {
+        handleError({
+          error,
+        });
+      }
     }
   };
   const displayProductInforProps: TDisplayProductInforProps = {
@@ -70,10 +112,17 @@ export const useProductDetailPage = () => {
     quantityForm,
     categoryData: categoryData!,
     handleAddCart,
+    warehouseData: warehouseData!,
+    onAddWishlist,
   };
   const displayProductTabsProps: TDisplayProductTabsProps = {
     description: productData?.description!,
     reviewData: reviewData!,
   };
-  return { displayProductInforProps, listImage, displayProductTabsProps };
+  return {
+    displayProductInforProps,
+    listImage,
+    displayProductTabsProps,
+    name: productData?.name,
+  };
 };

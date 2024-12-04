@@ -6,3 +6,6 @@
 .swiper-pagination-bullet-active {
   background-color: #fcb941;
 }
+.swiper-pagination {
+  bottom: 0 !important;
+}

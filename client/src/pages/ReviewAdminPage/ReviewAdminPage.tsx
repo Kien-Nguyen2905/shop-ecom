@@ -1,12 +1,25 @@
 import { useReviewAdminPage } from './useReviewAdminPage';
-import { Rate, Table } from 'antd';
+import { Rate, Select, Table } from 'antd';
 import dayjs from 'dayjs';
 import { TCreateReviewResponse } from '../../services/Review/tyings';
-import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import {
+  CalendarOutlined,
+  ClockCircleOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import { useTransactionAdminPage } from '../TransactionAdminPage/useTransactionAdminPage';
+const { Option } = Select;
 
 const ReviewAdminPage = () => {
   const { reviewData } = useReviewAdminPage();
-  const columns = [
+  const { userData } = useTransactionAdminPage();
+  const emailFilters =
+    userData?.map((user) => ({
+      label: user.email,
+      value: user.email,
+    })) || [];
+
+  const columns: any = [
     {
       title: 'Product',
       dataIndex: 'product',
@@ -27,6 +40,41 @@ const ReviewAdminPage = () => {
       title: 'Reviewer',
       dataIndex: 'reviewer',
       width: '15%',
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+      }: any) => (
+        <div style={{ padding: 8 }}>
+          <Select
+            showSearch
+            style={{ width: 200 }}
+            value={selectedKeys[0]}
+            placeholder="Select an email"
+            onChange={(value) => {
+              setSelectedKeys(value ? [value] : []);
+              confirm();
+            }}
+            onBlur={clearFilters}
+            allowClear
+          >
+            {emailFilters.map((email) => (
+              <Option key={email.value} value={email.value}>
+                {email.label}
+              </Option>
+            ))}
+          </Select>
+        </div>
+      ),
+      filterIcon: () => <UserOutlined />,
+      onFilter: (value: string, record: any) => {
+        // Filter reviews by email
+        const reviewerEmail = userData?.find(
+          (item) => item?._id === record?.reviewer?.user_id,
+        )?.email;
+        return reviewerEmail === value;
+      },
       render: (record: TCreateReviewResponse['reviewer']) => {
         return (
           <div>
@@ -72,6 +120,7 @@ const ReviewAdminPage = () => {
       ),
     },
   ];
+
   return (
     <div className="pt-[100px]">
       <Table

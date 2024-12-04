@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { wishlistServices } from '../../services/Wishlist';
 import { wishlistActions } from '../reducers';
 import { TAddWishlistPayload } from '../../services/Wishlist/tyings';
+import { message } from 'antd';
 
 export const getWishlist = createAsyncThunk(
   'wishlist/get',
@@ -22,6 +23,7 @@ export const updateWishlist = createAsyncThunk(
     try {
       const res = await wishlistServices.updateWishlist(acctionPayload);
       thunkAPI.dispatch(getWishlist());
+      message.success(res.data.message);
       return res.data.data;
     } catch (error) {
       thunkAPI.rejectWithValue(error);

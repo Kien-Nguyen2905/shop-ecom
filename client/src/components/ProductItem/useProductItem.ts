@@ -4,48 +4,44 @@ import { useMainContext } from '../../context/MainConTextProvider';
 import { AppDispatch, useSelector } from '../../store/store';
 import { addToCart } from '../../store/middlewares/cartMiddleware';
 import { TAddcartPayload } from './tyings';
-import { showToast } from '../../libs';
 import { TAddWishlistPayload } from '../../services/Wishlist/tyings';
 import { updateWishlist } from '../../store/middlewares/wishlistMiddleWare';
+import { handleError } from '../../libs';
 
 export const useProductItem = () => {
-  const { checkAuthen, openModal } = useMainContext();
+  const { openModal } = useMainContext();
   const dispatch = useDispatch<AppDispatch>();
+  const { profile } = useSelector((state) => state.auth);
   const { updateStatus } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
+
   const onAddToCart = async (payload: TAddcartPayload) => {
-    if (!checkAuthen) {
+    if (!profile) {
       openModal();
     } else if (payload && updateStatus !== THUNK_STATUS.pending) {
       try {
-        const res = await dispatch(addToCart(payload)).unwrap();
-        if (res._id) {
-          showToast({
-            type: 'success',
-            message: 'Successfully',
-          });
-        }
+        dispatch(addToCart(payload)).unwrap();
       } catch (error) {
-        console.log('error', error);
+        handleError({
+          error,
+        });
       }
     }
   };
+
   const onAddWishlist = async (payload: TAddWishlistPayload) => {
-    if (!checkAuthen) {
+    if (!profile) {
       openModal();
     } else if (payload && updateStatus !== THUNK_STATUS.pending) {
       try {
-        const res = await dispatch(updateWishlist(payload)).unwrap();
-        if (res._id) {
-          showToast({
-            type: 'success',
-            message: 'Successfully',
-          });
-        }
+        await dispatch(updateWishlist(payload)).unwrap();
       } catch (error) {
-        console.log('error', error);
+        handleError({
+          error,
+        });
       }
     }
   };
-  return { onAddToCart, onAddWishlist, wishlist };
+
+  return { onAddToCart, onAddWishlist, wishlist, dispatch, profile };
 };

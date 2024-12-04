@@ -9,20 +9,21 @@ import {
   Upload,
   Checkbox,
 } from 'antd';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { FormValues, TAddProductProps } from './tyings';
 import { Controller, FieldErrors } from 'react-hook-form';
 import ImgCrop from 'antd-img-crop';
 import { IoCloudUploadOutline } from 'react-icons/io5';
 import { useAddProduct } from './hooks/useAddProduct';
 
-const AddProduct: FC<TAddProductProps> = ({
+const DrawerProduct: FC<TAddProductProps> = ({
   isOpen,
   closeModalAdd,
   brandList,
   categoryList,
 }) => {
   const {
+    setCategoryId,
     variants,
     setVariants,
     watch,
@@ -42,6 +43,7 @@ const AddProduct: FC<TAddProductProps> = ({
     handleAddVariant,
     dataInformation,
     showAttributeByCategory,
+    productDetails,
   } = useAddProduct();
   const columns = [
     {
@@ -116,12 +118,17 @@ const AddProduct: FC<TAddProductProps> = ({
       ),
     },
   ];
-
+  useEffect(() => {
+    if (!isOpen) {
+      setCategoryId('');
+    }
+  }, [isOpen]);
   return (
     <Drawer
-      placement="right"
       size={'large'}
-      onClose={closeModalAdd}
+      onClose={() => {
+        closeModalAdd();
+      }}
       open={isOpen}
       extra={
         <div className="flex gap-5">
@@ -146,8 +153,15 @@ const AddProduct: FC<TAddProductProps> = ({
                 name="name"
                 control={control}
                 rules={{ required: 'Please enter the product name' }}
+                defaultValue={productDetails?.name}
                 render={({ field }) => (
-                  <Input {...field} placeholder="Enter product name" />
+                  <Input
+                    {...field}
+                    onChange={(value) => {
+                      field.onChange(value);
+                    }}
+                    placeholder="Enter product name"
+                  />
                 )}
               />
               {errors.name && (
@@ -218,8 +232,8 @@ const AddProduct: FC<TAddProductProps> = ({
                     beforeUpload={() => false}
                     style={{ width: '200px' }}
                     onRemove={() => {
-                      field.onChange(null);
-                      setValue('thumbnail', null);
+                      field.onChange(undefined);
+                      setValue('thumbnail', '');
                     }}
                     fileList={fileList}
                   >
@@ -306,81 +320,83 @@ const AddProduct: FC<TAddProductProps> = ({
         </div>
         {dataInformation?.category_id === watch('category_id') && (
           <div>
-            {Object.entries(dataInformation.attributes).map(([key, value]) => (
-              <div key={key} className="mb-4">
-                <label className="capitalize">
-                  {typeof value === 'string' ? value : key}
-                </label>
-                {Array.isArray(value) ? (
-                  // Render as Select if the value is an array
-                  <>
-                    <Controller
-                      name={`attributes.${key}`}
-                      control={control}
-                      rules={{
-                        required: 'Please choose attribute value',
-                      }}
-                      render={({ field }) => {
-                        const fieldValue = Array.isArray(field.value)
-                          ? field.value
-                          : []; // Đảm bảo giá trị là mảng
-                        return (
-                          <Checkbox.Group
-                            className="w-full"
-                            {...field}
-                            value={fieldValue} // Truyền giá trị đã đảm bảo là mảng
-                            options={value.map((option: string) => ({
-                              label: option,
-                              value: option,
-                            }))}
-                          />
-                        );
-                      }}
-                    />
-                    {(errors as FieldErrors<FormValues>)['attributes']?.[
-                      key
-                    ] && (
-                      <p className="text-red-500">
-                        {
-                          (errors as FieldErrors<FormValues>)['attributes']?.[
-                            key
-                          ]?.message
-                        }
-                      </p>
-                    )}
-                  </>
-                ) : (
-                  // Render as Input for string or other types
-                  <>
-                    <Controller
-                      name={`attributes.${key}`}
-                      control={control}
-                      rules={{
-                        required: 'Please type attribute value',
-                      }}
-                      render={({ field }) => <Input {...field} />}
-                    />
-                    {(errors as FieldErrors<FormValues>)['attributes']?.[
-                      key
-                    ] && (
-                      <p className="text-red-500">
-                        {
-                          (errors as FieldErrors<FormValues>)['attributes']?.[
-                            key
-                          ]?.message
-                        }
-                      </p>
-                    )}
-                  </>
-                )}
-              </div>
-            ))}
+            {Object.entries(dataInformation?.attributes || {})?.map(
+              ([key, value]) => (
+                <div key={key} className="mb-4">
+                  <label className="capitalize">
+                    {typeof value === 'string' ? value : key}
+                  </label>
+                  {Array.isArray(value) ? (
+                    // Render as Select if the value is an array
+                    <>
+                      <Controller
+                        name={`attributes.${key}`}
+                        control={control}
+                        rules={{
+                          required: 'Please choose attribute value',
+                        }}
+                        render={({ field }) => {
+                          const fieldValue = Array.isArray(field.value)
+                            ? field.value
+                            : []; // Đảm bảo giá trị là mảng
+                          return (
+                            <Checkbox.Group
+                              className="w-full"
+                              {...field}
+                              value={fieldValue} // Truyền giá trị đã đảm bảo là mảng
+                              options={value.map((option: string) => ({
+                                label: option,
+                                value: option,
+                              }))}
+                            />
+                          );
+                        }}
+                      />
+                      {(errors as FieldErrors<FormValues>)['attributes']?.[
+                        key
+                      ] && (
+                        <p className="text-red-500">
+                          {
+                            (errors as FieldErrors<FormValues>)['attributes']?.[
+                              key
+                            ]?.message
+                          }
+                        </p>
+                      )}
+                    </>
+                  ) : (
+                    // Render as Input for string or other types
+                    <>
+                      <Controller
+                        name={`attributes.${key}`}
+                        control={control}
+                        rules={{
+                          required: 'Please type attribute value',
+                        }}
+                        render={({ field }) => <Input {...field} />}
+                      />
+                      {(errors as FieldErrors<FormValues>)['attributes']?.[
+                        key
+                      ] && (
+                        <p className="text-red-500">
+                          {
+                            (errors as FieldErrors<FormValues>)['attributes']?.[
+                              key
+                            ]?.message
+                          }
+                        </p>
+                      )}
+                    </>
+                  )}
+                </div>
+              ),
+            )}
           </div>
         )}
         <div className="pt-[20px]">
           <label className="block">Variants</label>
           <Controller
-            name="variants" // Tên trường của bạn trong form
+            name="variants"
             control={control}
             render={({ field }) => (
               <>
@@ -388,50 +404,52 @@ const AddProduct: FC<TAddProductProps> = ({
                   {...field}
                   activeKey={activeKey}
                   onChange={handleCollapseChange}
-                  items={variants.map((variant: any) => ({
+                  items={variants?.map((variant: any) => ({
                     key: String(variant.index),
                     label: `Variant ${variant.index + 1}`,
                     children: (
-                      <>
-                        <Table
-                          dataSource={[variant]}
-                          columns={columns}
-                          pagination={false}
-                          footer={() => (
-                            <div className="flex flex-col gap-10">
-                              <>
-                                <ImgCrop rotationSlider>
-                                  <Upload
-                                    listType="picture-card"
-                                    onChange={(info) =>
-                                      onChangeVariant(info, variant.index)
-                                    }
-                                    onPreview={onPreview}
-                                    beforeUpload={() => false}
-                                  >
-                                    {/* Kiểm tra điều kiện nếu uploadedImages[variant.index] chưa có ảnh hoặc ít hơn 3 ảnh */}
-                                    {(uploadedImages[variant?.index]?.length ??
-                                      0) < 3 && <IoCloudUploadOutline />}
-                                  </Upload>
-                                </ImgCrop>
-                              </>
-                              <Space>
-                                <Button
-                                  onClick={() =>
-                                    handleRemoveVariant(variant.index)
-                                  }
-                                  danger
-                                >
-                                  Remove Variant
-                                </Button>
-                                <Button onClick={handleAddVariant}>
-                                  Add Variant
-                                </Button>
-                              </Space>
-                            </div>
-                          )}
-                        />
-                      </>
+                      <Table
+                        dataSource={[variant]}
+                        columns={columns}
+                        pagination={false}
+                        footer={() => (
+                          <div className="flex flex-col gap-10">
+                            <ImgCrop rotationSlider>
+                              <Upload
+                                listType="picture-card"
+                                onChange={(info) =>
+                                  onChangeVariant(info, variant.index)
+                                }
+                                onPreview={onPreview}
+                                beforeUpload={() => false}
+                                onRemove={() => {
+                                  uploadedImages[variant.index].filter(
+                                    (_, idx) => idx !== 0,
+                                  );
+                                }}
+                                fileList={uploadedImages[variant.index]}
+                              >
+                                {/* Kiểm tra điều kiện nếu uploadedImages[variant.index] chưa có ảnh hoặc ít hơn 3 ảnh */}
+                                {(uploadedImages[variant?.index]?.length ?? 0) <
+                                  3 && <IoCloudUploadOutline />}
+                              </Upload>
+                            </ImgCrop>
+                            <Space>
+                              <Button
+                                onClick={() =>
+                                  handleRemoveVariant(variant.index)
+                                }
+                                danger
+                              >
+                                Remove Variant
+                              </Button>
+                              <Button onClick={handleAddVariant}>
+                                Add Variant
+                              </Button>
+                            </Space>
+                          </div>
+                        )}
+                      />
                     ),
                   }))}
                 />
@@ -447,4 +465,4 @@ const AddProduct: FC<TAddProductProps> = ({
   );
 };
 
-export default AddProduct;
+export default DrawerProduct;

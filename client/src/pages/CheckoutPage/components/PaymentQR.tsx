@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Button, Modal } from 'antd';
 import { TPaymentQRProps } from './tyings';
 
@@ -12,22 +12,63 @@ const PaymentQR: FC<TPaymentQRProps> = ({
   setIsConfirmVisible,
   handleTransactionSePay,
 }) => {
+  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds (600 seconds)
+
+  // Effect for transaction polling every 2.5 seconds
   useEffect(() => {
     let intervalId: number;
+
     if (isOpen) {
-      handleTransactionSePay;
+      setTimeLeft(600); // Reset the countdown
+      // Start the transaction polling every 2.5 seconds
+      handleTransactionSePay(); // Call immediately to handle the first transaction
       intervalId = setInterval(handleTransactionSePay, 2500);
 
+      // Cleanup the interval when the modal is closed
       return () => clearInterval(intervalId);
     }
   }, [isOpen]);
+
+  // Effect for countdown timer every second
+  useEffect(() => {
+    let countdownInterval: number;
+
+    if (isOpen) {
+      // Countdown every second
+      countdownInterval = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev > 0) {
+            return prev - 1;
+          } else {
+            clearInterval(countdownInterval);
+            handleCancel(true);
+            return prev;
+          }
+        });
+      }, 1000);
+
+      return () => clearInterval(countdownInterval);
+    }
+  }, [isOpen, handleCancel]);
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes.toString().padStart(2, '0')}:${seconds
+      .toString()
+      .padStart(2, '0')}`;
+  };
+
   return (
     <div className="container">
       <div className="h-screen">
+        <div className="countdown-timer">
+          <p>Thời gian còn lại: {formatTime(timeLeft)}</p>
+        </div>
         <Modal
-          title="Thanh toán qua QR"
+          title={`Thanh toán qua QR: ${formatTime(timeLeft)}`}
           open={isOpen}
-          onCancel={handleCancel}
+          onCancel={() => handleCancel()}
           footer={null}
           className="flex items-center justify-center"
         >

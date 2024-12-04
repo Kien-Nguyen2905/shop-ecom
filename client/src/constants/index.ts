@@ -5,3 +5,5 @@ export * from './rules';
 export * from './home';
 export * from './statusAction';
 export * from './account';
+export * from './navlinks';
+export * from './product';

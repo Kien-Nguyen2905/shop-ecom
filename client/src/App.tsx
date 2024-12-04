@@ -32,6 +32,8 @@ const ForgotPasswordPage = lazy(
   () => import('./pages/ForgotPasswordPage/ForgotPasswordPage'),
 );
 const ProductPage = lazy(() => import('./pages/ProductPage/ProductPage'));
+const AboutUsPage = lazy(() => import('./pages/AboutUsPage/AboutUsPage'));
+
 const ProductDetailPage = lazy(
   () => import('./pages/ProductDetailPage/ProductDetailPage'),
 );
@@ -64,6 +66,8 @@ function App() {
           />
           <Route path={CUSTOMER_PATHS.ROOT} element={<HomePage />} />
           <Route path={CUSTOMER_PATHS.PRODUCT} element={<ProductPage />} />
+          <Route path={CUSTOMER_PATHS.ABOUTUS} element={<AboutUsPage />} />
+
           <Route
             path={CUSTOMER_PATHS.PRODUCT_DETAIL}
             element={<ProductDetailPage />}
