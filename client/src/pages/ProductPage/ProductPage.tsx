@@ -55,7 +55,6 @@ const ProductPage = () => {
           onCategoryChange={onCategoryChange}
           categories={categories!}
         />
-
         <ProductList onPageChange={onPageChange} listProduct={products!} />
       </div>
     </div>

@@ -11,7 +11,6 @@ const HomePage = () => {
       <div className="container">
         <Featured {...hotProduct} />
         <ProductLatest listProduct={products!} />
-        <div className="h-10"></div>
       </div>
     </>
   );

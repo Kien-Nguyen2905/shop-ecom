@@ -130,8 +130,8 @@ const OrderDetail: React.FC<TOrderDetailProps> = ({
                   <strong>Total Orders:</strong> {userDetail.total_order}
                 </p>
                 <p>
-                  <strong>Total Paid:</strong> $
-                  {userDetail.total_paid.toFixed(2)}
+                  <strong>Total Paid:</strong>{' '}
+                  {formatCurrency(userDetail.total_paid)}
                 </p>
               </Card>
             </Col>
@@ -155,19 +155,35 @@ const OrderDetail: React.FC<TOrderDetailProps> = ({
         </div>
       </div>
       {orderDetail.status === 0 && (
-        <div className="flex justify-end mt-5">
-          <Button
-            type="primary"
-            onClick={() => {
-              handleOrder({
-                order_id: orderDetail._id!,
-                status: 1,
-                user_id: orderDetail.user_id,
-              });
-            }}
-          >
-            Accept Order
-          </Button>
+        <div className="flex gap-5 ml-auto w-max">
+          <div className="flex justify-end mt-5">
+            <Button
+              type="primary"
+              onClick={() => {
+                handleOrder({
+                  order_id: orderDetail._id!,
+                  status: 1,
+                  user_id: orderDetail.user_id,
+                });
+              }}
+            >
+              Accept Order
+            </Button>
+          </div>
+          <div className="flex justify-end mt-5">
+            <Button
+              danger
+              onClick={() => {
+                handleOrder({
+                  order_id: orderDetail._id!,
+                  status: 2,
+                  user_id: orderDetail.user_id,
+                });
+              }}
+            >
+              Reject Order
+            </Button>
+          </div>
         </div>
       )}
     </Modal>

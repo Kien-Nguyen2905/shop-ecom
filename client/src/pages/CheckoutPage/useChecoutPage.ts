@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AppDispatch, useSelector } from '../../store/store';
 import { useAccountPage } from '../AccountPage/useAccountPage';
 import { useDispatch } from 'react-redux';
-import { updateCart } from '../../store/middlewares/cartMiddleware';
+import { getCart, updateCart } from '../../store/middlewares/cartMiddleware';
 import { message } from 'antd';
 import { handleError } from '../../libs';
 import { useForm } from 'react-hook-form';
@@ -14,9 +14,11 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { CUSTOMER_PATHS, THUNK_STATUS } from '../../constants';
 import { useMainContext } from '../../context/MainConTextProvider';
+import { generateDesc } from '../../utils';
+import orderServices from '../../services/Order/orderServices';
 
 export const useCheckoutPage = () => {
-  const { desc } = useMainContext();
+  const { desc, setDesc } = useMainContext();
   const navigate = useNavigate();
   const { control, setError, handleSubmit, reset } = useForm<any>();
   const dispatch = useDispatch<AppDispatch>();
@@ -81,6 +83,7 @@ export const useCheckoutPage = () => {
         value.type_payment === '0' &&
         checkoutStatus !== THUNK_STATUS.pending
       ) {
+        await orderServices.checkStock(cartInfo?.products!);
         const dataCOD = await dispatch(
           createOrderByCOD({
             ...value,
@@ -101,6 +104,7 @@ export const useCheckoutPage = () => {
           navigate(CUSTOMER_PATHS.CHECKOUT_SUCCESS);
         }
       } else {
+        await orderServices.checkStock(cartInfo?.products!);
         setValueForm({
           products: cartInfo?.products!,
           address: {
@@ -134,11 +138,14 @@ export const useCheckoutPage = () => {
             order: valueForm,
           }),
         ).unwrap();
+
         if (res?._id) {
-          handleConfirmClose();
+          await handleConfirmClose();
+          setDesc(generateDesc());
           message.success('Order successfully');
           navigate(CUSTOMER_PATHS.CHECKOUT_SUCCESS);
         }
+        return res;
       }
     } catch (error) {
       handleError({ error });
@@ -181,6 +188,7 @@ export const useCheckoutPage = () => {
         ward: profile?.address?.ward,
         street_address: profile?.address.street_address,
       });
+      dispatch(getCart());
     }
   }, [reset, profile]);
   return {

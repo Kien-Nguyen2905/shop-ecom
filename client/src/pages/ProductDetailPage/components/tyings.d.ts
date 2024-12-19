@@ -4,6 +4,7 @@ import { TCategoryResponse } from '../../../services/Category/tyings';
 import { TAddcartPayload } from '../../../components/ProductItem/tyings';
 import { TCreateReviewResponse } from '../../../services/Review/tyings';
 import { TWarehouseResponse } from '../../../services/Warehouse/tyings';
+import { TBrandResponse } from '../../../services/Brand/tyings';
 
 export type TDisplayProductProps = {
   listImage: any;
@@ -22,6 +23,7 @@ export type TDisplayProductInforProps = {
   warehouseData: TWarehouseResponse;
   productData: TProductByIdResponse;
   categoryData: TCategoryResponse;
+  brandData: TBrandResponse[];
   variantId: string;
   onChangeVariant: (variantId: string) => void;
   quantityForm: UseFormReturn<

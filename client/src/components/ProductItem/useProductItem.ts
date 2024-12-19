@@ -12,13 +12,13 @@ export const useProductItem = () => {
   const { openModal } = useMainContext();
   const dispatch = useDispatch<AppDispatch>();
   const { profile } = useSelector((state) => state.auth);
-  const { updateStatus } = useSelector((state) => state.cart);
+  // const { updateStatus } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
 
   const onAddToCart = async (payload: TAddcartPayload) => {
     if (!profile) {
       openModal();
-    } else if (payload && updateStatus !== THUNK_STATUS.pending) {
+    } else if (payload) {
       try {
         dispatch(addToCart(payload)).unwrap();
       } catch (error) {
@@ -32,7 +32,7 @@ export const useProductItem = () => {
   const onAddWishlist = async (payload: TAddWishlistPayload) => {
     if (!profile) {
       openModal();
-    } else if (payload && updateStatus !== THUNK_STATUS.pending) {
+    } else if (payload) {
       try {
         await dispatch(updateWishlist(payload)).unwrap();
       } catch (error) {

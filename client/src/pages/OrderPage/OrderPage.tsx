@@ -72,7 +72,11 @@ const OrderPage = () => {
                     </p>
                     <p>
                       <strong>Status:</strong>{' '}
-                      {order.status === 0 ? 'Pending' : 'Completed'}
+                      {order.status === 0
+                        ? 'Pending'
+                        : order.status === 1
+                        ? 'Completed'
+                        : 'Rejected'}
                     </p>
                     <p>
                       <strong>Address:</strong>{' '}

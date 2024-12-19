@@ -3,6 +3,7 @@ export type TTransactionResponse = {
   user_id: string;
   type_payment: number;
   method_payment: string;
+  status: number;
   value: number;
   content: string;
   created_at: string;

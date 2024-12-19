@@ -139,12 +139,12 @@ const ProductAdminPage: React.FC = () => {
         const menuItems = [
           {
             key: 'view',
-            label: 'View Detail',
+            label: 'View',
             onClick: () => handleViewDetail(record),
           },
           {
             key: 'Edit',
-            label: 'Edit',
+            label: 'Update',
             onClick: () => {
               openUpdateModal(record.key);
             },

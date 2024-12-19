@@ -3,12 +3,16 @@ import { QuantityInput } from '../../../components';
 import { FC } from 'react';
 import { TCartViewProps } from './tyings';
 import { formatCurrency } from '../../../utils';
+import { useWarehouse } from '../../../queries';
 
 const CartView: FC<TCartViewProps> = ({
-  products,
   handleAddCart,
   handleRemoveCart,
+  products,
 }) => {
+  const { data: warehouseData } = useWarehouse();
+
+  if (!warehouseData) return;
   return (
     <div className="flex-1">
       {products?.length > 0 &&
@@ -22,7 +26,11 @@ const CartView: FC<TCartViewProps> = ({
             </p>
             <QuantityInput
               isDisabled
-              max={100}
+              max={
+                warehouseData?.find(
+                  (product) => product.variant_id === item.variant_id,
+                )?.stock!
+              }
               value={item.quantity}
               onChange={(value) =>
                 handleAddCart({

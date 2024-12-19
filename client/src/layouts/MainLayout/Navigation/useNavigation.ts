@@ -1,50 +1,53 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { debounce } from 'lodash';
 import { AppDispatch, useSelector } from '../../../store/store';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { removeCart } from '../../../store/middlewares/cartMiddleware';
 import { handleError } from '../../../libs';
 import { CUSTOMER_PATHS } from '../../../constants';
-
+import { useForm } from 'react-hook-form';
+import queryString from 'query-string';
 export const useNavigation = () => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
-
   const { cartInfo } = useSelector((state) => state.cart);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { search } = useLocation();
+
   const urlParams = new URLSearchParams(search);
+  const { control, watch } = useForm({
+    defaultValues: {
+      search: urlParams.get('search') || '',
+    },
+  });
 
-  const [searchValue, setSearchValue] = useState('');
+  let searchValue = watch('search');
 
-  useEffect(() => {
-    setSearchValue(urlParams.get('search') || '');
-  }, [search]);
   const onSearch = debounce((value: string) => {
-    // Add or update the 'search' parameter
-    urlParams.set('search', value);
+    // Chuyển đổi query string hiện tại thành object
+    const currentParams = queryString.parse(search) as Record<
+      string,
+      string | string[]
+    >;
 
-    // Set default values for other query parameters (if not present)
-    if (!urlParams.has('limit')) {
-      urlParams.set('limit', '6');
+    // Thêm hoặc cập nhật trường search
+    currentParams.search = value;
+
+    // Thêm các query mặc định nếu chưa tồn tại
+    if (!currentParams.limit) {
+      currentParams.limit = '6';
     }
-    if (!urlParams.has('page')) {
-      urlParams.set('page', '1');
+    if (!currentParams.page) {
+      currentParams.page = '1';
     }
 
-    // Construct the full URL path including the updated query parameters
-    const newUrl = `${CUSTOMER_PATHS.PRODUCT}?${urlParams.toString()}`;
+    // Chuyển đổi object thành query string
+    const newQueryString = queryString.stringify(currentParams);
 
-    // Navigate to the new URL with updated query parameters
-    navigate(newUrl);
+    // Điều hướng với `/product` và các query
+    navigate(`${CUSTOMER_PATHS.PRODUCT}?${newQueryString}`);
   }, 700);
-
-  // Handle input change and update the search state
-  const handleInputChange = (value: string) => {
-    setSearchValue(value); // Update search state
-    onSearch(value); // Call onSearch to update the URL
-  };
 
   const handleRemoveCart = async (variant_id: string) => {
     try {
@@ -57,12 +60,13 @@ export const useNavigation = () => {
   };
 
   return {
-    searchValue, // Provide searchValue state for input field
-    handleInputChange, // Provide handleInputChange to bind to input field
+    searchValue,
     cartInfo,
+    onSearch,
     isDropdownVisible,
     setDropdownVisible,
     handleRemoveCart,
-    setSearchValue,
+    control,
+    watch,
   };
 };

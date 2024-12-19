@@ -9,6 +9,9 @@ import { authServices } from '../../services/Auth';
 import { LOCAL_STORAGE } from '../../constants';
 import { authActions, cartActions } from '../reducers';
 import { SuccessResponse } from '../../services/tyings';
+import { getCart } from './cartMiddleware';
+import { getWishlist } from './wishlistMiddleWare';
+import { getOrder } from './orderMiddleWare';
 
 export const login = createAsyncThunk<
   SuccessResponse<TProfileResponse>,
@@ -26,6 +29,9 @@ export const login = createAsyncThunk<
       res.data?.data.refresh_token,
     );
     localStorage.setItem(LOCAL_STORAGE.ROLE, res.data.data.role.toString());
+    await thunkAPI.dispatch(getCart());
+    await thunkAPI.dispatch(getWishlist());
+    await thunkAPI.dispatch(getOrder());
     return await thunkAPI.dispatch(profileUser()).unwrap();
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error);

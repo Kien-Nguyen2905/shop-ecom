@@ -60,7 +60,7 @@ export const useUpadteProductMutation = (id: string) => {
 
   return useMutation({
     mutationFn: (payload: TUpdateProductPayload) =>
-      productServices.updateCategory(id, payload), // No need for 'return' here
+      productServices.updateCategory(id, payload),
 
     onSuccess: () => {
       queryClient.invalidateQueries({

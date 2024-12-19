@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   useUpdateWarehouseMutation,
   useWarehouse,
@@ -8,7 +8,7 @@ import { useProductAdminPage } from '../ProductAdminPage/useProductAdminPage';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ADMIN_PATHS } from '../../constants';
 import { useForm } from 'react-hook-form';
-import { showToast } from '../../libs';
+import { handleError, showToast } from '../../libs';
 
 export const useWarehouseAdminPage = () => {
   const navigate = useNavigate();
@@ -23,7 +23,13 @@ export const useWarehouseAdminPage = () => {
   const { data: warehouseDetail } = useWarehouseByIdQuery(warehouseId);
 
   const [isImport, setIsImport] = useState(false);
-  const { control, watch } = useForm();
+  const { control, watch, reset, setError } = useForm();
+  useEffect(() => {
+    reset({
+      import_quantity: warehouseDetail?.import_quantity,
+      stock: warehouseDetail?.stock,
+    });
+  }, [reset, warehouseDetail]);
   const shipmentColumns = [
     {
       title: 'Date',
@@ -58,13 +64,19 @@ export const useWarehouseAdminPage = () => {
         });
         if (res.data.data._id) {
           handleClose();
+          reset();
           showToast({
             type: 'success',
             message: res.data.message,
           });
         }
       }
-    } catch (error) {}
+    } catch (error) {
+      handleError({
+        error,
+        setError,
+      });
+    }
   };
   const openDrawer = async ({
     warehouseId,

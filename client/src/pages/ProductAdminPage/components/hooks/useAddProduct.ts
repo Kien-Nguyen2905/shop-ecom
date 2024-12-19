@@ -19,7 +19,7 @@ export const useAddProduct = () => {
   const urlParams = new URLSearchParams(location.search);
   const productId = urlParams.get('productId') || undefined;
   const navigate = useNavigate();
-  const { refetch } = useProductAdminPage();
+  const { refetch, productDetails } = useProductAdminPage();
   const uploadImage = useUploadImageMutation();
   const createProduct = useCreateProductMutation();
   const updateProduct = useUpadteProductMutation(productId!);
@@ -77,17 +77,17 @@ export const useAddProduct = () => {
     },
   });
 
-  const { productDetails } = useProductAdminPage();
   useEffect(() => {
     if (productDetails) {
       // Cập nhật giá trị mặc định trong form khi `productDetails` có dữ liệu
       setValue('name', productDetails.name);
       setValue('category_id', productDetails.category_id);
+      setCategoryId(productDetails.category_id);
       setValue('brand_id', productDetails.brand_id);
       setValue('description', productDetails.description);
       setValue('thumbnail', productDetails.thumbnail);
       setValue('featured', productDetails.featured);
-      setValue('minimum_stock', 10);
+      setValue('minimum_stock', productDetails.minimum_stock);
       setValue('attributes', productDetails.attributes);
       setFileList([
         {
@@ -114,6 +114,43 @@ export const useAddProduct = () => {
 
       // Cập nhật state uploadedImages với imagesObject
       setUploadedImages(imagesObject);
+    } else {
+      reset({
+        name: '',
+        category_id: '',
+        brand_id: '',
+        description: '',
+        thumbnail: '',
+        variants: [
+          {
+            index: 0,
+            color: '',
+            price: 0,
+            stock: 0,
+            discount: 0,
+            images: [],
+          },
+        ],
+        featured: {
+          isPopular: false,
+          isRated: false,
+          onSale: false,
+        },
+        minimum_stock: 0,
+        attributes: {},
+      });
+      setVariants([
+        {
+          index: 0,
+          color: '',
+          price: 0,
+          stock: 0,
+          discount: 0,
+          images: [],
+        },
+      ]);
+      setFileList([]);
+      setUploadedImages([]);
     }
   }, [productDetails, setValue]);
   useEffect(() => {
@@ -219,6 +256,13 @@ export const useAddProduct = () => {
         values.minimum_stock = +values.minimum_stock;
         const thumbNail = watch('thumbnail');
         if (productId) {
+          if (productDetails?.variants.length !== values.variants.length)
+            // đánh dấu lại index theo thứ tự cho trường hợp remove variant
+            values.variants = values.variants.map(
+              (item: any, index: number) => {
+                return { ...item, index: index };
+              },
+            );
           if (isObject(thumbNail)) {
             const formDataThumbnail = new FormData();
             formDataThumbnail.append('image', values.thumbnail);
@@ -401,6 +445,8 @@ export const useAddProduct = () => {
   };
 
   return {
+    productId,
+    reset,
     setCategoryId,
     setUploadedImages,
     variants,

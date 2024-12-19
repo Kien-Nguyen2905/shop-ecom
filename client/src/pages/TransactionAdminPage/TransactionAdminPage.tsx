@@ -1,4 +1,4 @@
-import { Table, Select, Card, Row, Col } from 'antd';
+import { Table, Select, Card, Row, Col, Tag } from 'antd';
 import { useTransactionAdminPage } from './useTransactionAdminPage';
 import dayjs from 'dayjs';
 import { formatCurrency } from '../../utils';
@@ -10,29 +10,20 @@ import {
 } from '@ant-design/icons';
 import { MdOutlineLocalShipping, MdOutlineAttachMoney } from 'react-icons/md';
 import { GrTransaction } from 'react-icons/gr';
+import { GoCheckbox } from 'react-icons/go';
+import { FaRegCalendarTimes } from 'react-icons/fa';
 
 const { Option } = Select;
 
 const TransactionAdminPage = () => {
-  const { transactionData, userData } = useTransactionAdminPage();
-
-  const totalRevenue =
-    transactionData?.reduce((sum, transaction) => sum + transaction.value, 0) ||
-    0;
-  const totalTransactions = transactionData?.length || 0;
-  const today = dayjs().startOf('day');
-  const todayRevenue =
-    transactionData?.reduce(
-      (sum, transaction) =>
-        dayjs(transaction.created_at).isSame(today, 'day')
-          ? sum + transaction.value
-          : sum,
-      0,
-    ) || 0;
-  const todayTransactions =
-    transactionData?.filter((transaction) =>
-      dayjs(transaction.created_at).isSame(today, 'day'),
-    ).length || 0;
+  const {
+    transactionData,
+    userData,
+    todayFailRevenue,
+    todaySuccessRevenue,
+    todaySuccessTransactions,
+    todayFailedTransactions,
+  } = useTransactionAdminPage();
 
   // Generate email filter options from userData
   const emailFilters =
@@ -119,6 +110,28 @@ const TransactionAdminPage = () => {
       ),
     },
     {
+      title: 'Status',
+      dataIndex: 'status',
+      filters: [
+        { text: 'Successed', value: 0 },
+        { text: 'Failed', value: 1 },
+      ],
+      filterMultiple: false,
+      onFilter: (value: number, record: any) => record.status === value,
+      render: (status: number) => {
+        let color = '';
+        let text = '';
+        if (status === 0) {
+          color = 'green';
+          text = 'Successed';
+        } else if (status === 1) {
+          color = 'red';
+          text = 'Failed';
+        }
+        return <Tag color={color}>{text}</Tag>;
+      },
+    },
+    {
       title: 'Value',
       dataIndex: 'value',
       key: 'value',
@@ -129,9 +142,7 @@ const TransactionAdminPage = () => {
       title: 'Content',
       dataIndex: 'content',
       key: 'content',
-      render: (content: string) => (
-        <p>{content ? content : 'Cash on delivery'}</p>
-      ),
+      render: (content: string) => <p>{content ? content : 'No content'}</p>,
     },
     {
       title: 'Date',
@@ -158,34 +169,34 @@ const TransactionAdminPage = () => {
     <div className="pt-[50px]">
       <Row gutter={16} className="pb-[30px]">
         <Col span={6}>
-          <Card title="Total Transactions" bordered={false}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <MdOutlineAttachMoney size={24} style={{ marginRight: 8 }} />
-              <p>{formatCurrency(totalRevenue)}</p>
+          <Card title="Total Successed Today" bordered={false}>
+            <div className="flex items-center gap-3">
+              <MdOutlineAttachMoney size={24} />
+              <p>{formatCurrency(todaySuccessRevenue)}</p>
             </div>
           </Card>
         </Col>
         <Col span={6}>
-          <Card title="Total Transactions Today" bordered={false}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <MdOutlineAttachMoney size={24} style={{ marginRight: 8 }} />
-              <p>{formatCurrency(todayRevenue)}</p>
+          <Card title="Total Failed Today" bordered={false}>
+            <div className="flex items-center gap-3">
+              <GrTransaction size={24} />
+              <p>{formatCurrency(todayFailRevenue)}</p>
             </div>
           </Card>
         </Col>
         <Col span={6}>
-          <Card title="Transactions All" bordered={false}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <GrTransaction size={24} style={{ marginRight: 8 }} />
-              <p>{totalTransactions}</p>
+          <Card title="Successful  Today" bordered={false}>
+            <div className="flex items-center gap-3">
+              <GoCheckbox size={24} className="text-green-600" />
+              <p>{todaySuccessTransactions}</p>
             </div>
           </Card>
         </Col>
         <Col span={6}>
-          <Card title="Transactions Today" bordered={false}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <GrTransaction size={24} style={{ marginRight: 8 }} />
-              <p>{todayTransactions}</p>
+          <Card title="Failed  Today" bordered={false}>
+            <div className="flex items-center gap-3">
+              <FaRegCalendarTimes size={24} className="text-red-600" />
+              <p>{todayFailedTransactions}</p>
             </div>
           </Card>
         </Col>

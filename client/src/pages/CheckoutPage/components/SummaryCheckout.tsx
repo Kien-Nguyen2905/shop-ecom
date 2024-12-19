@@ -1,8 +1,6 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { formatCurrency } from '../../../utils';
 import { TSummaryCheckoutProps } from './tyings';
-import { Button } from '../../../components';
-import Input from '../../../components/Input/Input';
 
 const SummaryCheckout: FC<TSummaryCheckoutProps> = ({
   total,
@@ -38,7 +36,7 @@ const SummaryCheckout: FC<TSummaryCheckoutProps> = ({
             <h3 className="text-black font-PpBold">SubTotal</h3>
             <p className="text-black font-PpBold">{formatCurrency(subTotal)}</p>
           </div>
-          {discount && (
+          {discount > 0 && (
             <div className="flex justify-between pb-3 border-b border-darkGrey">
               <h3 className="text-black font-PpBold">Discount</h3>
               <p className="text-black font-PpBold">

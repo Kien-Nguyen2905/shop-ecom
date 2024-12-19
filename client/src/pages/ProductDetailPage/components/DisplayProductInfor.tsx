@@ -17,6 +17,7 @@ const DisplayProductInfor: FC<TDisplayProductInforProps> = ({
   handleAddCart,
   warehouseData,
   onAddWishlist,
+  brandData,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const variant = productData?.variants?.find((item) => item._id === variantId);
@@ -60,8 +61,8 @@ const DisplayProductInfor: FC<TDisplayProductInforProps> = ({
           />
         ))}
       </div>
-      <div className="">
-        <span className="">Quantity:</span>
+      <div className="flex items-center gap-5">
+        <span className="">Quantity</span>
         <QuantityInput
           max={variant?.stock!}
           value={+quantityForm?.watch('quantity')}
@@ -69,6 +70,9 @@ const DisplayProductInfor: FC<TDisplayProductInforProps> = ({
             quantityForm?.setValue('quantity', value.toString())
           }
         />
+        <div className="">
+          <span className="">{variant?.stock}</span> items available
+        </div>
       </div>
       <div className="flex gap-4">
         <Button
@@ -104,6 +108,10 @@ const DisplayProductInfor: FC<TDisplayProductInforProps> = ({
         </Button>
       </div>
       <div className="">Category: {categoryData?.name}</div>
+      <div className="">
+        Brand:{' '}
+        {brandData.find((item) => item._id === productData.brand_id)?.name}
+      </div>
       {Object.keys(productData?.attributes).length > 0 && (
         <div className="relative">
           <Descriptions

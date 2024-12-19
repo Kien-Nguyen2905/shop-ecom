@@ -42,6 +42,7 @@ export type TProductByIdResponse = {
   thumbnail: string;
   description: string;
   featured: TFeatured;
+  minimum_stock: number;
   variants: TVariant[];
   attributes: Record<string, string | []>;
   rate: number;

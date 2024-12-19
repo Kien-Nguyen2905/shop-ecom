@@ -28,7 +28,7 @@ const ProductItem: FC<TProductItemProps> = ({ className = '', item }) => {
         />
       </Link>
       {profile &&
-      wishlist?.list_item.some(
+      wishlist?.list_item?.some(
         (product) => product.variant_id === item.variants[0]._id,
       ) ? (
         <div
@@ -92,12 +92,17 @@ const ProductItem: FC<TProductItemProps> = ({ className = '', item }) => {
           {item?.name}
         </Link>
 
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           <div className="text-primary text-[16px]">
             {formatCurrency(
               (1 - item.variants[0].discount) * item.variants[0].price,
             )}
           </div>
+          {item.variants[0].discount > 0 && (
+            <div className="text-primary text-[14px] bg-yellow-100 px-1">
+              -{item.variants[0].discount * 100} %
+            </div>
+          )}
         </div>
         <div className="">
           <Rate disabled value={item.rate} />

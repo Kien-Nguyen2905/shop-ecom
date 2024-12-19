@@ -41,19 +41,34 @@ export const useOrderAdminPage = () => {
     setIsOpenModal(false);
   };
   // Calculate totals
-  const totalOrders = orderData?.length || 0;
+  // Calculate totals
   const today = dayjs().startOf('day');
+
+  // Tổng số lượng đơn hàng hôm nay
   const todayOrders =
     orderData?.filter((order) => dayjs(order.created_at).isSame(today, 'day'))
       .length || 0;
-  const totalRevenue =
-    orderData?.reduce((sum, order) => sum + order.total, 0) || 0;
-  const todayRevenue =
-    orderData?.reduce(
-      (sum, order) =>
-        dayjs(order.created_at).isSame(today, 'day') ? sum + order.total : sum,
-      0,
-    ) || 0;
+
+  // Tổng số lượng đơn hàng chờ hôm nay (pending = 0)
+  const todayPendingOrders =
+    orderData?.filter(
+      (order) =>
+        order.status === 0 && dayjs(order.created_at).isSame(today, 'day'),
+    ).length || 0;
+
+  // Tổng số lượng đơn hàng chấp nhận hôm nay (accepted = 1)
+  const todayAcceptedOrders =
+    orderData?.filter(
+      (order) =>
+        order.status === 1 && dayjs(order.created_at).isSame(today, 'day'),
+    ).length || 0;
+
+  // Tổng số lượng đơn hàng từ chối hôm nay (rejected = 2)
+  const todayRejectedOrders =
+    orderData?.filter(
+      (order) =>
+        order.status === 2 && dayjs(order.created_at).isSame(today, 'day'),
+    ).length || 0;
 
   const tableProductData = orderDetail?.products?.map(
     (product: TProductOrder) => ({
@@ -82,10 +97,10 @@ export const useOrderAdminPage = () => {
   return {
     orderData,
     userData,
-    totalOrders,
     todayOrders,
-    totalRevenue,
-    todayRevenue,
+    todayPendingOrders,
+    todayAcceptedOrders,
+    todayRejectedOrders,
     openModal,
     orderDetailProps,
   };

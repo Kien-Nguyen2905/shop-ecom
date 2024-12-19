@@ -53,6 +53,7 @@ export const useProductAdminPage = () => {
   };
   const closeModalAdd = () => {
     setIsAddProductModalOpen(false);
+    navigate(ADMIN_PATHS.PRODUCT);
   };
   const openModelAdd = () => {
     setIsAddProductModalOpen(true); // Open the modal to add a new product

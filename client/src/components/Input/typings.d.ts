@@ -7,7 +7,7 @@ export type TInputProps = {
   type?: string;
   rules?: RegisterOptions;
   variant?: string;
-  onChange?: (value: string) => void;
+  onChange?: any;
   disabled?: boolean;
   value?: string | number;
   checked?: boolean;

@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { TModaOpenValue } from './tyings';
-import { handleError, showToast } from '../../libs';
+import { handleError } from '../../libs';
 import reviewService from '../../services/Review/reviewServices';
 import { TCreateReviewPayload } from '../../services/Review/tyings';
 import { message } from 'antd';
@@ -61,6 +61,9 @@ export const useOrderPage = () => {
       });
     }
   };
+  useEffect(() => {
+    dispatch(getOrder());
+  }, []);
   const modalProps = {
     openModal,
     closeModal,

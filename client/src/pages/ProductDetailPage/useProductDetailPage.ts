@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
+  useBrandQuery,
   useCategoryByIdQuery,
   useProductByIdQuery,
   useWarehouse,
@@ -34,8 +35,9 @@ export const useProductDetailPage = () => {
   const [variantId, setVariantId] = useState<string>(
     new URLSearchParams(search).get('variant') as string,
   );
-  const { data: productData } = useProductByIdQuery(id);
+  const { data: productData, isLoading } = useProductByIdQuery(id);
   const { data: categoryData } = useCategoryByIdQuery(productData?.category_id);
+  const { data: brandData } = useBrandQuery();
   const { data: reviewData } = useReviewByProductIdQuery(id!);
   const { data: warehouseData, refetch } = useWarehouse(variantId);
 
@@ -114,6 +116,7 @@ export const useProductDetailPage = () => {
     handleAddCart,
     warehouseData: warehouseData!,
     onAddWishlist,
+    brandData: brandData!,
   };
   const displayProductTabsProps: TDisplayProductTabsProps = {
     description: productData?.description!,
@@ -124,5 +127,6 @@ export const useProductDetailPage = () => {
     listImage,
     displayProductTabsProps,
     name: productData?.name,
+    isLoading,
   };
 };

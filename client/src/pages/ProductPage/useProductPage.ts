@@ -12,12 +12,12 @@ export const useProductPage = () => {
   const [_, setSearchParams] = useSearchParams();
   const { data: categories } = useCategoryQuery();
   const { data } = useProductQuery(search || `?limit=${LIMITS}&page=1`);
-
   // Parse the query params from the URL
   const queryObject = queryString.parse(search) as Record<
     string,
     string | string[]
   >;
+
   const [sortValue, setSortValue] = useState<string>(
     queryObject.orderBy
       ? SORT_OPTIONS.find(

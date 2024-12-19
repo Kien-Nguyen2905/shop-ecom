@@ -117,7 +117,7 @@ const TableCategory: React.FC<TEditableTableProps> = ({
           },
           {
             key: 'edit',
-            label: 'Edit',
+            label: 'Update',
             onClick: () => openDrawer({ categoryId: record._id, isEdit: true }),
           },
           {

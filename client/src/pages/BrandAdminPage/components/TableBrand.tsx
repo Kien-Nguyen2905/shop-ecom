@@ -72,8 +72,8 @@ const TableBrand: React.FC<TEditableTableProps> = ({
       ),
     },
     {
-      title: 'Operation',
-      dataIndex: 'operation',
+      title: 'Actions',
+      dataIndex: 'Actions',
       render: (_: any, record: TBrandResponse) => {
         const editable = isEditing(record);
         return editable ? (
@@ -95,7 +95,7 @@ const TableBrand: React.FC<TEditableTableProps> = ({
               disabled={editingKey !== ''}
               onClick={() => editRecord(record)}
             >
-              Edit
+              Update
             </button>
             <button disabled={editingKey !== ''}>
               <Popconfirm

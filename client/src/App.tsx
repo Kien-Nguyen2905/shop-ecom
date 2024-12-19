@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { ADMIN_PATHS, CUSTOMER_PATHS } from './constants';
+import { NotFoundPage } from './pages/NotFoundPage';
 const MainLayout = lazy(() => import('./layouts/MainLayout/MainLayout'));
 const AdminLayout = lazy(() => import('./layouts/AdminLayout/AdminLayout'));
 const OauthPage = lazy(() => import('./pages/OauthPage/OauthPage'));
@@ -117,6 +118,7 @@ function App() {
             element={<TransactionAdminPage />}
           />
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
   );

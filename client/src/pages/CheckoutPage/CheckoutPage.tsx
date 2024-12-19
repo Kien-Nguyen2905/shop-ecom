@@ -24,11 +24,13 @@ const CheckoutPage = () => {
     <div className="container">
       <div className="flex h-screen gap-12 pt-10">
         <div className="flex-1">
-          <CheckoutEarnPoint
-            availablePoints={availablePoints!}
-            applyEarnPoint={applyEarnPoint}
-            appliedPoints={appliedPoints}
-          />
+          {availablePoints! > 0 && (
+            <CheckoutEarnPoint
+              availablePoints={availablePoints!}
+              applyEarnPoint={applyEarnPoint}
+              appliedPoints={appliedPoints}
+            />
+          )}
           <CheckoutInfor {...checkoutInforProps!} />
         </div>
         <div className="">

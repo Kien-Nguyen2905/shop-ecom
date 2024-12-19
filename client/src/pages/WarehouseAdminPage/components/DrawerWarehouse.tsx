@@ -41,6 +41,19 @@ const DrawerWarehouse: FC<TDrawerWarehouseProps> = ({
       >
         <form>
           <div className="mb-4">
+            <div className="hidden">
+              <label>ID Product</label>
+              <Controller
+                name="product_id"
+                control={control}
+                defaultValue={warehouseDetail.product_id}
+                render={({ field }) => (
+                  <>
+                    <Input {...field} readOnly />
+                  </>
+                )}
+              />
+            </div>
             <label>Product</label>
             <Controller
               name="product_name"
@@ -54,7 +67,20 @@ const DrawerWarehouse: FC<TDrawerWarehouseProps> = ({
             />
           </div>
           <div className="mb-4">
-            <label>Variant</label>
+            <div className="hidden">
+              <label>ID Variant</label>
+              <Controller
+                name="variant_id"
+                control={control}
+                defaultValue={warehouseDetail.variant_id}
+                render={({ field }) => (
+                  <>
+                    <Input {...field} readOnly />
+                  </>
+                )}
+              />
+            </div>
+            <label>ID Variant</label>
             <Controller
               name="variant"
               control={control}

@@ -13,7 +13,6 @@ const PaymentQR: FC<TPaymentQRProps> = ({
   handleTransactionSePay,
 }) => {
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds (600 seconds)
-
   // Effect for transaction polling every 2.5 seconds
   useEffect(() => {
     let intervalId: number;
@@ -22,7 +21,7 @@ const PaymentQR: FC<TPaymentQRProps> = ({
       setTimeLeft(600); // Reset the countdown
       // Start the transaction polling every 2.5 seconds
       handleTransactionSePay(); // Call immediately to handle the first transaction
-      intervalId = setInterval(handleTransactionSePay, 2500);
+      intervalId = setInterval(handleTransactionSePay, 3000);
 
       // Cleanup the interval when the modal is closed
       return () => clearInterval(intervalId);
@@ -60,11 +59,9 @@ const PaymentQR: FC<TPaymentQRProps> = ({
   };
 
   return (
-    <div className="container">
+    <div className={`${isOpen ? '' : 'hidden'} container`}>
       <div className="h-screen">
-        <div className="countdown-timer">
-          <p>Thời gian còn lại: {formatTime(timeLeft)}</p>
-        </div>
+        <div className=""></div>
         <Modal
           title={`Thanh toán qua QR: ${formatTime(timeLeft)}`}
           open={isOpen}
@@ -78,7 +75,6 @@ const PaymentQR: FC<TPaymentQRProps> = ({
             alt="QR Code"
           />
         </Modal>
-
         <Modal
           title="Xác nhận"
           open={isConfirmVisible}

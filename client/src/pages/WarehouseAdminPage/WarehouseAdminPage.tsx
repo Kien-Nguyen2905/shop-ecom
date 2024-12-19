@@ -1,6 +1,6 @@
-import { Button, Dropdown, Table, Tag } from 'antd';
+import { Button, Dropdown, Input, Table, Tag } from 'antd';
 import { useWarehouseAdminPage } from './useWarehouseAdminPage';
-import { EllipsisOutlined } from '@ant-design/icons';
+import { SearchOutlined, EllipsisOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { DrawerWarehouse } from './components';
 import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
@@ -23,7 +23,44 @@ const WarehouseAdminPage = () => {
     {
       title: 'Product',
       dataIndex: 'product_name',
-      sorter: (a: any, b: any) => a.product_name.localeCompare(b.product_name),
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+      }: any) => (
+        <div style={{ padding: 8 }}>
+          <Input
+            placeholder="Search product"
+            value={selectedKeys[0]}
+            onChange={(e) =>
+              setSelectedKeys(e.target.value ? [e.target.value] : [])
+            }
+            onPressEnter={() => confirm()}
+            style={{ marginBottom: 8, display: 'block' }}
+          />
+          <Button
+            type="link"
+            size="small"
+            onClick={() => clearFilters && clearFilters()}
+          >
+            Reset
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => confirm()}
+            icon={<SearchOutlined />}
+          >
+            Search
+          </Button>
+        </div>
+      ),
+      filterIcon: (filtered: boolean) => (
+        <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+      ),
+      onFilter: (value: any, record: any) =>
+        record.product_name.toLowerCase().includes(value.toLowerCase()),
     },
     {
       title: 'Variant',
@@ -125,7 +162,7 @@ const WarehouseAdminPage = () => {
         const menuItems = [
           {
             key: 'view',
-            label: 'View Detail',
+            label: 'View',
             onClick: () =>
               openDrawer({ warehouseId: record._id, isView: true }),
           },
@@ -162,7 +199,7 @@ const WarehouseAdminPage = () => {
       <Table
         columns={columns}
         dataSource={warehouseData}
-        pagination={{ pageSize: 5 }}
+        pagination={{ pageSize: 6 }}
       />
     </div>
   );

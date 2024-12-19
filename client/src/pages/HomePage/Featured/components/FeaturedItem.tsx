@@ -5,7 +5,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { ProductItem } from '../../../../components';
 import { TFeaturedItemProps } from './tyings';
-import { Keyboard, Mousewheel, Navigation, Pagination } from 'swiper/modules';
+import { Keyboard, Navigation, Pagination } from 'swiper/modules';
 
 import './FeaturedItem.css';
 import ArrowSlide from './ArrowSlide';

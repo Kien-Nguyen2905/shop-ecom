@@ -23,6 +23,7 @@ const DrawerProduct: FC<TAddProductProps> = ({
   categoryList,
 }) => {
   const {
+    productId,
     setCategoryId,
     variants,
     setVariants,
@@ -45,6 +46,7 @@ const DrawerProduct: FC<TAddProductProps> = ({
     showAttributeByCategory,
     productDetails,
   } = useAddProduct();
+
   const columns = [
     {
       title: 'Color',
@@ -65,15 +67,25 @@ const DrawerProduct: FC<TAddProductProps> = ({
       title: 'Price',
       dataIndex: 'price',
       key: 'price',
-      render: (text: string, record: any) => (
+      render: (text: number, record: any) => (
         <Input
           type="number"
           min={1}
           value={text}
+          onKeyUp={(e) => {
+            if (!/^\d$/.test(e.key)) {
+              e.preventDefault(); // Ngăn chặn nhập ký tự không phải số
+            }
+          }}
           onChange={(e) => {
-            const newVariants = [...variants];
-            newVariants[record.index].price = Number(e.target.value);
-            setVariants(newVariants);
+            const inputValue = e.target.value;
+            if (/^\d*$/.test(inputValue)) {
+              // Kiểm tra chỉ chứa số hoặc rỗng
+              const newVariants = [...variants];
+              newVariants[record.index].price =
+                inputValue === '' ? '' : Number(inputValue);
+              setVariants(newVariants);
+            }
           }}
         />
       ),
@@ -82,15 +94,27 @@ const DrawerProduct: FC<TAddProductProps> = ({
       title: 'Stock',
       dataIndex: 'stock',
       key: 'stock',
-      render: (text: string, record: any) => (
+      render: (text: number, record: any) => (
         <Input
           value={text}
+          disabled={productId ? true : false}
           min={1}
           type="number"
+          onKeyUp={(e) => {
+            // Ngăn nhập ký tự không phải số
+            if (!/^\d$/.test(e.key)) {
+              e.preventDefault();
+            }
+          }}
           onChange={(e) => {
-            const newVariants = [...variants];
-            newVariants[record.index].stock = Number(e.target.value);
-            setVariants(newVariants);
+            const inputValue = e.target.value;
+            if (/^\d*$/.test(inputValue)) {
+              // Kiểm tra chỉ chứa số hoặc rỗng
+              const newVariants = [...variants];
+              newVariants[record.index].stock =
+                inputValue === '' ? '' : Number(inputValue);
+              setVariants(newVariants);
+            }
           }}
         />
       ),
@@ -99,16 +123,21 @@ const DrawerProduct: FC<TAddProductProps> = ({
       title: 'Discount',
       dataIndex: 'discount',
       key: 'discount',
-      render: (text: any, record: any) => (
+      render: (text: number, record: any) => (
         <Input
           disabled={!watch('featured.onSale')}
-          value={text ? text * 100 : ''} // Hiển thị dạng phần trăm (1 -> 100)
-          min={1}
+          value={text * 100}
+          min={0}
           max={100}
           type="number"
+          onKeyUp={(e) => {
+            if (!/^\d$/.test(e.key)) {
+              e.preventDefault(); // Ngăn chặn nhập ký tự không phải số
+            }
+          }}
           onChange={(e) => {
             const value = Number(e.target.value); // Lấy giá trị nhập vào
-            if (value >= 1 && value <= 100) {
+            if (value >= 0 && value <= 100) {
               const newVariants = [...variants];
               newVariants[record.index].discount = value / 100; // Chuyển sang giá trị thập phân
               setVariants(newVariants);

@@ -21,6 +21,7 @@ export const useVerifyEmailPage = () => {
   const register = useRegisterMutation();
   const resendVerifyEmail = useResendVerifyEmailMutation();
   const navigate = useNavigate();
+
   const handleRegisterByEmail = async (payload: TRegisterPayload) => {
     try {
       const res = await register.mutateAsync(payload);

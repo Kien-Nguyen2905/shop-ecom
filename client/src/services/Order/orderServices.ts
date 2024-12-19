@@ -5,6 +5,7 @@ import {
   TCreateOrderResponse,
   TOrderAllResponse,
   TOrderResponse,
+  TProductOrder,
   TUpdateStatusOrder,
   TUpdateStatusOrderDetail,
 } from './tyings';
@@ -27,6 +28,9 @@ const orderServices = {
       `/order`,
       payload,
     );
+  },
+  checkStock: (payload: TProductOrder[]) => {
+    return instance.post<SuccessResponse<{}>>(`/order/check-stock`, payload);
   },
 };
 export default orderServices;

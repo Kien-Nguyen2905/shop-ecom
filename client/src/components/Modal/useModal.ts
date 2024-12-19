@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useMainContext } from '../../context/MainConTextProvider';
 import {
   TLoginPayload,
@@ -90,8 +90,6 @@ export const useModal = () => {
         error,
         setError,
       });
-    } finally {
-      reset();
     }
   };
 

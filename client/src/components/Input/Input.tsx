@@ -27,7 +27,6 @@ const Input: React.FC<TInputProps> = ({
       rules: props.rules || RULES[name] || {}, // Fallback to an empty object if no rules exist
       defaultValue: '',
     });
-
     return renderProp ? (
       renderProp(props, invalid, field)
     ) : (
@@ -49,6 +48,10 @@ const Input: React.FC<TInputProps> = ({
           }`}
           {...field}
           {...props}
+          onChange={(e) => {
+            field.onChange(e); // Gọi react-hook-form để cập nhật giá trị
+            if (onChange) onChange(e.target.value); // Gọi onChange từ props nếu có
+          }}
         />
         {invalid && <p className="text-sm text-red-600">{error?.message}</p>}
       </div>

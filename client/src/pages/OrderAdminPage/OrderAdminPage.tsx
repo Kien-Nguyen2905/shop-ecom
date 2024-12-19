@@ -7,23 +7,24 @@ import {
   CalendarOutlined,
   ClockCircleOutlined,
   EllipsisOutlined,
-  FileDoneOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import { MdOutlineLocalShipping } from 'react-icons/md';
 import { GoCheckbox } from 'react-icons/go';
 import { TOrderItem } from './tyings';
 import { OrderDetail } from './components';
-import { useCustomerAdminPage } from '../CustomerAdminPage/useCustomerAdminPage';
+import { FaRegCalendarTimes } from 'react-icons/fa';
+import { IoTimerOutline } from 'react-icons/io5';
+import { AiOutlineFileDone } from 'react-icons/ai';
 const { Option } = Select;
 const OrderAdminPage = () => {
   const {
     orderData,
     userData,
-    totalOrders,
     todayOrders,
-    totalRevenue,
-    todayRevenue,
+    todayPendingOrders,
+    todayAcceptedOrders,
+    todayRejectedOrders,
     openModal,
     orderDetailProps,
   } = useOrderAdminPage();
@@ -121,14 +122,25 @@ const OrderAdminPage = () => {
       filters: [
         { text: 'Pending', value: 0 },
         { text: 'Accepted', value: 1 },
+        { text: 'Reject', value: 2 },
       ],
       filterMultiple: false,
       onFilter: (value: number, record: any) => record.status === value,
-      render: (status: number) => (
-        <Tag color={status === 0 ? 'orange' : 'green'}>
-          {status === 0 ? 'Pending' : 'Accepted'}
-        </Tag>
-      ),
+      render: (status: number) => {
+        let color = '';
+        let text = '';
+        if (status === 0) {
+          color = 'orange';
+          text = 'Pending';
+        } else if (status === 1) {
+          color = 'green';
+          text = 'Accepted';
+        } else if (status === 2) {
+          color = 'red';
+          text = 'Reject';
+        }
+        return <Tag color={color}>{text}</Tag>;
+      },
     },
     {
       title: 'Date',
@@ -154,7 +166,7 @@ const OrderAdminPage = () => {
         const menuItems = [
           {
             key: 'view',
-            label: 'View Detail',
+            label: 'View',
             onClick: () => openModal(record),
           },
         ];
@@ -171,34 +183,34 @@ const OrderAdminPage = () => {
     <div className="pt-[50px]">
       <Row gutter={16} className="pb-[30px]">
         <Col span={6}>
-          <Card title="Total Orders" bordered={false}>
-            <div className="flex items-center gap-2">
-              <GoCheckbox />
-              <p>{totalOrders}</p>
-            </div>
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card title="Orders Today" bordered={false}>
-            <div className="flex items-center gap-2">
-              <FileDoneOutlined />
+          <Card title="Amount Today" bordered={false}>
+            <div className="flex items-center gap-3">
+              <AiOutlineFileDone size={24} />
               <p>{todayOrders}</p>
             </div>
           </Card>
         </Col>
         <Col span={6}>
-          <Card title="Total Revenue" bordered={false}>
-            <div className="flex items-center gap-2">
-              <BankOutlined />
-              <p>{formatCurrency(totalRevenue)}</p>
+          <Card title="Pending Today" bordered={false}>
+            <div className="flex items-center gap-3">
+              <IoTimerOutline size={24} />
+              <p>{todayPendingOrders}</p>
             </div>
           </Card>
         </Col>
         <Col span={6}>
-          <Card title="Revenue Today" bordered={false}>
-            <div className="flex items-center gap-2">
-              <CalendarOutlined />
-              <p>{formatCurrency(todayRevenue)}</p>
+          <Card title="Accepted Today" bordered={false}>
+            <div className="flex items-center gap-3">
+              <GoCheckbox size={24} className="text-green-600" />
+              <p>{todayAcceptedOrders}</p>
+            </div>
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card title="Rejected Today" bordered={false}>
+            <div className="flex items-center gap-3">
+              <FaRegCalendarTimes size={24} className="text-red-600" />
+              <p>{todayRejectedOrders}</p>
             </div>
           </Card>
         </Col>

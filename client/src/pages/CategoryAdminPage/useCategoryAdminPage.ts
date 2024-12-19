@@ -161,10 +161,6 @@ export const useCategoryAdminPage = () => {
         error,
         setError,
       });
-      showToast({
-        type: 'error',
-        message: error?.response?.data?.message,
-      });
     }
   };
 

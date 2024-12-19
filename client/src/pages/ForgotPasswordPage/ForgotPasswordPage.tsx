@@ -14,8 +14,12 @@ const ForgotPasswordPage = () => {
   } = useForgotPasswordPage();
 
   return (
-    <div className="flex items-center gap-8 flex-col pt-[150px] w-full h-full">
-      <h3 className="xl:text-[30px] text-primary">Vui lòng xác minh email</h3>
+    <div className="flex items-center gap-8 flex-col pt-[150px] w-full h-[500px]">
+      <h3 className="xl:text-[30px] text-primary">
+        {token
+          ? 'Please enter new password'
+          : 'Please enter your email of account'}
+      </h3>
       <form
         className="flex flex-col w-1/4 gap-5"
         onSubmit={handleSubmit(handleSendOrResend)}

@@ -2,7 +2,8 @@ export const RULES: Record<string, {}> = {
   email: {
     required: { value: true, message: 'Please enter your email address' },
     pattern: {
-      value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+      value:
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
       message: 'Invalid email',
     },
   },

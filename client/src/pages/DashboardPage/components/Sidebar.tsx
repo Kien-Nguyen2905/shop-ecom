@@ -9,7 +9,7 @@ const Sidebar = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   return (
-    <div className="flex flex-col items-start h-[400px]">
+    <div className="flex flex-col items-start min-h-[400px]">
       <div className="flex flex-col gap-2 w-[290px]">
         {ACCOUNT_ROUTES.map((item) => (
           <NavLink

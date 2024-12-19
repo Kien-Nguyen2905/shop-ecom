@@ -56,7 +56,7 @@ const QuantityInput: FC<TQuantityInputProps> = ({
       </button>
       <input
         type="number"
-        className="w-16 text-center outline-none appearance-none"
+        className="w-16 text-center outline-none appearance-none font-PpBold"
         onChange={onInputChange}
         onBlur={onInputBlur}
         value={renderValue.toString()?.replace(/^0+/, '')}

@@ -16,7 +16,6 @@ const FilterProduct: FC<TFilterProductProps> = ({
   const [_, setSearchParams] = useSearchParams();
   const [isChecked, setIsChecked] = useState('');
   const [priceRange, setPriceRange] = useState<number[]>([0, 0]);
-
   const handleCleanAll = () => {
     setSortValue('newest');
     setPriceRange([0, 0]);

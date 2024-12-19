@@ -56,10 +56,10 @@ export const createOrderByBanking = createAsyncThunk(
           transaction_id: data.data._id!,
         });
         if (res.data.data._id) {
-          thunkAPI.dispatch(getOrder());
-          thunkAPI.dispatch(getCart());
+          await thunkAPI.dispatch(getOrder());
+          await thunkAPI.dispatch(getCart());
         }
-        thunkAPI.fulfillWithValue(res.data.data);
+        await thunkAPI.fulfillWithValue(res.data.data);
         return res.data.data;
       }
     } catch (error) {
