@@ -33,47 +33,47 @@ export const USERS_MESSAGES = {
   VERIFY_FORGOT_SUCCED: 'Verify forgot password token successfully',
   PASSWORD_TOKEN_REQUIRED: 'Password token is required',
   RESET_PASSWORD_SUCCED: 'Reset password successfully',
-  PHONE_REQUIRED: 'Phone number is required.',
-  PHONE_STRING: 'Phone number must be a string.',
-  PHONE_INVALID: 'Phone number is invalid.',
-  PHONE_LENGTH: 'Phone number must be between 10 and 15 characters.'
+  PHONE_REQUIRED: 'Phone number is required',
+  PHONE_STRING: 'Phone number must be a string',
+  PHONE_INVALID: 'Phone number is invalid',
+  PHONE_LENGTH: 'Phone number must be between 10 and 15 characters'
 }
 export const ADDRESS_MESSAGES = {
-  PROVINCE_REQUIRED: 'Province is required.',
-  PROVINCE_STRING: 'Province must be a string.',
+  PROVINCE_REQUIRED: 'Province is required',
+  PROVINCE_STRING: 'Province must be a string',
 
-  DISTRICT_REQUIRED: 'District is required.',
-  DISTRICT_STRING: 'District must be a string.',
+  DISTRICT_REQUIRED: 'District is required',
+  DISTRICT_STRING: 'District must be a string',
 
-  WARD_REQUIRED: 'Ward is required.',
-  WARD_STRING: 'Ward must be a string.',
+  WARD_REQUIRED: 'Ward is required',
+  WARD_STRING: 'Ward must be a string',
 
-  STREET_ADDRESS_REQUIRED: 'Street address is required.',
-  STREET_ADDRESS_STRING: 'Street address must be a string.'
+  STREET_ADDRESS_REQUIRED: 'Street address is required',
+  STREET_ADDRESS_STRING: 'Street address must be a string'
 }
 export const CATEGORY_MESSAGES = {
-  CATEGORY_NAME_REQUIRED: 'Category name is required.',
-  CATEGORY_NAME_STRING: 'Category name must be a string.',
+  CATEGORY_NAME_REQUIRED: 'Category name is required',
+  CATEGORY_NAME_STRING: 'Category name must be a string',
   CATEGORY_NAME_EXISTS: 'Category name already exists',
-  CATEGORY_NOT_EXISTS: 'Category does not exists.',
+  CATEGORY_NOT_EXISTS: 'Category does not exists',
   CATEGORY_BELONG_TO_EXIST_PRODUCT: 'Category belong to exist product',
   CATEGORY_ID_INVALID: 'Category id is invalid',
   CATEGORY_ID_MUST_BE_STRING: 'Category id must be string'
 }
 export const BRAND_MESSAGES = {
-  BRAND_NAME_REQUIRED: 'Brand name is required.',
-  BRAND_NAME_STRING: 'Brand name must be a string.',
-  BRAND_NAME_EXISTS: 'Brand name already exist.',
-  BRAND_NOT_EXISTS: 'Brand does not exist.',
+  BRAND_NAME_REQUIRED: 'Brand name is required',
+  BRAND_NAME_STRING: 'Brand name must be a string',
+  BRAND_NAME_EXISTS: 'Brand name already exists',
+  BRAND_NOT_EXISTS: 'Brand does not exist',
   BRAND_BELONG_TO_EXIST_PRODUCT: 'Brand belong to exist product',
   BRAND_ID_INVALID: 'Brand id is invalid',
   BRAND_ID_REQUIRED: 'Brand id is required'
 }
 
 export const PRODUCT_MESSAGES = {
-  PRODUCT_EXISTS: 'Product has already existed.',
-
-  PRODUCT_NOT_EXISTS: 'Product does not exist.',
+  PRODUCT_EXISTS: 'Product has already existed',
+  PRODUCT_EXISTS_ORDER: 'Product has already existed order',
+  PRODUCT_NOT_EXISTS: 'Product does not exist',
   PRODUCY_NAME_REQUIRED: 'Product name is required',
   PRODUCY_NAME_STRING: 'Product name must be string',
   PRODUCY_NAME_NAME_LENGTH: 'Product name length must be from 5 letters',
@@ -107,7 +107,7 @@ export const PRODUCT_MESSAGES = {
   VARIANT_RATE_BETWEEN_0_AND_5: 'Variant rate must be an integer between 0 and 5',
   VARIANT_IMAGES_INVALID: 'Variant images must be with 3 images of valid URLs',
   VARIANT_DISCOUNT_BETWEEN_0_AND_1: 'Variant discount must be a number between 0 and 1',
-  VARIANT_NOT_EXISTS: 'Variant does not exists.',
+  VARIANT_NOT_EXISTS: 'Variant does not exists',
 
   RATE_MUST_BE_INTEGER: 'Rate must be an integer between 0 and 5',
 
@@ -126,15 +126,15 @@ export const PRODUCT_MESSAGES = {
 export const WAREHOUSE_MESSAGES = {
   QUANTITY_MIN: 'Quantity must be a interger from 1',
 
-  INVALID_IMPORT_QUANTITY: 'Import quantity must be a non-negative integer.',
+  INVALID_IMPORT_QUANTITY: 'Import quantity must be a non-negative integer',
 
-  STOCK_REQUIRED: 'Stock is required.',
-  INVALID_STOCK_VALUE: 'Stock must be a non-negative integer.',
+  STOCK_REQUIRED: 'Stock is required',
+  INVALID_STOCK_VALUE: 'Stock must be a non-negative integer',
 
-  INVALID_MINIMUM_STOCK_VALUE: 'Minimum stock must be a non-negative integer.',
+  INVALID_MINIMUM_STOCK_VALUE: 'Minimum stock must be a non-negative integer',
 
-  SHIPMENTS_MUST_BE_ARRAY: 'Shipments must be an array.',
-  INVALID_SHIPMENT_ITEM: 'Each shipment must be a valid object.',
+  SHIPMENTS_MUST_BE_ARRAY: 'Shipments must be an array',
+  INVALID_SHIPMENT_ITEM: 'Each shipment must be a valid object',
   INVALID_SHIPMENT_QUANTITY: 'Shipment quantity must be a non-negative number.',
   INVALID_SHIPMENT_DATE: 'Shipment date must be a valid date string.'
 }

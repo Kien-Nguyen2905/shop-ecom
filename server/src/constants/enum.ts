@@ -9,8 +9,7 @@ export enum EVerification {
 export enum STATUS_ORDER {
   WAITING,
   ACCEPT,
-  REJECT,
-  RETURN
+  REJECT
 }
 export enum TYPE_PAYMENT {
   COD,
@@ -18,6 +17,6 @@ export enum TYPE_PAYMENT {
 }
 
 export enum STATUS_TRANSACTION {
-  COD,
-  BANKING
+  SUCCESSED,
+  FAILED
 }

@@ -1,4 +1,4 @@
-import { TWarehousePayload } from '~/services/warehouse/type'
+import { TUpdateWarehousePayload, TWarehousePayload } from '~/services/warehouse/type'
 import { ObjectId } from 'mongodb'
 import { BRAND_MESSAGES, CATEGORY_MESSAGES, PRODUCT_MESSAGES } from '~/constants/message'
 import { BadRequestError, ConflictRequestError, InternalServerError, NotFoundError } from '~/models/errors/errors'
@@ -118,6 +118,7 @@ class ProductServices {
       if (dateTo) query.created_at.$lte = new Date(dateTo)
     }
 
+    // option i tìm kiếm không phân biệt chữ hoa chữ thường (case-insensitive)
     if (search) {
       query.name = {
         $regex: search,
@@ -139,12 +140,6 @@ class ProductServices {
 
     if (topRated) {
       query['featured.isRated'] = topRated
-    }
-
-    if (minPrice || maxPrice) {
-      query['variants.0.price'] = {}
-      if (minPrice !== undefined) query['variants.0.price'].$gte = minPrice
-      if (maxPrice !== undefined) query['variants.0.price'].$lte = maxPrice
     }
 
     if (outOfStockLimit) {
@@ -179,13 +174,29 @@ class ProductServices {
           {
             $addFields: {
               firstVariantPrice: {
+                // multi nhân các giá trị bên trong mảng
                 $multiply: [
+                  // Lấy price của phần tử đầu tiên 0
                   { $arrayElemAt: ['$variants.price', 0] },
+                  // Thực hiện trừ giữa 1 và discount của phần tử đầu tiên 0
                   { $subtract: [1, { $arrayElemAt: ['$variants.discount', 0] }] }
                 ]
               }
             }
           },
+          // Lọc theo minPrice và maxPrice nếu có
+          ...(minPrice || maxPrice
+            ? [
+                {
+                  $match: {
+                    firstVariantPrice: {
+                      ...(minPrice !== undefined ? { $gte: minPrice } : {}),
+                      ...(maxPrice !== undefined ? { $lte: maxPrice } : {})
+                    }
+                  }
+                }
+              ]
+            : []),
           { $sort: sort },
           { $skip: skip },
           { $limit: limit }
@@ -219,6 +230,19 @@ class ProductServices {
               }
             }
           },
+          // Lọc theo minPrice và maxPrice nếu có
+          ...(minPrice || maxPrice
+            ? [
+                {
+                  $match: {
+                    firstVariantPrice: {
+                      ...(minPrice !== undefined ? { $gte: minPrice } : {}),
+                      ...(maxPrice !== undefined ? { $lte: maxPrice } : {})
+                    }
+                  }
+                }
+              ]
+            : []),
           { $sort: sort }
         ])
         .toArray()
@@ -233,6 +257,17 @@ class ProductServices {
       throw new NotFoundError({ message: PRODUCT_MESSAGES.PRODUCT_NOT_EXISTS })
     }
     return productExist
+  }
+
+  async checkProductInOrder(productId: string) {
+    //Can not delete product in order pending
+    const productExist = await databaseService.orders.findOne({
+      'products.product_id': new ObjectId(productId),
+      status: 0
+    })
+    if (productExist) {
+      throw new BadRequestError({ message: PRODUCT_MESSAGES.PRODUCT_EXISTS_ORDER })
+    }
   }
 
   async checkProductandVariant(productId: string, variantId: string, quantity?: number) {
@@ -281,38 +316,131 @@ class ProductServices {
   }
 
   async updateProduct(productId: string, payload: TUpdateProductPayload) {
+    // Check product exist
     await this.checkProductById(productId)
+    // Check product exist in order with status pending
+    await this.checkProductInOrder(productId)
+    // Delete product had been updated in cart users
+    await databaseService.carts.updateMany(
+      {
+        'products.product_id': new ObjectId(productId)
+      },
+      {
+        $pull: {
+          products: { product_id: new ObjectId(productId) }
+        }
+      }
+    )
+
     const category_id = new ObjectId(payload.category_id)
     const brand_id = new ObjectId(payload.brand_id)
 
-    // Check for existence of category and brand
-    const categoryExist = await databaseService.categories.findOne({ _id: category_id })
+    // Check exist category and brand
+    const [categoryExist, brandExist] = await Promise.all([
+      databaseService.categories.findOne({ _id: category_id }),
+      databaseService.brands.findOne({ _id: brand_id })
+    ])
+
     if (!categoryExist) {
       throw new NotFoundError({ message: CATEGORY_MESSAGES.CATEGORY_NOT_EXISTS })
     }
-    const brandExist = await databaseService.brands.findOne({ _id: brand_id })
+
     if (!brandExist) {
       throw new NotFoundError({ message: BRAND_MESSAGES.BRAND_NOT_EXISTS })
     }
 
+    // Check stock variant must be large minimum stock
+    const checkMinimumStock = await payload.variants?.some((item) => item.stock <= payload.minimum_stock!)
+    if (checkMinimumStock) {
+      throw new BadRequestError({ message: 'Stock variant must be large minimun stock' })
+    }
+
+    // Add field _id for variant item
+    payload.variants = payload.variants?.map((variant) => ({
+      ...variant,
+      _id: new ObjectId(variant._id) || new ObjectId()
+    }))
+
+    // Lấy danh sách variant_id trong payload
+    const variantIdsInPayload = payload.variants?.map((variant) => new ObjectId(variant._id)) || []
+
+    // Lấy danh sách warehouse hiện tại liên quan đến productId
+    const currentWarehouses = await databaseService.warehouse.find({ product_id: new ObjectId(productId) }).toArray()
+
+    // Cập nhật warehouse với variant cũ và nhập kho warehouse nếu có thêm variant
+    for (const variant of payload.variants || []) {
+      const existingWarehouse = currentWarehouses.find((warehouse) =>
+        warehouse.variant_id.equals(new ObjectId(variant._id))
+      )
+      if (existingWarehouse) {
+        // Cập nhật warehouse nếu đã tồn tại
+        await databaseService.warehouse.updateOne(
+          { _id: existingWarehouse._id, isDeleted: false },
+          {
+            $set: {
+              minimum_stock: payload.minimum_stock,
+              product_name: payload.name!,
+              stock: variant.stock,
+              import_quantity: variant.stock,
+              variant: variant.color,
+              updated_at: new Date(),
+              isDeleted: false
+            }
+          }
+        )
+      } else {
+        // Thêm warehouse mới nếu chưa tồn tại
+        const resultInsert = await databaseService.warehouse.insertOne({
+          product_id: new ObjectId(productId),
+          product_name: payload.name!,
+          variant: variant.color,
+          variant_id: new ObjectId(variant._id),
+          minimum_stock: payload.minimum_stock!,
+          sold: 0,
+          stock: variant.stock,
+          shipments: [
+            {
+              shipment_date: new Date(),
+              quantity: variant.stock
+            }
+          ],
+          import_quantity: variant.stock,
+          created_at: new Date(),
+          updated_at: new Date(),
+          isDeleted: false
+        })
+
+        if (!resultInsert.acknowledged) {
+          throw new InternalServerError()
+        }
+      }
+    }
+
+    // Đánh dấu isDeleted là true cho những warehouse không có trong payload
+    const variantIdsToDelete = currentWarehouses
+      .filter((warehouse) => !variantIdsInPayload.some((id) => id.equals(warehouse.variant_id))) // So sánh đúng kiểu ObjectId
+      // nếu không khớp trả về true lấy phần tử đó
+      .map((warehouse) => warehouse._id)
+    // map ra chỉ lấy id của warehouse
+
+    if (variantIdsToDelete.length > 0) {
+      const resultMarkDeleted = await databaseService.warehouse.updateMany(
+        { _id: { $in: variantIdsToDelete } },
+        { $set: { isDeleted: true, updated_at: new Date() } }
+      )
+
+      if (!resultMarkDeleted.acknowledged) {
+        throw new InternalServerError()
+      }
+    }
+
+    // Cập nhật thông tin sản phẩm
     const result = await databaseService.products.updateOne(
       { _id: new ObjectId(productId) },
       { $set: { ...payload, category_id, brand_id, updated_at: new Date() } }
     )
-    if (!result.acknowledged || result.modifiedCount) {
-      throw new InternalServerError()
-    }
 
-    const resultUpdateMinimumStock = await databaseService.warehouse.updateMany(
-      {
-        product_id: new ObjectId(productId)
-      },
-      {
-        minimum_stock: payload.minimum_stock
-      }
-    )
-
-    if (!resultUpdateMinimumStock.acknowledged || resultUpdateMinimumStock.modifiedCount) {
+    if (!result.acknowledged) {
       throw new InternalServerError()
     }
 
@@ -329,15 +457,27 @@ class ProductServices {
     if (!result.acknowledged) {
       throw new InternalServerError()
     }
+
     return await this.getProductById(productId)
   }
 
   async deleteProduct(productId: string) {
     await this.checkProductById(productId)
+    await this.checkProductInOrder(productId)
     await Promise.all([
       databaseService.products.deleteOne({ _id: new ObjectId(productId) }),
-      databaseService.informations.deleteOne({ product_id: new ObjectId(productId) }),
-      warehouseServices.updateIsDeleted(productId)
+      warehouseServices.updateIsDeleted(productId),
+      databaseService.carts.updateMany(
+        { 'products.product_id': new ObjectId(productId) },
+        { $pull: { products: { product_id: new ObjectId(productId) } } } // Loại bỏ sản phẩm khỏi mảng `products`
+      ),
+      databaseService.wishlist.updateMany(
+        {
+          'list_item.product_id': new ObjectId(productId)
+        },
+        { $pull: { list_item: { product_id: new ObjectId(productId) } } }
+      )
+      // update wishlist
     ])
   }
 }

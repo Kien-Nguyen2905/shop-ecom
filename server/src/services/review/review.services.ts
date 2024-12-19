@@ -1,6 +1,6 @@
 import { TProductReview, TUserReview } from './../../models/schemas/reviews/type.d'
 import { ObjectId } from 'mongodb'
-import { InternalServerError } from '~/models/errors/errors'
+import { InternalServerError, NotFoundError } from '~/models/errors/errors'
 import Review from '~/models/schemas/reviews/reviews.schemas'
 import { TReviewProps } from '~/models/schemas/reviews/type'
 import databaseService from '~/services/database/database.services'
@@ -23,6 +23,12 @@ class ReviewServices {
   }
 
   async createReview({ user_id, order_id, product_id, variant_id, title, description, rate }: TCreateReviewPayload) {
+    // await productServices.checkProductandVariant(product_id, variant_id)
+    const productExist = await productServices.getProductById(product_id)
+    const variantExist = productExist.variants.find((item) => item._id.toString() === variant_id)
+    if (!variantExist) {
+      throw new NotFoundError({ message: 'Product had been deleted!' })
+    }
     await orderServices.findVariantUnreview({ order_id, variant_id })
     const _id = new ObjectId()
     let reviewer: TUserReview = { email: '', full_name: '', user_id: '' }

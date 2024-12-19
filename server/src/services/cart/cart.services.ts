@@ -9,6 +9,7 @@ class CartServices {
   async getCart(id: string) {
     return ((await databaseService.carts.findOne({ user_id: new ObjectId(id) })) as TCartProps) || []
   }
+
   async updateCart({ product_id, variant_id, quantity, user_id }: TUpdateCartPayload) {
     //Check quantity with variant stock
     await productServices.checkProductandVariant(product_id, variant_id, quantity)
@@ -61,6 +62,7 @@ class CartServices {
     // Trả về giỏ hàng đã cập nhật hoặc đã thêm mới
     return (await databaseService.carts.findOne({ user_id: new ObjectId(user_id) })) || []
   }
+
   async removeCart({ user_id, item_id }: TRemoveItemCartPayload) {
     const cart = await databaseService.carts.findOne({ user_id: new ObjectId(user_id) })
     if (!cart) {

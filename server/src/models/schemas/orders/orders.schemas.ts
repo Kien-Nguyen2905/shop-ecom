@@ -8,6 +8,7 @@ export default class Order {
   user_id: ObjectId
   products: TProductOrder[]
   total: number
+  earn_point?: number
   type_payment: TYPE_PAYMENT
   note?: string
   address: TAddessProps
@@ -22,6 +23,7 @@ export default class Order {
     this.user_id = order.user_id
     this.products = order.products
     this.total = order.total
+    this.earn_point = order.earn_point || 0
     this.type_payment = order.type_payment
     this.note = order.note || ''
     this.address = order.address

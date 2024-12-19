@@ -22,7 +22,7 @@ const app = express()
 const port = env.PORT || 8080
 app.use(
   cors({
-    origin: `${env.CORS_ORIGIN}`, // Cho phép FE từ localhost:3000 truy cập
+    origin: `${env.CORS_ORIGIN}`, // Cho phép FE từ CORS_ORIGIN
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Các phương thức được phép
     allowedHeaders: ['Content-Type', 'Authorization'] // Các header được phép
   })

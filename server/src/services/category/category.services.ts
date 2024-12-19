@@ -53,8 +53,8 @@ class CategoryServices {
   }
 
   async getCategory() {
-    const categories = await databaseService.categories.find().toArray()
-    return categories.reverse() || []
+    const categories = await databaseService.categories.find().sort({ created_at: -1 }).toArray()
+    return categories || []
   }
 
   async getCategoryById(_id: string) {

@@ -3,10 +3,11 @@ import { USERS_MESSAGES } from '~/constants/message'
 import { REASON_PHRASES } from '~/constants/reasonPhrases'
 import { TErrorProps, TErrorsEntityProps } from '~/models/errors/type'
 
-export class ErrorWithStatus {
+export class ErrorWithStatus extends Error {
   message: string
   status?: number
   constructor({ message, status }: { message: string; status?: number }) {
+    super()
     this.message = message
     this.status = status
   }

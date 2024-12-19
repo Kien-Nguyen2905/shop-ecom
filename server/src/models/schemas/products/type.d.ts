@@ -7,6 +7,7 @@ export type TFeatured = {
 }
 export type TVariant = {
   _id: ObjectId
+  index: number
   color: string
   price: number
   stock: number

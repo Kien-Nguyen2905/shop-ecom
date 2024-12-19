@@ -44,3 +44,12 @@ export const getOrderController = async (
     data: await orderServices.getOrder()
   }).send(res)
 }
+
+export const checkStockController = async (
+  req: Request<ParamsDictionary, any, any>,
+  res: Response,
+  next: NextFunction
+) => {
+  await orderServices.checkStockAvailability(req.body)
+  return new SuccessResponse({}).send(res)
+}

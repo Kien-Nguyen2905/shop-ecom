@@ -21,6 +21,7 @@ class WishlistService {
     }
 
     const payloadItem = {
+      _id: new ObjectId(),
       variant_id: new ObjectId(variant_id),
       product_id: new ObjectId(productExist._id),
       image: productExist.thumbnail,

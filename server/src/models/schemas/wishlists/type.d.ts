@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb'
 
 export type TListItem = {
+  _id: ObjectId
   product_id: ObjectId
   variant_id: ObjectId
   image: string

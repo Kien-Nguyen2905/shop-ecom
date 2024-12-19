@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { ObjectId } from 'mongodb'
 import { env } from 'process'
-import { TYPE_PAYMENT } from '~/constants/enum'
-import { BadRequestError, InternalServerError } from '~/models/errors/errors'
+import { STATUS_TRANSACTION, TYPE_PAYMENT } from '~/constants/enum'
+import { InternalServerError } from '~/models/errors/errors'
 import Transaction from '~/models/schemas/transactions/transactions.schemas'
 import databaseService from '~/services/database/database.services'
 import { TCreateTransactionPayload, TTransactionResponse, TTransactionSepayQuery } from '~/services/transaction/type'
@@ -14,6 +14,7 @@ class TransactionServices {
       _id,
       user_id: new ObjectId(user_id),
       type_payment,
+      status: STATUS_TRANSACTION.SUCCESSED,
       method_payment: type_payment ? 'BANKING' : 'COD',
       value,
       content
@@ -24,9 +25,11 @@ class TransactionServices {
     }
     return this.getTransaction(_id.toString()) || {}
   }
+
   async getTransaction(_id: string) {
     return (databaseService.transactions.findOne({ _id: new ObjectId(_id) }) as {}) || {}
   }
+
   async getTransactionSePay({ content, value, user_id }: TTransactionSepayQuery) {
     const response = await axios.get('https://my.sepay.vn/userapi/transactions/list', {
       params: {
@@ -61,6 +64,7 @@ class TransactionServices {
       throw new InternalServerError()
     }
   }
+
   async getAllTransaction() {
     return ((await databaseService.transactions.find().toArray()).reverse() as TTransactionResponse) || []
   }

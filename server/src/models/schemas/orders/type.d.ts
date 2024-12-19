@@ -18,6 +18,7 @@ export type TOrderProps = {
   user_id: ObjectId
   products: TProductOrder[]
   total: number
+  earn_point: number
   type_payment: TYPE_PAYMENT
   note?: string
   address: TAddessProps

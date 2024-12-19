@@ -9,13 +9,7 @@ export const nameProductSchema: ParamSchema = {
   isString: {
     errorMessage: PRODUCT_MESSAGES.PRODUCY_NAME_STRING
   },
-  trim: true,
-  isLength: {
-    options: {
-      min: 3
-    },
-    errorMessage: PRODUCT_MESSAGES.PRODUCY_NAME_NAME_LENGTH
-  }
+  trim: true
 }
 
 export const productIdSchema: ParamSchema = {
@@ -103,7 +97,7 @@ export const variantsSchema: ParamSchema = {
       value.forEach((variant) => {
         if (typeof variant.color !== 'string' || variant.color === '')
           throw new Error(PRODUCT_MESSAGES.VARIANT_COLOR_MUST_BE_STRING)
-        if (typeof variant.price !== 'number' || variant.price <= 0)
+        if (typeof variant.price !== 'number' || variant.price <= 0 || isNaN(variant.price))
           throw new Error(PRODUCT_MESSAGES.VARIANT_PRICE_POSITIVE)
         if (!Number.isInteger(variant.stock) || variant.stock <= 0) {
           throw new Error(PRODUCT_MESSAGES.VARIANT_STOCK_POSITIVE_INTEGER)
@@ -155,13 +149,7 @@ export const updateNameProductSchema: ParamSchema = {
   isString: {
     errorMessage: PRODUCT_MESSAGES.PRODUCY_NAME_STRING
   },
-  trim: true,
-  isLength: {
-    options: {
-      min: 5
-    },
-    errorMessage: PRODUCT_MESSAGES.PRODUCY_NAME_NAME_LENGTH
-  }
+  trim: true
 }
 
 export const updateVariantIdSchema: ParamSchema = {

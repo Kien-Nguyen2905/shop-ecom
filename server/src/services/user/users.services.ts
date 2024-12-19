@@ -98,14 +98,29 @@ class UserServices {
       email: email,
       password: hashPassword(password)
     } as TVerifyReqBody)
-
-    const verification = new Verification({
-      email: email,
-      email_token
-    })
-    const result = await databaseService.verifications.insertOne(verification)
-    if (!result.insertedId) {
-      throw new InternalServerError()
+    const verificationExist = await databaseService.verifications.findOne({ email })
+    if (verificationExist) {
+      const result = await databaseService.verifications.updateOne(
+        { email },
+        {
+          $set: {
+            email_token,
+            updated_at: new Date()
+          }
+        }
+      )
+      if (!result.modifiedCount) {
+        throw new InternalServerError()
+      }
+    } else {
+      const verification = new Verification({
+        email: email,
+        email_token
+      })
+      const result = await databaseService.verifications.insertOne(verification)
+      if (!result.insertedId) {
+        throw new InternalServerError()
+      }
     }
     await this.sendVerificationEmail({
       email: email,
@@ -169,8 +184,8 @@ class UserServices {
       password
     })
     const token = new Token({ user_id, refresh_token: refresh_token })
-    const cart = new Cart({ user_id })
-    const wishlist = new Wishlist({ user_id })
+    const cart = new Cart({ user_id, _id: new ObjectId() })
+    const wishlist = new Wishlist({ user_id, _id: new ObjectId() })
     const result = await Promise.all([
       databaseService.users.insertOne(user),
       databaseService.tokens.insertOne(token),
@@ -231,7 +246,7 @@ class UserServices {
     const forgot_password_token = await this.signForgotPassword(email)
     const user = await databaseService.users.findOne({ email })
     if (!user) {
-      throw new NotFoundError()
+      throw new NotFoundError({ message: USERS_MESSAGES.EMAIL_NOT_EXIST })
     }
     const password_reset = new PasswordReset({
       user_id: user?._id,
@@ -311,9 +326,11 @@ class UserServices {
     const user = await databaseService.users.findOne({
       _id: existPasswordToken.user_id
     })
+
     if (!user) {
       throw new NotFoundError()
     }
+
     const result = await databaseService.users.updateOne(
       {
         _id: user?._id
@@ -325,10 +342,13 @@ class UserServices {
         }
       }
     )
+
     if (!result.acknowledged) {
       throw new InternalServerError()
     }
+
     await databaseService.passwordResets.deleteOne({ password_token })
+
     return {}
   }
 
@@ -337,6 +357,7 @@ class UserServices {
       this.signAccessToken({ user_id: new ObjectId(user_id), role }),
       this.signRefreshToken({ user_id: new ObjectId(user_id), role, exp })
     ])
+
     await databaseService.tokens.updateOne(
       { refresh_token },
       {
@@ -346,6 +367,7 @@ class UserServices {
         }
       }
     )
+
     return {
       access_token: new_access_token,
       refresh_token: new_refresh_token
