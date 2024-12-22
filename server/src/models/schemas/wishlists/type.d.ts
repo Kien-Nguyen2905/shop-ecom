@@ -1,18 +1,15 @@
 import { ObjectId } from 'mongodb'
 
-export type TListItem = {
-  _id: ObjectId
+export type TProductsWishListItem = {
   product_id: ObjectId
   variant_id: ObjectId
-  image: string
-  name: string
-  price: number
-  discount: number
 }
-export type TWishlistProps = {
+export type TProductsWishList = TProductsWishListItem[]
+
+export type TWishlist = {
   _id?: ObjectId
   user_id: ObjectId
-  list_item?: TListItem[]
+  products?: TProductsWishList
   created_at?: Date
   updated_at?: Date
 }

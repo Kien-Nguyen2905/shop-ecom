@@ -285,11 +285,10 @@ class ProductServices {
 
   async getProductById(productId: string) {
     const result = (await databaseService.products.findOne({ _id: new ObjectId(productId) })) as TProductProps
-    const attribute = await databaseService.informations.findOne({ product_id: new ObjectId(productId) })
     if (!result) {
       throw new NotFoundError()
     }
-    return { ...result, attribute: attribute?.attributes }
+    return result
   }
 
   async checkProductByName(name: string) {

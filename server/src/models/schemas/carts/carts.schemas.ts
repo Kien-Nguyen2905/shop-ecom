@@ -1,13 +1,13 @@
 import { ObjectId } from 'mongodb'
-import { TCartProps, TProductCartProps } from '~/models/schemas/carts/type'
+import { TCart, TProductsCart } from '~/models/schemas/carts/type'
 
 export default class Cart {
   _id?: ObjectId
   user_id: ObjectId
-  products?: TProductCartProps[]
+  products?: TProductsCart[]
   created_at?: Date
   updated_at?: Date
-  constructor(cart: TCartProps) {
+  constructor(cart: TCart) {
     const date = new Date()
     this._id = cart._id
     this.user_id = cart.user_id

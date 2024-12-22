@@ -38,6 +38,7 @@ export const USERS_MESSAGES = {
   PHONE_INVALID: 'Phone number is invalid',
   PHONE_LENGTH: 'Phone number must be between 10 and 15 characters'
 }
+
 export const ADDRESS_MESSAGES = {
   PROVINCE_REQUIRED: 'Province is required',
   PROVINCE_STRING: 'Province must be a string',
@@ -51,6 +52,7 @@ export const ADDRESS_MESSAGES = {
   STREET_ADDRESS_REQUIRED: 'Street address is required',
   STREET_ADDRESS_STRING: 'Street address must be a string'
 }
+
 export const CATEGORY_MESSAGES = {
   CATEGORY_NAME_REQUIRED: 'Category name is required',
   CATEGORY_NAME_STRING: 'Category name must be a string',
@@ -60,6 +62,7 @@ export const CATEGORY_MESSAGES = {
   CATEGORY_ID_INVALID: 'Category id is invalid',
   CATEGORY_ID_MUST_BE_STRING: 'Category id must be string'
 }
+
 export const BRAND_MESSAGES = {
   BRAND_NAME_REQUIRED: 'Brand name is required',
   BRAND_NAME_STRING: 'Brand name must be a string',
@@ -123,6 +126,7 @@ export const PRODUCT_MESSAGES = {
   ATTRIBUTE_PIN_NON_EMPTY: 'Pin must be a non-empty string',
   ATTRIBUTE_DEMAND_ARRAY: 'Demand must be an array of non-empty strings'
 }
+
 export const WAREHOUSE_MESSAGES = {
   QUANTITY_MIN: 'Quantity must be a interger from 1',
 
@@ -138,9 +142,15 @@ export const WAREHOUSE_MESSAGES = {
   INVALID_SHIPMENT_QUANTITY: 'Shipment quantity must be a non-negative number.',
   INVALID_SHIPMENT_DATE: 'Shipment date must be a valid date string.'
 }
-export const CART_MESSAGE = {
+
+export const CART_MESSAGES = {
   ITEM_ID_REQUIRED: 'Item id is required',
   ITEM_ID_MUST_BE_STRING: 'Item id must be string'
+}
+
+export const WISHLIST_MESSAGES = {
+  ACTION_IS_REQUIRED: 'Action is required',
+  ACTION_IS_INVALID: 'Action is invalid'
 }
 export const ORDER_MESSAGES = {
   PRODUCTS_ARRAY: 'Products must be array',

@@ -20,3 +20,8 @@ export enum STATUS_TRANSACTION {
   SUCCESSED,
   FAILED
 }
+
+export enum ACTION_WISHLIST {
+  ADD,
+  REMOVE
+}

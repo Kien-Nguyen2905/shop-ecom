@@ -1,17 +1,17 @@
 import { ObjectId } from 'mongodb'
-import { TListItem, TWishlistProps } from '~/models/schemas/wishlists/type'
+import { TProductsWishList, TWishlist } from '~/models/schemas/wishlists/type'
 
 export default class Wishlist {
   _id?: ObjectId
   user_id: ObjectId
-  list_item?: TListItem[]
+  products?: TProductsWishList
   created_at?: Date
   updated_at?: Date
-  constructor(wishlist: TWishlistProps) {
+  constructor(wishlist: TWishlist) {
     const date = new Date()
     this._id = wishlist._id
     this.user_id = wishlist.user_id
-    this.list_item = wishlist.list_item || []
+    this.products = wishlist.products || []
     this.created_at = wishlist.created_at || date
     this.updated_at = wishlist.updated_at || date
   }

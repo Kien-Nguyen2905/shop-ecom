@@ -1,5 +1,5 @@
 import { ParamSchema } from 'express-validator'
-import { CART_MESSAGE, POPULAR_MESSAGES } from '~/constants/message'
+import { CART_MESSAGES, POPULAR_MESSAGES } from '~/constants/message'
 import { idObjectInvalid } from '~/utils/checkValidObjectId'
 
 export const quantityCartSchema: ParamSchema = {
@@ -11,10 +11,10 @@ export const quantityCartSchema: ParamSchema = {
 
 export const itemIdCartSchema: ParamSchema = {
   notEmpty: {
-    errorMessage: CART_MESSAGE.ITEM_ID_REQUIRED
+    errorMessage: CART_MESSAGES.ITEM_ID_REQUIRED
   },
   isString: {
-    errorMessage: CART_MESSAGE.ITEM_ID_MUST_BE_STRING
+    errorMessage: CART_MESSAGES.ITEM_ID_MUST_BE_STRING
   },
   trim: true,
   custom: {

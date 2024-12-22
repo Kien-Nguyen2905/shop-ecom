@@ -1,28 +1,26 @@
 import { ObjectId } from 'mongodb'
 import { BadRequestError, InternalServerError, NotFoundError } from '~/models/errors/errors'
-import { TCartProps } from '~/models/schemas/carts/type'
+import { TCart } from '~/models/schemas/carts/type'
 import { TRemoveItemCartPayload, TUpdateCartPayload } from '~/services/cart/type'
 import databaseService from '~/services/database/database.services'
 import productServices from '~/services/product/product.services'
 
 class CartServices {
   async getCart(id: string) {
-    return ((await databaseService.carts.findOne({ user_id: new ObjectId(id) })) as TCartProps) || []
+    return ((await databaseService.carts.findOne({ user_id: new ObjectId(id) })) as TCart) || {}
   }
 
   async updateCart({ product_id, variant_id, quantity, user_id }: TUpdateCartPayload) {
     //Check quantity with variant stock
     await productServices.checkProductandVariant(product_id, variant_id, quantity)
-    const productId = new ObjectId(product_id)
-    const variantId = new ObjectId(variant_id)
-    const product = (await productServices.getProductById(product_id)) || {}
-    if (!product) {
-      throw new BadRequestError()
-    }
+
+    const product = await productServices.getProductById(product_id)
+
     const variant = product.variants.find((item) => item._id.toString() === variant_id)
     if (!variant) {
       throw new BadRequestError()
     }
+
     // Kiểm tra sản phẩm đã tồn tại trong giỏ hàng hay chưa
     const cart = await databaseService.carts.findOne({ user_id: new ObjectId(user_id) })
     if (!cart) {
@@ -30,23 +28,23 @@ class CartServices {
     }
 
     const existingProductIndex = cart.products?.findIndex(
-      (product) => product.product_id.equals(productId) && product.variant_id.equals(variantId)
+      (product) =>
+        product.product_id.equals(new ObjectId(product_id)) && product.variant_id.equals(new ObjectId(variant_id))
     )
     if (existingProductIndex !== -1) {
       // Nếu sản phẩm đã tồn tại, cập nhật lại thông tin
-      cart.products![existingProductIndex!].quantity += quantity
+      cart.products![existingProductIndex!].quantity = quantity
     } else {
       // Nếu sản phẩm chưa tồn tại, thêm sản phẩm mới vào giỏ hàng
       cart.products!.push({
-        _id: new ObjectId(),
-        product_id: productId,
-        variant_id: variantId,
+        product_id: new ObjectId(product_id),
+        variant_id: new ObjectId(variant_id),
+        name: product.name,
+        price: variant?.price,
         quantity,
         image: product.thumbnail,
         color: variant?.color,
-        discount: variant?.discount,
-        name: product.name,
-        price: variant?.price
+        discount: variant?.discount
       })
     }
     // Cập nhật giỏ hàng trong cơ sở dữ liệu
@@ -59,8 +57,7 @@ class CartServices {
         }
       }
     )
-    // Trả về giỏ hàng đã cập nhật hoặc đã thêm mới
-    return (await databaseService.carts.findOne({ user_id: new ObjectId(user_id) })) || []
+    return await this.getCart(user_id)
   }
 
   async removeCart({ user_id, item_id }: TRemoveItemCartPayload) {
