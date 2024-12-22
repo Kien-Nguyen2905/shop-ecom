@@ -10,7 +10,7 @@ const CheckoutPage = () => {
   const {
     checkoutInforProps,
     paymentQrProps,
-    cartInfo,
+    cart,
     applyEarnPoint,
     appliedPoints,
     availablePoints,
@@ -18,7 +18,7 @@ const CheckoutPage = () => {
     handlCheckout,
     handleSubmit,
   } = useCheckoutPage();
-  if (cartInfo?.products?.length! <= 0)
+  if (cart?.products?.length! <= 0)
     return <Navigate to={CUSTOMER_PATHS.ROOT} />;
   return (
     <div className="container">
@@ -34,7 +34,7 @@ const CheckoutPage = () => {
           <CheckoutInfor {...checkoutInforProps!} />
         </div>
         <div className="">
-          <SummaryCheckout {...cartInfo!} />
+          <SummaryCheckout {...cart!} />
 
           <form
             onSubmit={handleSubmit(handlCheckout)}

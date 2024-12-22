@@ -1,10 +1,12 @@
+import { TProductItem } from '../../../../services/Product/tyings';
+
 export type TFeaturedItemProps = {
-  children: Product[];
+  productList: TProductItem[];
   className?: string;
 };
 
 export type TArrowSlideProps = {
   children: React.ReactNode;
   className?: string;
-  onClick: () => voi;
+  onClick: () => void;
 };

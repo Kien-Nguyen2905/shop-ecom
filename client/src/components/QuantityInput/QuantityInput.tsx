@@ -9,12 +9,13 @@ const QuantityInput: FC<TQuantityInputProps> = ({
   value,
   onChange,
   isDisabled,
+  isBlur = false,
 }) => {
   const [renderValue, setRenderValue] = useState(value || min);
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = Number(e.target.value);
     setRenderValue(newValue);
-    onChange?.(newValue);
+    if (!isBlur) onChange?.(newValue);
   };
 
   const onInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {

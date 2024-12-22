@@ -1,5 +1,4 @@
 export type TProductCart = {
-  _id?: string;
   product_id: string;
   image: string;
   name: string;

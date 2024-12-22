@@ -19,13 +19,15 @@ import { addToCart } from '../../store/middlewares/cartMiddleware';
 import { useReviewByProductIdQuery } from '../../queries/useReview';
 import { useMainContext } from '../../context/MainConTextProvider';
 import { THUNK_STATUS } from '../../constants';
-import { TAddWishlistPayload } from '../../services/Wishlist/tyings';
 import { updateWishlist } from '../../store/middlewares/wishlistMiddleWare';
 import { message } from 'antd';
+import { TUpdateWishlistPayload } from '../../services/Wishlist/tyings';
 
 export const useProductDetailPage = () => {
   const { openModal } = useMainContext();
   const { profile } = useSelector((state) => state.auth);
+  const { cart } = useSelector((state) => state.cart);
+
   const { wishlist } = useSelector((state) => state.wishlist);
 
   const { id } = useParams();
@@ -79,7 +81,18 @@ export const useProductDetailPage = () => {
       openModal();
     } else if (payload && updateStatus !== THUNK_STATUS.pending) {
       try {
-        dispatch(addToCart(payload)).unwrap();
+        const quantityExist =
+          cart?.products.find(
+            (product) =>
+              product.product_id === payload.product_id &&
+              product.variant_id === payload.variant_id,
+          )?.quantity || 0;
+        const res = await dispatch(
+          addToCart({ ...payload, quantity: quantityExist + payload.quantity }),
+        ).unwrap();
+        if (res.data._id) {
+          message.success(res.message);
+        }
       } catch (error) {
         handleError({
           error,
@@ -87,12 +100,12 @@ export const useProductDetailPage = () => {
       }
     }
   };
-  const onAddWishlist = async (payload: TAddWishlistPayload) => {
+  const onAddWishlist = async (payload: TUpdateWishlistPayload) => {
     if (!profile) {
       openModal();
     } else if (payload && updateStatus !== THUNK_STATUS.pending) {
       try {
-        const wishListItemExist = wishlist?.list_item.some(
+        const wishListItemExist = wishlist?.products.some(
           (item) => item.variant_id === payload.variant_id,
         );
         if (wishListItemExist) {

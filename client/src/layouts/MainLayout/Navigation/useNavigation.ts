@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form';
 import queryString from 'query-string';
 export const useNavigation = () => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
-  const { cartInfo } = useSelector((state) => state.cart);
+  const { cart } = useSelector((state) => state.cart);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { search } = useLocation();
@@ -61,7 +61,7 @@ export const useNavigation = () => {
 
   return {
     searchValue,
-    cartInfo,
+    cart,
     onSearch,
     isDropdownVisible,
     setDropdownVisible,

@@ -25,18 +25,18 @@ const CartView: FC<TCartViewProps> = ({
               {formatCurrency(item.price * (1 - item.discount))}
             </p>
             <QuantityInput
-              isDisabled
               max={
                 warehouseData?.find(
                   (product) => product.variant_id === item.variant_id,
                 )?.stock!
               }
               value={item.quantity}
+              isBlur
               onChange={(value) =>
                 handleAddCart({
                   product_id: item.product_id!,
                   variant_id: item.variant_id!,
-                  quantity: value - item.quantity,
+                  quantity: value,
                 })
               }
             />

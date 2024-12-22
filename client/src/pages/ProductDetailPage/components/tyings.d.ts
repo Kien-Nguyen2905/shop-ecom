@@ -5,6 +5,7 @@ import { TAddcartPayload } from '../../../components/ProductItem/tyings';
 import { TCreateReviewResponse } from '../../../services/Review/tyings';
 import { TWarehouseResponse } from '../../../services/Warehouse/tyings';
 import { TBrandResponse } from '../../../services/Brand/tyings';
+import { TCart } from '../../../store/reducers/tyings';
 
 export type TDisplayProductProps = {
   listImage: any;

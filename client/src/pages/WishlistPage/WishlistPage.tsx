@@ -1,44 +1,28 @@
-import { AppDispatch, useSelector } from '../../store/store';
 import { formatCurrency } from '../../utils';
-import { Typography, Pagination } from 'antd'; // Import Pagination
+import { Typography, Pagination } from 'antd';
 import { Button } from '../../components';
 import { VscClose } from 'react-icons/vsc';
-import { addToCart } from '../../store/middlewares/cartMiddleware';
-import { useDispatch } from 'react-redux';
-import { updateWishlist } from '../../store/middlewares/wishlistMiddleWare';
 import { Link } from 'react-router-dom';
 import { CUSTOMER_PATHS } from '../../constants';
-import { useProductQuery } from '../../queries';
-import { useState } from 'react';
+import { ACTION_WISHLIST } from '../../constants/enum';
+import { useWishlistPage } from './useWishlistPage';
 
 const { Text } = Typography;
 
 const WishlistPage = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { wishlist } = useSelector((state) => state.wishlist);
-  const { data: productData } = useProductQuery();
-
-  // State for pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // Define items per page
-
-  if (!wishlist) return <div className="">Empty</div>;
-
-  // Calculate the paginated items
-  const totalItems = wishlist?.list_item?.length || 0;
-  const paginatedItems = wishlist?.list_item?.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  );
-
-  // Handle page change
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  const {
+    wishlist,
+    handleAddtoCart,
+    handleRemoveWishList,
+    currentProducts,
+    handlePageChange,
+    currentPage,
+    ITEMS_PER_PAGE,
+  } = useWishlistPage();
 
   return (
     <div>
-      {wishlist?.list_item?.length > 0 && (
+      {wishlist && wishlist?.products?.length > 0 && (
         <div className="flex items-center justify-start gap-[60px] pb-5 border-b border-darkGrey font-bold">
           <div className="w-[200px] flex items-center gap-3">
             <p className="flex-1">Product</p>
@@ -49,11 +33,10 @@ const WishlistPage = () => {
         </div>
       )}
 
-      {/* Wishlist items */}
-      {paginatedItems?.length > 0 ? (
-        paginatedItems.map((item) => (
+      {currentProducts && currentProducts.length > 0 ? (
+        currentProducts.map((item) => (
           <div
-            key={item.product_id}
+            key={item.variant_id}
             className="flex flex-col gap-5 pb-3 border-b pt-9 border-darkGrey"
           >
             <div className="flex items-center justify-start gap-[60px]">
@@ -67,15 +50,7 @@ const WishlistPage = () => {
                 <img className="w-14 h-14" src={item.image} alt={item.name} />
                 <div className="flex-1">
                   <p>{item.name}</p>
-                  <p>
-                    {
-                      productData?.products
-                        .find((product) => product._id === item.product_id)
-                        ?.variants.find(
-                          (variant) => variant._id === item.variant_id,
-                        )?.color
-                    }
-                  </p>
+                  <p>{item.color}</p>
                 </div>
               </Link>
               <p className="w-[100px] text-center">
@@ -91,25 +66,21 @@ const WishlistPage = () => {
               <div className="flex items-center gap-3">
                 <Button
                   onClick={() =>
-                    dispatch(
-                      addToCart({
-                        product_id: item.product_id,
-                        quantity: 1,
-                        variant_id: item.variant_id,
-                      }),
-                    )
+                    handleAddtoCart({
+                      product_id: item.product_id,
+                      quantity: 1,
+                      variant_id: item.variant_id,
+                    })
                   }
                   text="Add to cart"
                 ></Button>
                 <VscClose
                   onClick={() =>
-                    dispatch(
-                      updateWishlist({
-                        product_id: item.product_id,
-                        quantity: -1,
-                        variant_id: item.variant_id,
-                      }),
-                    )
+                    handleRemoveWishList({
+                      product_id: item.product_id,
+                      action: ACTION_WISHLIST.REMOVE,
+                      variant_id: item.variant_id,
+                    })
                   }
                   className="cursor-pointer"
                 />
@@ -120,17 +91,13 @@ const WishlistPage = () => {
       ) : (
         <div className="mt-4 text-center text-gray-600">Wishlist is empty.</div>
       )}
-
-      {/* Pagination */}
-      {totalItems > itemsPerPage && (
-        <Pagination
-          current={currentPage}
-          pageSize={itemsPerPage}
-          total={totalItems}
-          onChange={handlePageChange}
-          className="mt-4 text-center"
-        />
-      )}
+      <Pagination
+        current={currentPage}
+        total={wishlist?.products.length || 0}
+        pageSize={ITEMS_PER_PAGE}
+        onChange={handlePageChange}
+        className="ml-auto text-center mt-9 w-max"
+      />
     </div>
   );
 };

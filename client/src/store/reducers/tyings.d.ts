@@ -33,7 +33,7 @@ export type TCart = TGetCartResponse & {
   discount: number;
 };
 export type TCartState = {
-  cartInfo?: TCart;
+  cart?: TCart;
   updateStatus: string;
   getStatus: string;
 };

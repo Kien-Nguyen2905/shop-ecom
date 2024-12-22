@@ -16,7 +16,6 @@ export const handleError = ({
   setError?: UseFormSetError<any>;
   duration?: number;
 }) => {
-  console.log(error.isAxiosError);
   // Kiểm tra nếu error là một AxiosError và xử lý
   if (error.isAxiosError) {
     // Xử lý lỗi Axios và tạo đối tượng HttpError thích hợp

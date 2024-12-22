@@ -14,12 +14,12 @@ const ProductList: FC<TProductListProps> = ({ listProduct, onPageChange }) => {
         <>
           <div className="h-[790px] w-max relative">
             <div className="grid w-full h-full grid-cols-3 gap-[30px] ml-auto">
-              {products.map((item) => (
+              {products.map((product) => (
                 <div
-                  key={item._id}
+                  key={product._id}
                   className="col-6 h-max col-md-4 col-lg-4 w-max"
                 >
-                  <ProductItem item={item} />
+                  <ProductItem product={product} />
                 </div>
               ))}
             </div>

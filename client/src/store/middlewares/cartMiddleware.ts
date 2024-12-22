@@ -4,11 +4,8 @@ import {
   TRemoveCartPayload,
   TUpdateCartPayload,
 } from '../../services/Cart/tyings';
-import { message } from 'antd';
-
 export const getCart = createAsyncThunk('cart/get', async (_, thunkAPI) => {
   try {
-    // Gọi API lấy thông tin giỏ hàng
     const res = await cartServices.getCart();
     const cartData = res.data.data;
 
@@ -32,7 +29,7 @@ export const getCart = createAsyncThunk('cart/get', async (_, thunkAPI) => {
       }, 0) || 0;
 
     // Tạo object trả về đã được tính toán
-    const modCartInfo = {
+    const modcart = {
       ...cartData,
       subTotal,
       discount: total - subTotal,
@@ -40,8 +37,8 @@ export const getCart = createAsyncThunk('cart/get', async (_, thunkAPI) => {
       totalProduct,
     };
     // Trả dữ liệu qua thunkAPI
-    thunkAPI.fulfillWithValue(modCartInfo);
-    return modCartInfo;
+    thunkAPI.fulfillWithValue(modcart);
+    return modcart;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error);
   }
@@ -52,10 +49,9 @@ export const addToCart = createAsyncThunk(
   async (actionPayload: TUpdateCartPayload, thunkAPI) => {
     try {
       const res = await cartServices.updateCart(actionPayload);
-      message.success(res.data.message);
       thunkAPI.dispatch(getCart());
       thunkAPI.fulfillWithValue(res.data.data);
-      return res.data.data;
+      return res.data;
     } catch (error) {
       thunkAPI.rejectWithValue(error);
       throw error;
@@ -68,9 +64,8 @@ export const removeCart = createAsyncThunk(
   async (actionPayload: TRemoveCartPayload, thunkAPI) => {
     try {
       const res = await cartServices.removeCart(actionPayload);
-      message.success(res.data.message);
       thunkAPI.dispatch(getCart());
-      return res.data.data;
+      return res.data;
     } catch (error) {
       thunkAPI.rejectWithValue(error);
       throw error;
@@ -108,7 +103,7 @@ export const updateCart = createAsyncThunk(
         }, 0) || 0;
       const appliedPoint = actionPayload * 1000;
 
-      const modCartInfo = {
+      const modcart = {
         ...cartData,
         subTotal,
         total: total - appliedPoint,
@@ -118,8 +113,8 @@ export const updateCart = createAsyncThunk(
         appliedPoint,
       };
       // Trả dữ liệu qua thunkAPI
-      thunkAPI.fulfillWithValue(modCartInfo);
-      return modCartInfo;
+      thunkAPI.fulfillWithValue(modcart);
+      return modcart;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error);
     }

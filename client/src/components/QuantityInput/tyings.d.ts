@@ -5,4 +5,5 @@ export type TQuantityInputProps = {
   value?: number;
   onChange?: (value: number) => void;
   isDisabled?: boolean;
+  isBlur?: boolean;
 };

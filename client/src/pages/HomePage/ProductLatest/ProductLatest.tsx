@@ -27,9 +27,9 @@ const ProductLatest: FC<TTBrandPropsProps> = ({ listProduct }) => {
         className="h-[460px]"
       >
         {listProduct?.length > 0 &&
-          listProduct?.slice(0, 10).map((item) => (
-            <SwiperSlide className="max-w-[277px]" key={item._id}>
-              <ProductItem item={item} />
+          listProduct?.slice(0, 10).map((product) => (
+            <SwiperSlide className="max-w-[277px]" key={product._id}>
+              <ProductItem product={product} />
             </SwiperSlide>
           ))}
       </Swiper>

@@ -5,7 +5,6 @@ const initialState: TWishlistState = {
   wishlist: undefined,
 };
 
-// Create the slice
 export const { reducer: wishlistReducer, actions: wishlistActions } =
   createSlice({
     initialState,

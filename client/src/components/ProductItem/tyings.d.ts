@@ -3,6 +3,6 @@ import { TProductItem } from '../../services/Product/tyings';
 
 export type TProductItemProps = {
   className?: string;
-  item: TProductItem;
+  product: TProductItem;
 };
 export type TAddcartPayload = TUpdateCartPayload;

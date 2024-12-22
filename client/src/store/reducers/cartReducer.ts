@@ -3,7 +3,7 @@ import { THUNK_STATUS } from '../../constants';
 import { addToCart, getCart, updateCart } from '../middlewares/cartMiddleware';
 import { TCartState } from './tyings';
 const initialState: TCartState = {
-  cartInfo: undefined,
+  cart: undefined,
   updateStatus: THUNK_STATUS.fullfilled,
   getStatus: THUNK_STATUS.fullfilled,
 };
@@ -12,10 +12,10 @@ export const { reducer: cartReducer, actions: cartActions } = createSlice({
   name: 'cart',
   reducers: {
     updateCacheCart: (state, action) => {
-      state.cartInfo = action.payload || state.cartInfo;
+      state.cart = action.payload || state.cart;
     },
     clearCart: (state) => {
-      state.cartInfo = undefined;
+      state.cart = undefined;
     },
   },
   extraReducers: (builder) => {
@@ -26,11 +26,11 @@ export const { reducer: cartReducer, actions: cartActions } = createSlice({
     //NOTE WHY ACTION.PAYLOAD
     builder.addCase(getCart.fulfilled, (state, action) => {
       state.getStatus = THUNK_STATUS.fullfilled;
-      state.cartInfo = action.payload;
+      state.cart = action.payload;
     });
     builder.addCase(getCart.rejected, (state) => {
       state.getStatus = THUNK_STATUS.rejected;
-      state.cartInfo = undefined;
+      state.cart = undefined;
     });
     //AddCart;
     builder.addCase(addToCart.pending, (state) => {
@@ -48,7 +48,7 @@ export const { reducer: cartReducer, actions: cartActions } = createSlice({
     });
     builder.addCase(updateCart.fulfilled, (state, action) => {
       state.getStatus = THUNK_STATUS.fullfilled;
-      state.cartInfo = action.payload;
+      state.cart = action.payload;
     });
     builder.addCase(updateCart.rejected, (state) => {
       state.updateStatus = THUNK_STATUS.rejected;

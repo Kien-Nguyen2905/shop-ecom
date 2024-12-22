@@ -23,7 +23,7 @@ export const useCheckoutPage = () => {
   const { control, setError, handleSubmit, reset } = useForm<any>();
   const dispatch = useDispatch<AppDispatch>();
   const { profile } = useSelector((state) => state.auth);
-  const { cartInfo } = useSelector((state) => state.cart);
+  const { cart } = useSelector((state) => state.cart);
   const { checkoutStatus } = useSelector((state) => state.order);
   const [appliedPoints, setAppliedPoints] = useState<number>(0);
   const [isConfirmVisible, setIsConfirmVisible] = useState<boolean>(false);
@@ -83,7 +83,7 @@ export const useCheckoutPage = () => {
         value.type_payment === '0' &&
         checkoutStatus !== THUNK_STATUS.pending
       ) {
-        await orderServices.checkStock(cartInfo?.products!);
+        await orderServices.checkStock(cart?.products!);
         const dataCOD = await dispatch(
           createOrderByCOD({
             ...value,
@@ -93,8 +93,8 @@ export const useCheckoutPage = () => {
               ward: value.ward,
               street_address: value.street_address,
             },
-            total: cartInfo?.total!,
-            products: cartInfo?.products!,
+            total: cart?.total!,
+            products: cart?.products!,
             earn_point: appliedPoints || 0,
             type_payment: 0,
           }),
@@ -104,9 +104,9 @@ export const useCheckoutPage = () => {
           navigate(CUSTOMER_PATHS.CHECKOUT_SUCCESS);
         }
       } else {
-        await orderServices.checkStock(cartInfo?.products!);
+        await orderServices.checkStock(cart?.products!);
         setValueForm({
-          products: cartInfo?.products!,
+          products: cart?.products!,
           address: {
             province: value.province,
             district: value.district,
@@ -130,11 +130,11 @@ export const useCheckoutPage = () => {
 
   const handleTransactionSePay = async () => {
     try {
-      if (cartInfo?.total && valueForm) {
+      if (cart?.total && valueForm) {
         const res = await dispatch(
           createOrderByBanking({
             desc,
-            value: cartInfo?.total,
+            value: cart?.total,
             order: valueForm,
           }),
         ).unwrap();
@@ -168,7 +168,7 @@ export const useCheckoutPage = () => {
 
   const paymentQrProps = {
     isOpen,
-    total: cartInfo?.total!,
+    total: cart?.total!,
     isConfirmVisible,
     desc,
     handleCancel,
@@ -197,7 +197,7 @@ export const useCheckoutPage = () => {
     applyEarnPoint,
     appliedPoints,
     availablePoints: profile?.earn_point,
-    cartInfo,
+    cart,
     control,
     handlCheckout,
     handleSubmit,

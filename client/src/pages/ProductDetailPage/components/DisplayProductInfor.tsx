@@ -7,6 +7,7 @@ import { Button, QuantityInput } from '../../../components';
 import { FC } from 'react';
 import { TDisplayProductInforProps } from './tyings';
 import { formatCurrency } from '../../../utils';
+import { ACTION_WISHLIST } from '../../../constants/enum';
 
 const DisplayProductInfor: FC<TDisplayProductInforProps> = ({
   productData,
@@ -97,7 +98,7 @@ const DisplayProductInfor: FC<TDisplayProductInforProps> = ({
           onClick={() =>
             onAddWishlist({
               product_id: productData?._id!,
-              quantity: 1,
+              action: ACTION_WISHLIST.ADD,
               variant_id: variant?._id,
             })
           }
@@ -110,7 +111,7 @@ const DisplayProductInfor: FC<TDisplayProductInforProps> = ({
       <div className="">Category: {categoryData?.name}</div>
       <div className="">
         Brand:{' '}
-        {brandData.find((item) => item._id === productData.brand_id)?.name}
+        {brandData?.find((item) => item._id === productData.brand_id)?.name}
       </div>
       {Object.keys(productData?.attributes).length > 0 && (
         <div className="relative">
@@ -124,7 +125,7 @@ const DisplayProductInfor: FC<TDisplayProductInforProps> = ({
               overflow: 'hidden',
             }}
           >
-            {Object.entries(productData?.attributes).map(([key, value]) => (
+            {Object.entries(productData?.attributes)?.map(([key, value]) => (
               <Descriptions.Item key={key} label={key.toUpperCase()}>
                 {Array.isArray(value)
                   ? value.map((item, index) => <p key={index}>{item}</p>)
@@ -140,7 +141,7 @@ const DisplayProductInfor: FC<TDisplayProductInforProps> = ({
 
       <Modal open={isModalOpen} footer={null} onCancel={handleCloseModal}>
         <Descriptions title="Information" bordered column={1}>
-          {Object.entries(productData?.attributes).map(([key, value]) => (
+          {Object.entries(productData?.attributes)?.map(([key, value]) => (
             <Descriptions.Item key={key} label={key.toUpperCase()}>
               {Array.isArray(value)
                 ? value.map((item, index) => <p key={index}>{item}</p>)

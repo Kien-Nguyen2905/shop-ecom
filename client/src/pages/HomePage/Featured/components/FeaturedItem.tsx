@@ -11,7 +11,10 @@ import './FeaturedItem.css';
 import ArrowSlide from './ArrowSlide';
 import { SlArrowLeft, SlArrowRight } from 'react-icons/sl';
 
-const FeaturedItem: FC<TFeaturedItemProps> = ({ children, className = '' }) => {
+const FeaturedItem: FC<TFeaturedItemProps> = ({
+  productList,
+  className = '',
+}) => {
   const slidesPerView = 4;
 
   const swiperRef = useRef<any>(null);
@@ -32,7 +35,7 @@ const FeaturedItem: FC<TFeaturedItemProps> = ({ children, className = '' }) => {
         <SlArrowRight size={50} />
       </ArrowSlide>
 
-      {children?.length > 0 && (
+      {productList?.length > 0 && (
         <Swiper
           modules={[Navigation, Pagination, Keyboard]}
           pagination={{ clickable: true }}
@@ -42,9 +45,9 @@ const FeaturedItem: FC<TFeaturedItemProps> = ({ children, className = '' }) => {
           onSwiper={(swiper) => (swiperRef.current = swiper)}
           className="h-[440px]"
         >
-          {children.map((item) => (
-            <SwiperSlide key={item.id} className="!min-w-[277px]">
-              <ProductItem item={item} />
+          {productList.map((product) => (
+            <SwiperSlide key={product._id} className="!min-w-[277px]">
+              <ProductItem product={product} />
             </SwiperSlide>
           ))}
         </Swiper>

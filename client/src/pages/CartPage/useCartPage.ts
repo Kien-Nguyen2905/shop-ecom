@@ -4,14 +4,18 @@ import { TAddcartPayload } from '../../components/ProductItem/tyings';
 import { addToCart, removeCart } from '../../store/middlewares/cartMiddleware';
 import { handleError } from '../../libs';
 import { THUNK_STATUS } from '../../constants';
+import { message } from 'antd';
 
 export const useCartPage = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { cartInfo, updateStatus } = useSelector((state) => state.cart);
+  const { cart, updateStatus } = useSelector((state) => state.cart);
   const handleAddCart = async (payload: TAddcartPayload) => {
     try {
-      if (cartInfo?._id && updateStatus !== THUNK_STATUS.pending) {
-        await dispatch(addToCart(payload)).unwrap();
+      if (cart?._id && updateStatus !== THUNK_STATUS.pending) {
+        const res = await dispatch(addToCart(payload)).unwrap();
+        if (res.data._id) {
+          message.success(res.message);
+        }
       }
     } catch (error) {
       handleError({
@@ -28,5 +32,5 @@ export const useCartPage = () => {
       });
     }
   };
-  return { cartInfo, handleAddCart, handleRemoveCart };
+  return { cart, handleAddCart, handleRemoveCart };
 };

@@ -14,7 +14,7 @@ const Navigation = () => {
     watch,
     onSearch,
     control,
-    cartInfo,
+    cart,
     isDropdownVisible,
     setDropdownVisible,
     handleRemoveCart,
@@ -70,17 +70,17 @@ const Navigation = () => {
               onMouseLeave={() => setDropdownVisible(false)}
             >
               <AiOutlineShoppingCart size={25} />
-              {cartInfo?.products?.length! > 0 && (
+              {cart?.products?.length! > 0 && (
                 <span className="flex items-center justify-center w-5 h-5 text-[9px] text-center text-white rounded-full bg-primary">
-                  {cartInfo?.products?.length}
+                  {cart?.products?.length}
                 </span>
               )}
               {isDropdownVisible &&
-                cartInfo?.products &&
-                cartInfo?.products?.length > 0 && (
+                cart?.products &&
+                cart?.products?.length > 0 && (
                   <DropdownCart
                     handleRemoveCart={handleRemoveCart}
-                    {...cartInfo!}
+                    {...cart!}
                   />
                 )}
             </div>

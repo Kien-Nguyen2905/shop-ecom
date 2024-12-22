@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { TAB } from '../../constants';
 import { useProductQuery } from '../../queries';
+import { TProductItem } from '../../services/Product/tyings';
 
 export const useHomePage = () => {
   const { data } = useProductQuery();
@@ -8,23 +9,23 @@ export const useHomePage = () => {
   const [selectTab, setSelectTab] = useState<String>(TAB.POPULAR);
   // using useMemo handle out list matching for tab and return selectTab
   const hotProduct = useMemo(() => {
-    let list: any[] = [];
+    let productList: TProductItem[] = [];
     switch (selectTab) {
       case TAB.POPULAR:
-        list = products?.filter((item) => item.featured.isPopular) || [];
+        productList = products?.filter((item) => item.featured.isPopular) || [];
         break;
       case TAB.ONSALE:
-        list = products?.filter((item) => item.featured.onSale) || [];
+        productList = products?.filter((item) => item.featured.onSale) || [];
         break;
       case TAB.RATED:
-        list = products?.filter((item) => item.featured.isRated) || [];
+        productList = products?.filter((item) => item.featured.isRated) || [];
         break;
       default:
-        list;
+        productList;
         break;
     }
     return {
-      list,
+      productList,
       selectTab,
       setSelectTab,
     };

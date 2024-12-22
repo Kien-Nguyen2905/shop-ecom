@@ -3,7 +3,14 @@ export type TFeatured = {
   onSale: boolean;
   isRated: boolean;
 };
-
+export type TVariant = {
+  _id: string;
+  color: string;
+  price: number;
+  stock: number;
+  images: string[];
+  discount: number;
+};
 export type TProductItem = {
   _id?: string;
   name: string;
@@ -49,19 +56,7 @@ export type TProductByIdResponse = {
   created_at: string; // ISO date string
   updated_at: string; // ISO date string
 };
-export type TFeatured = {
-  isPopular: boolean;
-  onSale: boolean;
-  isRated: boolean;
-};
-export type TVariant = {
-  _id: string;
-  color: string;
-  price: number;
-  stock: number;
-  images: string[];
-  discount: number;
-};
+
 export type TCreateProductPayload = {
   name: string;
   category_id: string;

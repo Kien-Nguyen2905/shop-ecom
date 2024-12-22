@@ -1,5 +1,7 @@
+import { TProductItem } from '../../../services/Product/tyings';
+
 export type TFeaturedProps = {
-  list: any[];
+  productList: TProductItem[];
   selectTab: String;
   setSelectTab: Dispatch<SetStateAction<String>>;
 };

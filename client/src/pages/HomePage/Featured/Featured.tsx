@@ -3,7 +3,11 @@ import { TAB } from '../../../constants';
 import { TFeaturedProps } from './tyings';
 import FeaturedItem from './components/FeaturedItem';
 
-const Featured: FC<TFeaturedProps> = ({ list, selectTab, setSelectTab }) => {
+const Featured: FC<TFeaturedProps> = ({
+  productList,
+  selectTab,
+  setSelectTab,
+}) => {
   return (
     <div className="py-10">
       <div className="flex items-center justify-center gap-3 mb-10 feature">
@@ -32,7 +36,7 @@ const Featured: FC<TFeaturedProps> = ({ list, selectTab, setSelectTab }) => {
           Top Rated
         </span>
       </div>
-      <FeaturedItem>{list}</FeaturedItem>
+      <FeaturedItem productList={productList} />
     </div>
   );
 };
