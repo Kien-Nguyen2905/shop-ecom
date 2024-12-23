@@ -35,7 +35,7 @@ class OrderService {
     }
   }
 
-  async updateStockProduct({ products, reject = false }: { products: any; reject?: boolean }) {
+  async updateStockandSoldProduct({ products, reject = false }: { products: any; reject?: boolean }) {
     for (let product of products) {
       const resultProduct = await databaseService.products.updateOne(
         {
@@ -44,7 +44,8 @@ class OrderService {
         },
         {
           $inc: {
-            'variants.$.stock': reject ? product.quantity : -product.quantity
+            'variants.$.stock': reject ? product.quantity : -product.quantity,
+            'variants.$.sold': reject ? -product.quantity : product.quantity
           },
           $set: {
             updated_at: new Date()
@@ -103,7 +104,7 @@ class OrderService {
         total,
         earn_point: earn_point || 0,
         phone,
-        status: STATUS_ORDER.WAITING,
+        status: STATUS_ORDER.PENDING,
         type_payment,
         transaction_id: transactionId
       })
@@ -117,7 +118,7 @@ class OrderService {
         phone,
         total,
         earn_point: earn_point || 0,
-        status: STATUS_ORDER.WAITING,
+        status: STATUS_ORDER.PENDING,
         type_payment: type_payment!,
         transaction_id: transactionId
       })
@@ -154,7 +155,7 @@ class OrderService {
     )
 
     // Update stock product
-    await this.updateStockProduct({ products })
+    await this.updateStockandSoldProduct({ products })
     // Remove product had been ordered in cart
     const cart = await cartServices.getCart(user_id)
     if (!cart) {
@@ -234,7 +235,7 @@ class OrderService {
         )
       }
     }
-    if (status === STATUS_ORDER.REJECT) {
+    if (status === STATUS_ORDER.CANCLE) {
       await databaseService.transactions.updateOne(
         { _id: new ObjectId(order.transaction_id) },
         {
@@ -270,7 +271,7 @@ class OrderService {
         })
       )
       // Cập nhật stock ở product
-      await this.updateStockProduct({ products: order.products, reject: true })
+      await this.updateStockandSoldProduct({ products: order.products, reject: true })
       if (order.earn_point > 0) {
         await userServices.updateProfile({
           user_id: order.user_id.toString(),

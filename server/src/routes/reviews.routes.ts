@@ -4,7 +4,6 @@ import {
   getReviewByProductIdController,
   getReviewController
 } from '~/controllers/reviews.controllers'
-import { adminAccessValidator } from '~/middlewares/admins/admins.middlewares'
 import { createReviewValidator } from '~/middlewares/reviews/reviews.middlewares'
 import { accessTokenValidator } from '~/middlewares/users/users.middlwares'
 

@@ -11,6 +11,7 @@ export type TVariant = {
   color: string
   price: number
   stock: number
+  sold: number
   images: string[]
   discount: number
 }

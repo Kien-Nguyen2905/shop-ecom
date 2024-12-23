@@ -29,7 +29,7 @@ class ProductServices {
       brandServices.getBrandById(brand_id)
     ])
 
-    variants.forEach((item) => (item._id = new ObjectId()))
+    variants.forEach((item) => ((item._id = new ObjectId()), (item.sold = 0)))
     const product = new Product({
       _id: product_id,
       name,
@@ -319,7 +319,7 @@ class ProductServices {
     await this.checkProductById(productId)
     // Check product exist in order with status pending
     await this.checkProductInOrder(productId)
-    // Delete product had been updated in cart users
+    // Remove product had been updated in cart users
     await databaseService.carts.updateMany(
       {
         'products.product_id': new ObjectId(productId)

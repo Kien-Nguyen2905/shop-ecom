@@ -1,22 +1,24 @@
 import { ObjectId } from 'mongodb'
-import { TProductReview, TReviewProps, TUserReview } from '~/models/schemas/reviews/type'
+import { TReviews } from '~/models/schemas/reviews/type'
 
 export default class Review {
   _id?: ObjectId
-  reviewer: TUserReview
+  user_id: ObjectId
   order_id: ObjectId
-  product: TProductReview
+  product_id: ObjectId
+  variant_id: ObjectId
   title: string
   description: string
   rate: number
   created_at?: Date
   updated_at?: Date
-  constructor(review: TReviewProps) {
+  constructor(review: TReviews) {
     const date = new Date()
     this._id = review._id
-    this.reviewer = review.reviewer
+    this.user_id = review.user_id
     this.order_id = review.order_id
-    this.product = review.product
+    this.product_id = review.product_id
+    this.variant_id = review.variant_id
     this.title = review.title
     this.description = review.description
     this.rate = review.rate
