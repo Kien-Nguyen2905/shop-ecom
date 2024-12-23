@@ -2,7 +2,10 @@ import { UseFormReturn } from 'react-hook-form';
 import { TProductByIdResponse } from '../../../services/Product/tyings';
 import { TCategoryResponse } from '../../../services/Category/tyings';
 import { TAddcartPayload } from '../../../components/ProductItem/tyings';
-import { TCreateReviewResponse } from '../../../services/Review/tyings';
+import {
+  TCreateReviewResponse,
+  TReviewByProductIdResponse,
+} from '../../../services/Review/tyings';
 import { TWarehouseResponse } from '../../../services/Warehouse/tyings';
 import { TBrandResponse } from '../../../services/Brand/tyings';
 import { TCart } from '../../../store/reducers/tyings';
@@ -39,5 +42,5 @@ export type TDisplayProductInforProps = {
 };
 export type TDisplayProductTabsProps = {
   description: string;
-  reviewData: TCreateReviewResponse[];
+  reviewData: TReviewByProductIdResponse[];
 };

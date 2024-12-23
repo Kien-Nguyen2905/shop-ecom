@@ -18,16 +18,15 @@ const ReviewAdminPage = () => {
       label: user.email,
       value: user.email,
     })) || [];
-
   const columns: any = [
     {
       title: 'Product',
       dataIndex: 'product',
       width: '15%',
-      render: (record: TCreateReviewResponse['product']) => {
+      render: (record: any) => {
         return (
           <div className="flex items-center gap-2">
-            <img className="w-[70px] h-[70px]" src={record?.image} alt="" />
+            <img className="w-[70px] h-[70px]" src={record?.thumbnail} alt="" />
             <div className="">
               <p>{record?.name}</p>
               <p>{record?.color}</p>
@@ -38,7 +37,7 @@ const ReviewAdminPage = () => {
     },
     {
       title: 'Reviewer',
-      dataIndex: 'reviewer',
+      dataIndex: 'user',
       width: '15%',
       filterDropdown: ({
         setSelectedKeys,
@@ -69,16 +68,16 @@ const ReviewAdminPage = () => {
       ),
       filterIcon: () => <UserOutlined />,
       onFilter: (value: string, record: any) => {
-        // Filter reviews by email
         const reviewerEmail = userData?.find(
           (item) => item?._id === record?.reviewer?.user_id,
         )?.email;
         return reviewerEmail === value;
       },
-      render: (record: TCreateReviewResponse['reviewer']) => {
+      render: (record: any) => {
         return (
           <div>
             <p className="font-bold">{record?.full_name}</p>
+            <p className="italic">{record?.phone}</p>
             <p className="italic">{record?.email}</p>
           </div>
         );

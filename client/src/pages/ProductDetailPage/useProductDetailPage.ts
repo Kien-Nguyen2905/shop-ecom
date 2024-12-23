@@ -22,7 +22,6 @@ import { THUNK_STATUS } from '../../constants';
 import { updateWishlist } from '../../store/middlewares/wishlistMiddleWare';
 import { message } from 'antd';
 import { TUpdateWishlistPayload } from '../../services/Wishlist/tyings';
-
 export const useProductDetailPage = () => {
   const { openModal } = useMainContext();
   const { profile } = useSelector((state) => state.auth);

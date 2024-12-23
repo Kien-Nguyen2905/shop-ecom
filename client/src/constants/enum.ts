@@ -7,9 +7,10 @@ export enum EVerification {
   Email,
 }
 export enum STATUS_ORDER {
-  WAITING,
+  PENDING,
   ACCEPT,
-  REJECT,
+  CANCLE,
+  RETURN,
 }
 export enum TYPE_PAYMENT {
   COD,

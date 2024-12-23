@@ -3,16 +3,13 @@ import { Card, Col, Rate, Row, Tabs, Pagination } from 'antd';
 import type { TabsProps } from 'antd';
 import { TDisplayProductTabsProps } from './tyings';
 import dayjs from 'dayjs';
-import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
 const DisplayProductTabs: FC<TDisplayProductTabsProps> = ({
   description,
   reviewData,
 }) => {
-  // State to manage current page
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 5;
 
-  // Paginate the data to show only the reviews for the current page
   const paginatedData = reviewData?.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize,
@@ -40,17 +37,15 @@ const DisplayProductTabs: FC<TDisplayProductTabsProps> = ({
                 <Col span={16} className="flex gap-[100px]">
                   <div className="">
                     <p className="reviewer-name">
-                      <strong>{review.reviewer.full_name}</strong>
+                      <strong>{review.user.full_name}</strong>
                     </p>
-                    <div className="flex flex-col gap-1">
+                    <p>Color: {review.variant.color}</p>
+                    <div className="flex gap-1">
                       <span>
-                        <CalendarOutlined style={{ marginRight: 4 }} />
                         {dayjs(review.created_at).format('DD-MM-YYYY')}
                       </span>
-                      <span>
-                        <ClockCircleOutlined style={{ marginRight: 4 }} />
-                        {dayjs(review.created_at).format('HH:mm:ss')}
-                      </span>
+                      <span>|</span>
+                      <span>{dayjs(review.created_at).format('HH:mm:ss')}</span>
                     </div>
                   </div>
                   <div className="">
