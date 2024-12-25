@@ -1,3 +1,5 @@
+import { STATUS_TRANSACTION, TYPE_PAYMENT } from '../../constants/enum';
+
 export type TTransactionResponse = {
   _id: string;
   user_id: string;
@@ -11,7 +13,8 @@ export type TTransactionResponse = {
 };
 
 export type TCreateTransactionPayload = {
-  type_payment: number;
+  order_id: string;
+  type_payment: TYPE_PAYMENT;
   value: number;
   content?: string;
 };

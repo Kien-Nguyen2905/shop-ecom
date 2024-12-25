@@ -6,7 +6,7 @@ export const useTransactionAllQuery = () => {
   return useQuery<TTransactionAllResponse>({
     queryKey: ['transactions'],
     queryFn: async () => {
-      const response = await transactionServices.getAllTransaction();
+      const response = await transactionServices.getTransaction();
       return response.data.data || [];
     },
   });

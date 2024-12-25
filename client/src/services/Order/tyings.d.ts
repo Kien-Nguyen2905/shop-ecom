@@ -1,3 +1,4 @@
+import { TYPE_PAYMENT } from '../../constants/enum';
 import { TAddessProps } from '../../store/reducers/tyings';
 import { TAddress } from '../Auth/typings';
 
@@ -13,14 +14,13 @@ export type TProductOrder = {
 };
 export type TCreateOrderPayload = {
   products: TProductOrder[];
-  type_payment?: number;
+  type_payment: TYPE_PAYMENT;
   note?: string;
-  address?: TAddress;
+  address: TAddress;
   phone: string;
   earn_point?: number;
-  transaction_id: string;
+  content?: string;
 };
-
 export type TCreateOrderResponse = {
   _id?: string;
   user_id: string;

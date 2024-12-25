@@ -1,10 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { THUNK_STATUS } from '../../constants';
-import {
-  createOrderByBanking,
-  createOrderByCOD,
-  getOrder,
-} from '../middlewares/orderMiddleWare';
+import { createOrder, getOrder } from '../middlewares/orderMiddleWare';
 import { TOrderState } from './tyings';
 
 const initialState: TOrderState = {
@@ -22,25 +18,13 @@ export const { reducer: orderReducer, actions: orderAction } = createSlice({
       state.orderInfo = action.payload;
     });
 
-    // Checkout COD
-    builder.addCase(createOrderByCOD.pending, (state) => {
+    builder.addCase(createOrder.pending, (state) => {
       state.checkoutStatus = THUNK_STATUS.pending;
     });
-    builder.addCase(createOrderByCOD.fulfilled, (state) => {
+    builder.addCase(createOrder.fulfilled, (state) => {
       state.checkoutStatus = THUNK_STATUS.fullfilled;
     });
-    builder.addCase(createOrderByCOD.rejected, (state) => {
-      state.checkoutStatus = THUNK_STATUS.rejected;
-    });
-
-    // Checkout COD
-    builder.addCase(createOrderByBanking.pending, (state) => {
-      state.checkoutStatus = THUNK_STATUS.pending;
-    });
-    builder.addCase(createOrderByBanking.fulfilled, (state) => {
-      state.checkoutStatus = THUNK_STATUS.fullfilled;
-    });
-    builder.addCase(createOrderByBanking.rejected, (state) => {
+    builder.addCase(createOrder.rejected, (state) => {
       state.checkoutStatus = THUNK_STATUS.rejected;
     });
   },

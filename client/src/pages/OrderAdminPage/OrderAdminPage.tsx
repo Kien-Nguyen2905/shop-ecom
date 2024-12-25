@@ -120,9 +120,10 @@ const OrderAdminPage = () => {
       title: 'Status',
       dataIndex: 'status',
       filters: [
-        { text: 'Pending', value: 0 },
-        { text: 'Accepted', value: 1 },
-        { text: 'Reject', value: 2 },
+        { text: 'PENDING', value: 0 },
+        { text: 'ACCEPTED', value: 1 },
+        { text: 'CANCLED', value: 2 },
+        { text: 'RETURNED', value: 3 },
       ],
       filterMultiple: false,
       onFilter: (value: number, record: any) => record.status === value,
@@ -130,14 +131,17 @@ const OrderAdminPage = () => {
         let color = '';
         let text = '';
         if (status === 0) {
-          color = 'orange';
-          text = 'Pending';
+          color = 'yellow';
+          text = 'PENDING';
         } else if (status === 1) {
           color = 'green';
-          text = 'Accepted';
+          text = 'ACCEPTED';
         } else if (status === 2) {
           color = 'red';
-          text = 'Reject';
+          text = 'CANCLED';
+        } else if (status === 3) {
+          color = 'orange';
+          text = 'RETURNED';
         }
         return <Tag color={color}>{text}</Tag>;
       },
@@ -156,6 +160,24 @@ const OrderAdminPage = () => {
           <span>
             <ClockCircleOutlined style={{ marginRight: 4 }} />
             {dayjs(record.created_at).format('HH:mm:ss')}
+          </span>
+        </div>
+      ),
+    },
+    {
+      title: 'Date Actions',
+      dataIndex: 'updated_at',
+      sorter: (a: any, b: any) =>
+        dayjs(a.updated_at).isBefore(dayjs(b.updated_at)) ? 1 : -1,
+      render: (_: any, record: any) => (
+        <div className="flex flex-col gap-2">
+          <span>
+            <CalendarOutlined style={{ marginRight: 4 }} />
+            {dayjs(record.updated_at).format('DD-MM-YYYY')}
+          </span>
+          <span>
+            <ClockCircleOutlined style={{ marginRight: 4 }} />
+            {dayjs(record.updated_at).format('HH:mm:ss')}
           </span>
         </div>
       ),

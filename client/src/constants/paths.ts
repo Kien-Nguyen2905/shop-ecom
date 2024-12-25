@@ -14,7 +14,7 @@ export const CUSTOMER_PATHS = {
     WISHLIST: '/dashboard/wishlist',
     ORDER: '/dashboard/order',
   },
-  PAYMENT: '/payment',
+  PAYMENT: '/checkout/payment',
 };
 export const ADMIN_PATHS = {
   ROOT: '/admin',

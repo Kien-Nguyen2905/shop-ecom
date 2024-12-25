@@ -7,7 +7,6 @@ import {
 } from 'react';
 import { TMainContextProviderProps } from './tyings';
 import { LOCAL_STORAGE } from '../constants';
-import { generateDesc } from '../utils';
 
 const defaultValue: TMainContextProviderProps = {
   isOpen: false,
@@ -16,8 +15,6 @@ const defaultValue: TMainContextProviderProps = {
   closeModal: () => null,
   checkAuthen: false,
   setCheckAuthen: () => null,
-  desc: '',
-  setDesc: () => null,
 };
 
 const MainContext = createContext<TMainContextProviderProps>(defaultValue);
@@ -27,7 +24,6 @@ export const MainConTextProvider = ({ children }: { children: ReactNode }) => {
   const [checkAuthen, setCheckAuthen] = useState<boolean>(
     defaultValue.checkAuthen,
   );
-  const [desc, setDesc] = useState<string>(generateDesc());
 
   const openModal = () => {
     setIsOpen(!isOpen);
@@ -46,8 +42,6 @@ export const MainConTextProvider = ({ children }: { children: ReactNode }) => {
   return (
     <MainContext.Provider
       value={{
-        desc,
-        setDesc,
         isOpen,
         checkAuthen,
         setCheckAuthen,

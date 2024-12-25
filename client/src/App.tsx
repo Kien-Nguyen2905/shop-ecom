@@ -94,12 +94,12 @@ function App() {
               />
             </Route>
             <Route path={CUSTOMER_PATHS.CHECKOUT} element={<CheckoutPage />} />
+            <Route path={CUSTOMER_PATHS.PAYMENT} element={<PaymentPage />} />
+
             <Route
               path={CUSTOMER_PATHS.CHECKOUT_SUCCESS}
               element={<CheckoutSuccessPage />}
             />
-
-            <Route path={CUSTOMER_PATHS.PAYMENT} element={<PaymentPage />} />
           </Route>
         </Route>
         <Route path={ADMIN_PATHS.ROOT} element={<AdminLayout />}>

@@ -113,8 +113,9 @@ const TransactionAdminPage = () => {
       title: 'Status',
       dataIndex: 'status',
       filters: [
-        { text: 'Successed', value: 0 },
-        { text: 'Failed', value: 1 },
+        { text: 'Pending', value: 0 },
+        { text: 'Successed', value: 1 },
+        { text: 'Failed', value: 2 },
       ],
       filterMultiple: false,
       onFilter: (value: number, record: any) => record.status === value,
@@ -122,9 +123,14 @@ const TransactionAdminPage = () => {
         let color = '';
         let text = '';
         if (status === 0) {
+          color = 'orange';
+          text = 'Pending';
+        }
+        if (status === 1) {
           color = 'green';
           text = 'Successed';
-        } else if (status === 1) {
+        }
+        if (status === 2) {
           color = 'red';
           text = 'Failed';
         }

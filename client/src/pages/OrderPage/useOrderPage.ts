@@ -7,7 +7,8 @@ import { TCreateReviewPayload } from '../../services/Review/tyings';
 import { message } from 'antd';
 import { useDispatch } from 'react-redux';
 import { AppDispatch, useSelector } from '../../store/store';
-import { getOrder } from '../../store/middlewares/orderMiddleWare';
+import { cancleOrder, getOrder } from '../../store/middlewares/orderMiddleWare';
+import orderServices from '../../services/Order/orderServices';
 
 export const useOrderPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -61,6 +62,14 @@ export const useOrderPage = () => {
       });
     }
   };
+  const handleCancleOrder = async (orderId: string) => {
+    try {
+      const res = await dispatch(cancleOrder(orderId)).unwrap();
+      message.success(res.message);
+    } catch (error) {
+      handleError({ error });
+    }
+  };
   useEffect(() => {
     dispatch(getOrder());
   }, []);
@@ -73,5 +82,6 @@ export const useOrderPage = () => {
     onChangeRate,
     handlePostReview,
   };
-  return { orderInfo, modalProps, openModal };
+
+  return { orderInfo, modalProps, openModal, handleCancleOrder };
 };

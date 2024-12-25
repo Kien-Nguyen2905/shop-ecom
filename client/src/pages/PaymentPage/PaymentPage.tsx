@@ -1,42 +1,27 @@
-import React, { useState } from 'react';
-import { Modal, Button } from 'antd';
-import { generateDesc } from '../../utils'; // Hàm tạo desc tự động
+import { usePaymentPage } from './usePaymentPage';
 
 const PaymentPage = () => {
-  const [isModalVisible, setIsModalVisible] = useState(false); // Trạng thái hiển thị modal
-
-  const showModal = () => {
-    setIsModalVisible(true); // Mở modal
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false); // Đóng modal
-  };
-
-  const desc = generateDesc(); // Tạo desc tự động
-
+  const { order } = usePaymentPage();
   return (
-    <div className="container">
-      <div className="h-screen">
-        <Button type="primary" onClick={showModal}>
-          Hiển thị QR Code
-        </Button>
-        <Modal
-          title="Thanh toán qua QR"
-          visible={isModalVisible}
-          onCancel={handleCancel}
-          footer={null} // Không cần nút "OK" hay "Cancel"
-        >
-          <div className="text-center">
-            <img
-              className="dark:invert"
-              src={`https://qr.sepay.vn/img?acc=0704590124&bank=MBBank&amount=10000&des=${desc}`}
-              alt="QR Code"
-              width={180}
-              height={38}
-            />
-          </div>
-        </Modal>
+    <div className="container flex items-center justify-center h-[700px]">
+      <div className="p-6 text-center bg-white rounded-lg shadow-lg">
+        <h1 className="mb-4 text-2xl font-bold text-primary">
+          QR Code Payment
+        </h1>
+        <p className="mb-6 text-darkGrey">
+          Scan the QR code below to make a payment.
+        </p>
+        <div className="inline-block p-4 bg-white border border-gray-200 rounded-lg">
+          <img
+            src={`https://qr.sepay.vn/img?acc=0704590124&bank=MBBank&amount=${order?.value}&des=${order?.content}`}
+            alt="QR Code"
+            className="object-cover w-64 h-64"
+          />
+        </div>
+        <p className="mt-4 text-sm text-textGrey">
+          Bank: MBBank | Account: 0704590124
+        </p>
+        <p className="mt-1 text-sm text-textGrey">NGUYEN TRUNG KIEN</p>
       </div>
     </div>
   );

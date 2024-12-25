@@ -6,19 +6,14 @@ import { getCart, updateCart } from '../../store/middlewares/cartMiddleware';
 import { message } from 'antd';
 import { handleError } from '../../libs';
 import { useForm } from 'react-hook-form';
-import { TCheckoutForm, TValueFormBanking } from './tyings';
-import {
-  createOrderByBanking,
-  createOrderByCOD,
-} from '../../store/middlewares/orderMiddleWare';
+import { TCheckoutForm } from './tyings';
 import { useNavigate } from 'react-router-dom';
 import { CUSTOMER_PATHS, THUNK_STATUS } from '../../constants';
-import { useMainContext } from '../../context/MainConTextProvider';
+import { createOrder } from '../../store/middlewares/orderMiddleWare';
 import { generateDesc } from '../../utils';
-import orderServices from '../../services/Order/orderServices';
 
 export const useCheckoutPage = () => {
-  const { desc, setDesc } = useMainContext();
+  const desc = generateDesc();
   const navigate = useNavigate();
   const { control, setError, handleSubmit, reset } = useForm<any>();
   const dispatch = useDispatch<AppDispatch>();
@@ -27,7 +22,6 @@ export const useCheckoutPage = () => {
   const { checkoutStatus } = useSelector((state) => state.order);
   const [appliedPoints, setAppliedPoints] = useState<number>(0);
   const [isConfirmVisible, setIsConfirmVisible] = useState<boolean>(false);
-  const [valueForm, setValueForm] = useState<TValueFormBanking>();
   const {
     valueProvince,
     dataProvince,
@@ -53,10 +47,6 @@ export const useCheckoutPage = () => {
     onClose();
   };
 
-  const onOpen = () => {
-    setIsOpen(true);
-  };
-
   const onClose = () => {
     setIsOpen(false);
   };
@@ -80,75 +70,37 @@ export const useCheckoutPage = () => {
       if (!value.type_payment) {
         message.error('Please choose method payment');
       } else if (
-        value.type_payment === '0' &&
+        value.type_payment &&
         checkoutStatus !== THUNK_STATUS.pending
       ) {
-        await orderServices.checkStock(cart?.products!);
         const dataCOD = await dispatch(
-          createOrderByCOD({
-            ...value,
+          createOrder({
+            note: value.note,
+            phone: value.phone,
             address: {
               province: value.province,
               district: value.district,
               ward: value.ward,
               street_address: value.street_address,
             },
-            total: cart?.total!,
             products: cart?.products!,
             earn_point: appliedPoints || 0,
-            type_payment: 0,
+            type_payment: +value.type_payment,
+            content: value.type_payment === '1' ? desc : '',
           }),
         ).unwrap();
-        if (dataCOD?._id) {
+        if (dataCOD?._id && value.type_payment === '0') {
           message.success('Order successfully');
           navigate(CUSTOMER_PATHS.CHECKOUT_SUCCESS);
+        } else {
+          navigate(`payment?order=${dataCOD?._id}`);
         }
-      } else {
-        await orderServices.checkStock(cart?.products!);
-        setValueForm({
-          products: cart?.products!,
-          address: {
-            province: value.province,
-            district: value.district,
-            ward: value.ward,
-            street_address: value.street_address,
-          },
-          phone: value.phone,
-          earn_point: appliedPoints || 0,
-          note: value.note || '',
-          type_payment: 1,
-        });
-        onOpen();
       }
     } catch (error) {
       handleError({
         error,
         setError,
       });
-    }
-  };
-
-  const handleTransactionSePay = async () => {
-    try {
-      if (cart?.total && valueForm) {
-        const res = await dispatch(
-          createOrderByBanking({
-            desc,
-            value: cart?.total,
-            order: valueForm,
-          }),
-        ).unwrap();
-
-        if (res?._id) {
-          await handleConfirmClose();
-          setDesc(generateDesc());
-          message.success('Order successfully');
-          navigate(CUSTOMER_PATHS.CHECKOUT_SUCCESS);
-        }
-        return res;
-      }
-    } catch (error) {
-      handleError({ error });
     }
   };
 
@@ -174,7 +126,6 @@ export const useCheckoutPage = () => {
     handleCancel,
     handleConfirmClose,
     setIsConfirmVisible,
-    handleTransactionSePay,
   };
 
   useEffect(() => {

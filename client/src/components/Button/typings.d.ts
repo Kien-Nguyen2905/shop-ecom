@@ -8,4 +8,5 @@ export type TButtonProps = {
   children?: React.ReactNode;
   loading?: boolean;
   type?: boolean;
+  variant?: string;
 };

@@ -66,7 +66,7 @@ const CheckoutPage = () => {
           </form>
         </div>
       </div>
-      <PaymentQR {...paymentQrProps} />
+      {/* <PaymentQR {...paymentQrProps} /> */}
     </div>
   );
 };

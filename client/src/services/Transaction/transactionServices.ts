@@ -13,14 +13,15 @@ const transactionServices = {
       payload,
     );
   },
-  getTransactionSePay: (queryString = '') => {
-    return instance.get<SuccessResponse<TTransactionResponse>>(
-      `/transaction/webhook/seepay${queryString ? `${queryString}` : ``}`,
-    );
-  },
-  getAllTransaction: () => {
+
+  getTransaction: () => {
     return instance.get<SuccessResponse<TTransactionAllResponse>>(
       `/transaction`,
+    );
+  },
+  getTransactionByOrder: (query: string) => {
+    return instance.get<SuccessResponse<TTransactionResponse>>(
+      `/transaction/order${query ? `/${query}` : ''}`,
     );
   },
 };

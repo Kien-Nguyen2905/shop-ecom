@@ -5,16 +5,25 @@ import { ModalReview } from './components';
 import { useOrderPage } from './useOrderPage';
 import { formatCurrency, getLocationName } from '../../utils';
 import dayjs from 'dayjs';
-import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { CalendarOutlined } from '@ant-design/icons';
 import {
   useDistrictsQuery,
   useProvicesQuery,
   useWardsQuery,
 } from '../../queries/useAddress';
+import {
+  STATUS_ORDER,
+  STATUS_TRANSACTION,
+  TYPE_PAYMENT,
+} from '../../constants/enum';
+import { IoTrashBinOutline } from 'react-icons/io5';
+import { Button } from '../../components';
+import { IoMdArrowForward } from 'react-icons/io';
 const { Panel } = Collapse;
 
 const OrderPage = () => {
-  const { orderInfo, modalProps, openModal } = useOrderPage();
+  const { orderInfo, modalProps, openModal, handleCancleOrder } =
+    useOrderPage();
   const { data: provinceData } = useProvicesQuery();
   const { data: districtData } = useDistrictsQuery();
   const { data: wardData } = useWardsQuery();
@@ -37,30 +46,34 @@ const OrderPage = () => {
                 districtData,
               );
               const ward = getLocationName(order.address?.ward, wardData);
-
               return (
                 <Panel
                   key={order._id!}
                   header={
                     <div className="flex items-center justify-between">
                       <span className="font-semibold">
-                        Order ID: {order._id}
+                        Order ID: {order?._id?.slice(-5).toUpperCase()}
                       </span>
                       <div className="flex gap-2">
+                        <span className="font-semibold">
+                          {order?.transaction?.[0].status ===
+                          STATUS_TRANSACTION.PENDING
+                            ? order?.transaction?.[0].status ===
+                              STATUS_TRANSACTION.FAILED
+                              ? 'Thanh toán thất bại'
+                              : 'Chưa thanh toán'
+                            : 'Đã thanh toán'}
+                        </span>
+                        <span>|</span>
                         <span>
                           <CalendarOutlined style={{ marginRight: 4 }} />
                           {dayjs(order.created_at).format('DD-MM-YYYY')}
-                        </span>
-                        <span>
-                          <ClockCircleOutlined style={{ marginRight: 4 }} />
-                          {dayjs(order.created_at).format('HH:mm:ss')}
                         </span>
                       </div>
                     </div>
                   }
                 >
                   <Card>
-                    <h4>Transaction ID: {order.transaction_id}</h4>
                     <p>
                       <strong>Total:</strong> {formatCurrency(order.total)}
                     </p>
@@ -75,8 +88,8 @@ const OrderPage = () => {
                       {order.status === 0
                         ? 'Pending'
                         : order.status === 1
-                        ? 'Completed'
-                        : 'Rejected'}
+                        ? 'Accepted'
+                        : 'Cancled'}
                     </p>
                     <p>
                       <strong>Address:</strong>{' '}
@@ -137,6 +150,35 @@ const OrderPage = () => {
                         </li>
                       ))}
                     </ul>
+                    <div className="flex gap-3 pt-5 ml-auto w-max">
+                      {order?.transaction?.[0].status ===
+                        STATUS_TRANSACTION.PENDING &&
+                        order.status === STATUS_ORDER.PENDING && (
+                          <>
+                            <Button
+                              variant="delete"
+                              className="w-[107.59px]"
+                              text="Cancle"
+                              onClick={() =>
+                                handleCancleOrder(order._id as string)
+                              }
+                            >
+                              <IoTrashBinOutline size={20} />
+                            </Button>
+                          </>
+                        )}
+                      {order?.transaction?.[0].status ===
+                        STATUS_TRANSACTION.PENDING &&
+                        order?.type_payment === TYPE_PAYMENT.BANKING && (
+                          <Link
+                            to={CUSTOMER_PATHS.PAYMENT + '?order=' + order._id}
+                          >
+                            <Button text="Process">
+                              <IoMdArrowForward size={20} />
+                            </Button>
+                          </Link>
+                        )}
+                    </div>
                   </Card>
                 </Panel>
               );

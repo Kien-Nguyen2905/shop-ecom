@@ -7,6 +7,7 @@ import {
   useProvicesQuery,
   useWardsQuery,
 } from '../../../queries/useAddress';
+import { STATUS_ORDER } from '../../../constants/enum';
 const OrderDetail: React.FC<TOrderDetailProps> = ({
   isOpenModal,
   userDetail,
@@ -154,7 +155,7 @@ const OrderDetail: React.FC<TOrderDetailProps> = ({
           </Row>
         </div>
       </div>
-      {orderDetail.status === 0 && (
+      {orderDetail.status === STATUS_ORDER.PENDING && (
         <div className="flex gap-5 ml-auto w-max">
           <div className="flex justify-end mt-5">
             <Button
@@ -162,7 +163,7 @@ const OrderDetail: React.FC<TOrderDetailProps> = ({
               onClick={() => {
                 handleOrder({
                   order_id: orderDetail._id!,
-                  status: 1,
+                  status: STATUS_ORDER.ACCEPT,
                   user_id: orderDetail.user_id,
                 });
               }}
@@ -176,12 +177,30 @@ const OrderDetail: React.FC<TOrderDetailProps> = ({
               onClick={() => {
                 handleOrder({
                   order_id: orderDetail._id!,
-                  status: 2,
+                  status: STATUS_ORDER.CANCLE,
                   user_id: orderDetail.user_id,
                 });
               }}
             >
-              Reject Order
+              Cancle Order
+            </Button>
+          </div>
+        </div>
+      )}
+      {orderDetail.status === STATUS_ORDER.ACCEPT && (
+        <div className="flex gap-5 ml-auto w-max">
+          <div className="flex justify-end mt-5">
+            <Button
+              type="primary"
+              onClick={() => {
+                handleOrder({
+                  order_id: orderDetail._id!,
+                  status: STATUS_ORDER.RETURN,
+                  user_id: orderDetail.user_id,
+                });
+              }}
+            >
+              Return Order
             </Button>
           </div>
         </div>
