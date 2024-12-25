@@ -14,7 +14,6 @@ export default class Order {
   address: TAddessProps
   phone: string
   status: STATUS_ORDER
-  transaction_id: ObjectId
   created_at?: Date
   updated_at?: Date
   constructor(order: TOrderProps) {
@@ -29,7 +28,6 @@ export default class Order {
     this.address = order.address
     this.phone = order.phone
     this.status = order.status
-    this.transaction_id = order.transaction_id
     this.created_at = order.created_at || date
     this.updated_at = order.updated_at || date
   }

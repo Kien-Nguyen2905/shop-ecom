@@ -19,7 +19,6 @@ export const createOrderValidator = validate(
       note: noteSchema,
       type_payment: typePaymentSchema,
       earn_point: earnPointSchema,
-      transaction_id: transactionIdSchema,
       phone: phoneSchema
     },
     ['body']

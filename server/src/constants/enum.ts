@@ -18,8 +18,9 @@ export enum TYPE_PAYMENT {
 }
 
 export enum STATUS_TRANSACTION {
-  SUCCESSED,
-  FAILED
+  PENDING,
+  SUCCESS,
+  FAIL
 }
 
 export enum ACTION_WISHLIST {

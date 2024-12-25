@@ -5,7 +5,13 @@ import { STATUS_TRANSACTION, TYPE_PAYMENT } from '~/constants/enum'
 import { InternalServerError } from '~/models/errors/errors'
 import Transaction from '~/models/schemas/transactions/transactions.schemas'
 import databaseService from '~/services/database/database.services'
-import { TCreateTransactionPayload, TTransactionResponse, TTransactionSepayQuery } from '~/services/transaction/type'
+import {
+  TCreateTransactionPayload,
+  TTransaction,
+  TTransactionResponse,
+  TTransactionSepayQuery,
+  TWebhookData
+} from '~/services/transaction/type'
 
 class TransactionServices {
   async createTransaction({ user_id, type_payment, value, content }: TCreateTransactionPayload) {
@@ -14,7 +20,8 @@ class TransactionServices {
       _id,
       user_id: new ObjectId(user_id),
       type_payment,
-      status: STATUS_TRANSACTION.SUCCESSED,
+      order_id: new ObjectId(),
+      status: STATUS_TRANSACTION.SUCCESS,
       method_payment: type_payment ? 'BANKING' : 'COD',
       value,
       content
@@ -23,10 +30,10 @@ class TransactionServices {
     if (!result.acknowledged || !result.insertedId) {
       throw new InternalServerError()
     }
-    return this.getTransaction(_id.toString()) || {}
+    return this.getTransactionById(_id.toString()) || {}
   }
 
-  async getTransaction(_id: string) {
+  async getTransactionById(_id: string) {
     return (databaseService.transactions.findOne({ _id: new ObjectId(_id) }) as {}) || {}
   }
 
@@ -65,8 +72,46 @@ class TransactionServices {
     }
   }
 
-  async getAllTransaction() {
-    return ((await databaseService.transactions.find().toArray()).reverse() as TTransactionResponse) || []
+  async getTransaction() {
+    return (
+      ((await databaseService.transactions.find().sort({ updated_at: -1 }).toArray()) as TTransactionResponse) || []
+    )
+  }
+
+  async getTransactionByOrder(order_id: string) {
+    return ((await databaseService.transactions.findOne({ order_id: new ObjectId(order_id) })) as TTransaction) || {}
+  }
+
+  async validateSePayWebhook(res: TWebhookData) {
+    const transactionList = await databaseService.transactions
+      .find({
+        value: res.transferAmount,
+        status: STATUS_TRANSACTION.PENDING,
+        type_payment: TYPE_PAYMENT.BANKING
+      })
+      .toArray()
+    if (transactionList) {
+      const transaction = transactionList.find((item) => res.content.includes(item.content || ''))
+      if (transaction) {
+        await databaseService.transactions.updateOne(
+          { _id: transaction._id },
+          {
+            $set: {
+              status: STATUS_TRANSACTION.SUCCESS,
+              updated_at: new Date()
+            }
+          }
+        )
+        await databaseService.orders.updateOne(
+          { _id: new ObjectId(transaction.order_id) },
+          {
+            $set: {
+              created_at: new Date()
+            }
+          }
+        )
+      }
+    }
   }
 }
 

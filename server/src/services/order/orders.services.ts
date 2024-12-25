@@ -3,6 +3,7 @@ import { STATUS_ORDER, STATUS_TRANSACTION, TYPE_PAYMENT } from '~/constants/enum
 import { BadRequestError, InternalServerError, NotFoundError } from '~/models/errors/errors'
 import Order from '~/models/schemas/orders/orders.schemas'
 import { TOrderProps } from '~/models/schemas/orders/type'
+import Transaction from '~/models/schemas/transactions/transactions.schemas'
 import cartServices from '~/services/cart/cart.services'
 import databaseService from '~/services/database/database.services'
 import {
@@ -65,8 +66,8 @@ class OrderService {
     note,
     type_payment,
     earn_point,
-    transaction_id,
-    phone
+    phone,
+    content
   }: TCreateOrderPayload) {
     // Check quantity in stock
     await this.checkStockAvailability(products)
@@ -91,7 +92,6 @@ class OrderService {
       isReviewed: false
     }))
     const orderId = new ObjectId()
-    const transactionId = new ObjectId(transaction_id)
 
     let order: any = {}
     if (type_payment === TYPE_PAYMENT.COD) {
@@ -105,8 +105,7 @@ class OrderService {
         earn_point: earn_point || 0,
         phone,
         status: STATUS_ORDER.PENDING,
-        type_payment,
-        transaction_id: transactionId
+        type_payment
       })
     } else {
       order = new Order({
@@ -119,15 +118,36 @@ class OrderService {
         total,
         earn_point: earn_point || 0,
         status: STATUS_ORDER.PENDING,
-        type_payment: type_payment!,
-        transaction_id: transactionId
+        type_payment: type_payment!
       })
     }
-
     const result = await databaseService.orders.insertOne(order)
     if (!result.acknowledged || !result.insertedId) {
       throw new InternalServerError()
     }
+
+    let transaction: any = {}
+    if (type_payment === TYPE_PAYMENT.COD) {
+      transaction = new Transaction({
+        order_id: orderId,
+        user_id: new ObjectId(user_id),
+        method_payment: 'COD',
+        status: STATUS_TRANSACTION.PENDING,
+        type_payment: TYPE_PAYMENT.COD,
+        value: total
+      })
+    } else {
+      transaction = new Transaction({
+        order_id: orderId,
+        user_id: new ObjectId(user_id),
+        method_payment: 'BANKING',
+        status: STATUS_TRANSACTION.PENDING,
+        type_payment: TYPE_PAYMENT.BANKING,
+        value: total,
+        content
+      })
+    }
+    await databaseService.transactions.insertOne(transaction)
     // Update sold and stock in warehouse
     await Promise.all(
       products.map(async (result) => {
@@ -196,7 +216,34 @@ class OrderService {
   }
 
   async getOrder() {
-    return (await databaseService.orders.find().toArray()).reverse() || []
+    return (
+      (
+        await databaseService.orders.aggregate([
+          {
+            $lookup: {
+              from: 'transactions',
+              localField: '_id',
+              foreignField: 'order_id',
+              as: 'transaction'
+            }
+          },
+          {
+            $match: {
+              $nor: [
+                {
+                  transaction: {
+                    $elemMatch: { type_payment: TYPE_PAYMENT.BANKING, status: STATUS_TRANSACTION.PENDING }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            $sort: { updated_at: -1 }
+          }
+        ])
+      ).toArray() || []
+    )
   }
 
   async getOrderDetail(orderId: string) {
@@ -205,9 +252,11 @@ class OrderService {
 
   async updateOrder({ order_id, status }: TUpdateStatusOrderPayload) {
     const order = await this.getOrderDetail(order_id)
+
     if (!order) {
-      throw new NotFoundError()
+      throw new BadRequestError()
     }
+
     const resultUpdateOrder = await databaseService.orders.updateOne(
       { _id: new ObjectId(order_id) },
       {
@@ -235,12 +284,13 @@ class OrderService {
         )
       }
     }
-    if (status === STATUS_ORDER.CANCLE) {
+    // CANCLE AND RETURN FOR COD
+    if (status === STATUS_ORDER.CANCLE || status === STATUS_ORDER.RETURN) {
       await databaseService.transactions.updateOne(
-        { _id: new ObjectId(order.transaction_id) },
+        { order_id: new ObjectId(order._id), type_payment: TYPE_PAYMENT.COD },
         {
           $set: {
-            status: STATUS_TRANSACTION.FAILED,
+            status: STATUS_TRANSACTION.FAIL,
             updated_at: new Date()
           }
         }
@@ -284,7 +334,30 @@ class OrderService {
   }
 
   async getOrderByUser(user_id: string) {
-    return (await databaseService.orders.find({ user_id: new ObjectId(user_id) }).toArray()).reverse() || []
+    return (
+      (await databaseService.orders
+        .aggregate([
+          {
+            $match: {
+              user_id: new ObjectId(user_id)
+            }
+          },
+          {
+            $lookup: {
+              from: 'transactions',
+              localField: '_id',
+              foreignField: 'order_id',
+              as: 'transaction'
+            }
+          },
+          {
+            $sort: {
+              created_at: -1
+            }
+          }
+        ])
+        .toArray()) || []
+    )
   }
 
   async findVariantUnreview({ order_id, variant_id }: TFindVariantUnreview) {
@@ -328,6 +401,54 @@ class OrderService {
     )
     if (!result.acknowledged || !result.modifiedCount) {
       throw new InternalServerError()
+    }
+  }
+
+  async cancleOrder(order_id: string) {
+    const order = await this.getOrderDetail(order_id)
+    if (!order) {
+      throw new BadRequestError()
+    }
+    if (order.status === STATUS_ORDER.PENDING) {
+      // Cập nhật warehouse với số lượng sold và stock mới
+      await Promise.all(
+        order.products.map(async (result) => {
+          const variantId = result.variant_id
+          const totalQuantitySold = result.quantity
+
+          const warehouseItem = await databaseService.warehouse.findOne({ variant_id: new ObjectId(variantId) })
+
+          if (warehouseItem) {
+            const updatedSold = warehouseItem.sold! - totalQuantitySold
+            const updatedStock = warehouseItem.stock! + totalQuantitySold
+
+            await databaseService.warehouse.updateOne(
+              { variant_id: new ObjectId(variantId) },
+              {
+                $set: {
+                  sold: updatedSold,
+                  stock: updatedStock,
+                  updated_at: new Date()
+                }
+              }
+            )
+          }
+        })
+      )
+      // Cập nhật stock ở product
+      await this.updateStockandSoldProduct({ products: order.products, reject: true })
+      if (order.earn_point > 0) {
+        await userServices.updateProfile({
+          user_id: order.user_id.toString(),
+          earn_point: order.earn_point!
+        })
+      }
+      // Delete transaction
+      await databaseService.transactions.deleteOne({ order_id: new ObjectId(order._id) })
+      // Delete order
+      await databaseService.orders.deleteOne({ _id: new ObjectId(order._id) })
+    } else {
+      throw new BadRequestError({ message: 'Order have been accepted' })
     }
   }
 }

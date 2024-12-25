@@ -14,6 +14,15 @@ export const createOrderController = async (
   }).send(res)
 }
 
+export const cancleOrderController = async (
+  req: Request<ParamsDictionary, any, any>,
+  res: Response,
+  next: NextFunction
+) => {
+  await orderServices.cancleOrder(req.params.id)
+  return new SuccessResponse({}).send(res)
+}
+
 export const updateOrderController = async (
   req: Request<ParamsDictionary, any, any>,
   res: Response,

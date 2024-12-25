@@ -93,7 +93,7 @@ export const statusSchema: ParamSchema = {
   isInt: {
     options: {
       min: 0,
-      max: 2
+      max: 3
     },
     errorMessage: ORDER_MESSAGES.STATUS_MUST_BE_INTEGER
   },

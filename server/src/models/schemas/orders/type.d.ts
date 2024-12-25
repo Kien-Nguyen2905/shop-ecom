@@ -24,7 +24,6 @@ export type TOrderProps = {
   address: TAddessProps
   phone: string
   status: STATUS_ORDER
-  transaction_id: ObjectId
   created_at?: Date
   updated_at?: Date
 }

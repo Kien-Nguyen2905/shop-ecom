@@ -5,6 +5,7 @@ import { TTransactionProps } from '~/models/schemas/transactions/type'
 export default class Transaction {
   _id?: ObjectId
   user_id: ObjectId
+  order_id: ObjectId
   type_payment: TYPE_PAYMENT
   status: STATUS_TRANSACTION
   method_payment: string
@@ -16,6 +17,7 @@ export default class Transaction {
     const date = new Date()
     this._id = transaction._id
     this.user_id = transaction.user_id
+    this.order_id = transaction.order_id
     this.type_payment = transaction.type_payment
     this.status = transaction.status
     this.method_payment = transaction.method_payment

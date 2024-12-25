@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { CREATED, SuccessResponse } from '~/models/success/success.response'
 import transactionServices from '~/services/transaction/transactions.services'
+
 export const getTransactionSePayController = async (
   req: Request<ParamsDictionary, any, any>,
   res: Response,
@@ -17,6 +18,25 @@ export const getTransactionSePayController = async (
   }).send(res)
 }
 
+export const getTransactionByOrderController = async (
+  req: Request<ParamsDictionary, any, any>,
+  res: Response,
+  next: NextFunction
+) => {
+  return new SuccessResponse({
+    data: await transactionServices.getTransactionByOrder(req.params.id as string)
+  }).send(res)
+}
+
+export const handleSePayWebhookController = async (
+  req: Request<ParamsDictionary, any, any>,
+  res: Response,
+  next: NextFunction
+) => {
+  await transactionServices.validateSePayWebhook(req.body)
+  return new SuccessResponse({}).send(res)
+}
+
 export const createTransactionController = async (
   req: Request<ParamsDictionary, any, any>,
   res: Response,
@@ -30,12 +50,12 @@ export const createTransactionController = async (
   }).send(res)
 }
 
-export const getAllTransactionController = async (
+export const getTransactionController = async (
   req: Request<ParamsDictionary, any, any>,
   res: Response,
   next: NextFunction
 ) => {
   return new CREATED({
-    data: await transactionServices.getAllTransaction()
+    data: await transactionServices.getTransaction()
   }).send(res)
 }

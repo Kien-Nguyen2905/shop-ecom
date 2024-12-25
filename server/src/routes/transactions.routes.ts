@@ -1,17 +1,20 @@
 import { Router } from 'express'
 import {
   createTransactionController,
-  getAllTransactionController,
-  getTransactionSePayController
+  getTransactionByOrderController,
+  getTransactionController,
+  handleSePayWebhookController
 } from '~/controllers/transactions.controllers'
 import { adminAccessValidator } from '~/middlewares/admins/admins.middlewares'
 import { accessTokenValidator } from '~/middlewares/users/users.middlwares'
 import { wrapRequestHandler } from '~/utils/handlerError'
 const transactionRoute = Router()
 
-transactionRoute.get('/webhook/seepay', accessTokenValidator, wrapRequestHandler(getTransactionSePayController))
+transactionRoute.post('/webhook/seepay', wrapRequestHandler(handleSePayWebhookController))
 
-transactionRoute.get('/', adminAccessValidator, wrapRequestHandler(getAllTransactionController))
+transactionRoute.get('/', adminAccessValidator, wrapRequestHandler(getTransactionController))
+
+transactionRoute.get('/order/:id', accessTokenValidator, wrapRequestHandler(getTransactionByOrderController))
 
 transactionRoute.post('/', accessTokenValidator, wrapRequestHandler(createTransactionController))
 

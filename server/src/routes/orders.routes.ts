@@ -2,6 +2,7 @@ import { adminAccessValidator } from '~/middlewares/admins/admins.middlewares'
 import { Router } from 'express'
 
 import {
+  cancleOrderController,
   checkStockController,
   createOrderController,
   getOrderByUserController,
@@ -16,12 +17,12 @@ const orderRoute = Router()
 
 orderRoute.post('/', createOrderValidator, accessTokenValidator, wrapRequestHandler(createOrderController))
 
+orderRoute.put('/:id', accessTokenValidator, wrapRequestHandler(cancleOrderController))
+
 orderRoute.put('/', updateOrderValidator, adminAccessValidator, wrapRequestHandler(updateOrderController))
 
 orderRoute.get('/', accessTokenValidator, wrapRequestHandler(getOrderByUserController))
 
 orderRoute.get('/all', accessTokenValidator, adminAccessValidator, wrapRequestHandler(getOrderController))
-
-orderRoute.post('/check-stock', accessTokenValidator, wrapRequestHandler(checkStockController))
 
 export default orderRoute
