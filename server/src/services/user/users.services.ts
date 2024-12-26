@@ -20,14 +20,14 @@ import {
 } from '~/services/user/type'
 import { hashPassword } from '~/utils/crypto'
 import { decodeToken, signToken, verifyToken } from '~/utils/jwt'
-import { sendVerification } from '~/utils/sendmail'
 import Verification from '~/models/schemas/verifications/verifications.schemas'
 import PasswordReset from '~/models/schemas/password-resets/password-resets.schemas'
-import { BadRequestError, InternalServerError, NotFoundError, UnauthorizedError } from '~/models/errors/errors'
+import { InternalServerError, NotFoundError, UnauthorizedError } from '~/models/errors/errors'
 import Cart from '~/models/schemas/carts/carts.schemas'
 import Wishlist from '~/models/schemas/wishlists/wishlists.schemas'
 import { USERS_MESSAGES } from '~/constants/message'
 import axios from 'axios'
+import { sendVerification, sendVerifyEmail } from '~/utils/email'
 
 class UserServices {
   async signAccessToken({ user_id, role }: IAccessToken) {
@@ -259,16 +259,11 @@ class UserServices {
     if (!insertResult.insertedId) {
       throw new InternalServerError()
     }
-
-    const emailResult = await this.sendVerificationForgotPassword({
+    await this.sendVerificationForgotPassword({
       email,
       token: forgot_password_token,
       type: EVerification.ForgotPassword
     })
-
-    if (!emailResult.messageId) {
-      throw new InternalServerError()
-    }
 
     return {
       forgot_password_token
@@ -295,15 +290,12 @@ class UserServices {
     if (!result.acknowledged) {
       throw new InternalServerError()
     }
-    const emailResult = await this.sendVerificationForgotPassword({
+    await this.sendVerificationForgotPassword({
       email,
       token: forgot_password_token,
       type: EVerification.ForgotPassword
     })
 
-    if (!emailResult.messageId) {
-      throw new InternalServerError()
-    }
     return {
       forgot_password_token
     }
