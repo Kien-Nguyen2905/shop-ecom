@@ -7,3 +7,4 @@ export * from './statusAction';
 export * from './account';
 export * from './navlinks';
 export * from './product';
+export * from './year';

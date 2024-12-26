@@ -5,6 +5,10 @@ import { NotFoundPage } from './pages/NotFoundPage';
 const MainLayout = lazy(() => import('./layouts/MainLayout/MainLayout'));
 const AdminLayout = lazy(() => import('./layouts/AdminLayout/AdminLayout'));
 const OauthPage = lazy(() => import('./pages/OauthPage/OauthPage'));
+const DashboardAdminpage = lazy(
+  () => import('./pages/DashboardAdminpage/DashboardAdminpage'),
+);
+
 const CustomerRoute = lazy(
   () => import('./components/CustomerRoute/CustomerRoute'),
 );
@@ -103,6 +107,8 @@ function App() {
           </Route>
         </Route>
         <Route path={ADMIN_PATHS.ROOT} element={<AdminLayout />}>
+          <Route path={ADMIN_PATHS.ROOT} element={<DashboardAdminpage />} />
+
           <Route path={ADMIN_PATHS.CATEGORY} element={<CategoryAdminPage />} />
           <Route path={ADMIN_PATHS.BRAND} element={<BrandAdminPage />} />
           <Route path={ADMIN_PATHS.PRODUCT} element={<ProductAdminPage />} />

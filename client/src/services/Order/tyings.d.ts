@@ -35,7 +35,10 @@ export type TCreateOrderResponse = {
   created_at?: Date;
   updated_at?: Date;
 };
-
+export type TRevenueOrder = {
+  month: string;
+  revenue: number;
+};
 type TProductOrderResponse = TProductOrder & { isReviewed: boolean };
 
 export type TOrderResponseItem = {
