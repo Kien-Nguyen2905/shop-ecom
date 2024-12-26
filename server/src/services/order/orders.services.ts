@@ -451,6 +451,36 @@ class OrderService {
       throw new BadRequestError({ message: 'Order have been accepted' })
     }
   }
+
+  async getRevenueOrder(year: string) {
+    const matchStage = year
+      ? {
+          $match: {
+            created_at: {
+              $gte: new Date(`${year}-01-01T00:00:00.000Z`),
+              $lte: new Date(`${year}-12-31T23:59:59.999Z`)
+            }
+          }
+        }
+      : {}
+
+    const revenueData = await databaseService.orders
+      .aggregate([
+        matchStage,
+        {
+          $group: {
+            _id: { $month: '$created_at' },
+            totalRevenue: { $sum: '$total' }
+          }
+        },
+        { $sort: { _id: 1 } }
+      ])
+      .toArray()
+    return revenueData.map((item) => ({
+      month: new Date(0, item._id - 1).toLocaleString('en-US', { month: 'long' }),
+      revenue: item.totalRevenue
+    }))
+  }
 }
 
 const orderServices = new OrderService()
