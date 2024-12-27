@@ -3,6 +3,6 @@ import { uploadImageController } from '~/controllers/images.controllers'
 import { wrapRequestHandler } from '~/utils/handlerError'
 const imagesRoute = Router()
 
-imagesRoute.post('/upload-image', wrapRequestHandler(uploadImageController))
+imagesRoute.post('/', wrapRequestHandler(uploadImageController))
 
 export default imagesRoute

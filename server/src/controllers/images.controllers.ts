@@ -13,6 +13,7 @@ export const uploadImageController = async (
     data: await imagesService.uploadImage(req)
   }).send(res)
 }
+
 export const serveImageController = (req: Request, res: Response, next: NextFunction) => {
   const { name } = req.params
   return res.sendFile(path.resolve(UPLOAD_IMAGE_DIR, name), (err) => {

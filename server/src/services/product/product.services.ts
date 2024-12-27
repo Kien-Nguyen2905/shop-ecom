@@ -9,6 +9,7 @@ import warehouseServices from '~/services/warehouse/warehouse.services'
 import { TProductProps } from '~/models/schemas/products/type'
 import categoryServices from '~/services/category/category.services'
 import brandServices from '~/services/brand/brand.services'
+import imagesService from '~/services/images/images.services'
 
 class ProductServices {
   async createProduct({
@@ -316,7 +317,19 @@ class ProductServices {
 
   async updateProduct(productId: string, payload: TUpdateProductPayload) {
     // Check product exist
-    await this.checkProductById(productId)
+    const product = await this.checkProductById(productId)
+    if (product.thumbnail !== payload.thumbnail) {
+      await imagesService.deleteImage(product.thumbnail)
+    }
+    if (payload.variants.length > 0) {
+      // flatMap return Array not nested
+      const oldVariantImages = product.variants.flatMap((variant) => variant.images)
+      const newVariantImages = payload.variants.flatMap((variant) => variant.images)
+      const imagesToDelete = oldVariantImages.filter((image) => !newVariantImages.includes(image))
+      if (imagesToDelete.length > 0) {
+        await Promise.all(imagesToDelete.map((image) => imagesService.deleteImage(image)))
+      }
+    }
     // Check product exist in order with status pending
     await this.checkProductInOrder(productId)
     // Remove product had been updated in cart users
@@ -461,14 +474,16 @@ class ProductServices {
   }
 
   async deleteProduct(productId: string) {
-    await this.checkProductById(productId)
+    const product = await this.checkProductById(productId)
     await this.checkProductInOrder(productId)
     await Promise.all([
+      imagesService.deleteImage(product.thumbnail),
+      product.variants.map((variant) => imagesService.deleteImage(variant.images)),
       databaseService.products.deleteOne({ _id: new ObjectId(productId) }),
       warehouseServices.updateIsDeleted(productId),
       databaseService.carts.updateMany(
         { 'products.product_id': new ObjectId(productId) },
-        { $pull: { products: { product_id: new ObjectId(productId) } } } // Loại bỏ sản phẩm khỏi mảng `products`
+        { $pull: { products: { product_id: new ObjectId(productId) } } }
       ),
       databaseService.wishlist.updateMany(
         {
@@ -476,7 +491,6 @@ class ProductServices {
         },
         { $pull: { list_item: { product_id: new ObjectId(productId) } } }
       )
-      // update wishlist
     ])
   }
 }

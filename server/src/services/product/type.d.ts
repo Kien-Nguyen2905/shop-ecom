@@ -20,7 +20,7 @@ export type TUpdateProductPayload = {
   thumbnail?: string
   description?: string
   featured?: TFeatured
-  variants?: TVariant[]
+  variants: TVariant[]
   minimum_stock?: number
   attributes?: Record<string, string | []>
   rate?: number
