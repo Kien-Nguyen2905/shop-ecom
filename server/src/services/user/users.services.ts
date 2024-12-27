@@ -27,7 +27,7 @@ import Cart from '~/models/schemas/carts/carts.schemas'
 import Wishlist from '~/models/schemas/wishlists/wishlists.schemas'
 import { USERS_MESSAGES } from '~/constants/message'
 import axios from 'axios'
-import { sendVerification, sendVerifyEmail } from '~/utils/email'
+import { sendVerification } from '~/utils/sendmail'
 
 class UserServices {
   async signAccessToken({ user_id, role }: IAccessToken) {
