@@ -256,6 +256,7 @@ export const useAddProduct = () => {
         values.minimum_stock = +values.minimum_stock;
         const thumbNail = watch('thumbnail');
         if (productId) {
+          // UpdateProduct
           if (productDetails?.variants.length !== values.variants.length)
             // đánh dấu lại index theo thứ tự cho trường hợp remove variant
             values.variants = values.variants.map(
@@ -263,6 +264,7 @@ export const useAddProduct = () => {
                 return { ...item, index: index };
               },
             );
+          // Upload image thumbnail
           if (isObject(thumbNail)) {
             const formDataThumbnail = new FormData();
             formDataThumbnail.append('image', values.thumbnail);
@@ -271,41 +273,40 @@ export const useAddProduct = () => {
               values.thumbnail = res.data.data[0];
             }
           }
-          if (Object.values(uploadedImages)) {
+          // Check images change
+          const checkImageChange = Object.values(uploadedImages).find((item) =>
+            item.some((image) => !image.url),
+          );
+          if (checkImageChange) {
+            console.log(Object.entries(uploadedImages));
             for (const [index, files] of Object.entries(uploadedImages)) {
               const formData = new FormData();
-
               // Lặp qua các file trong mỗi variant để tạo formData
               files.forEach((file: any) => {
                 if (file.originFileObj) {
                   formData.append('image', file.originFileObj); // Thêm file vào formData
                 }
               });
-
-              try {
+              console.log(files);
+              console.log('FormData:', [...formData.entries()]);
+              if ([...formData.entries()].length > 0) {
                 // Giả sử gọi API upload ảnh và nhận URL ảnh trả về từ BE (dạng mảng URL)
                 const res = await uploadImage.mutateAsync(formData);
-
+                console.log(res.data.data);
                 // Kiểm tra nếu có dữ liệu trả về từ BE
                 if (res.data.data && Array.isArray(res.data.data)) {
                   const updatedUrls = res.data.data; // Mảng URL ảnh trả về từ BE
-
-                  // Lấy ảnh cũ trước khi thay đổi
+                  // Lấy ảnh cũ tôn tại trong 1 variant trước khi thay đổi
                   const oldImages = files
                     .filter((file: any) => !file.lastModified) // Lọc các file không có lastModified (đã được tải lên trước)
                     .map((file: any) => file.url);
 
-                  console.log(oldImages);
                   // Cập nhật lại variant với URL đã upload
+
                   values.variants[parseInt(index)].images = oldImages
                     .filter((image: any) => !updatedUrls.includes(image)) // Loại bỏ ảnh bị thay đổi
                     .concat(updatedUrls); // Thêm ảnh mới từ BE vào cuối mảng
                 }
-              } catch (error: any) {
-                showToast({
-                  type: 'error',
-                  message: error,
-                });
               }
             }
           }
@@ -357,6 +358,7 @@ export const useAddProduct = () => {
             });
           }
         } else {
+          // Add product
           // Upload thumbnail nếu có
           if (values.thumbnail) {
             const formDataThumbnail = new FormData();
