@@ -1,4 +1,4 @@
-import { CheckoutEarnPoint, CheckoutInfor, PaymentQR } from './components';
+import { CheckoutEarnPoint, CheckoutInfor } from './components';
 import { useCheckoutPage } from './useChecoutPage';
 import SummaryCheckout from './components/SummaryCheckout';
 import { Button } from '../../components';
@@ -9,7 +9,6 @@ import { CUSTOMER_PATHS } from '../../constants';
 const CheckoutPage = () => {
   const {
     checkoutInforProps,
-    paymentQrProps,
     cart,
     applyEarnPoint,
     appliedPoints,

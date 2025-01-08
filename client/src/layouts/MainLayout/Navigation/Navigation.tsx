@@ -39,7 +39,7 @@ const Navigation = () => {
           </Link>
         </div>
         <div className="absolute hidden -translate-x-1/2 -translate-y-1/2 cursor-pointer xl:flex left-1/2 top-1/2">
-          <ul className="flex items-center justify-center">
+          <ul className="flex items-center justify-center uppercase">
             {CUSOTMER_NAV_LINKS.map((link) => (
               <NavLink
                 key={link.path}

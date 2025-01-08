@@ -3,11 +3,7 @@ import { RiArrowDropDownLine } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 import useHeader from './userHeader';
 import { FaShopify } from 'react-icons/fa';
-import {
-  CUSTOMER_PATHS,
-  LOCAL_STORAGE,
-  PROFILE_NAV_LINKS,
-} from '../../../constants';
+import { CUSTOMER_PATHS, PROFILE_NAV_LINKS } from '../../../constants';
 
 const Header = () => {
   const { showProfile, toggleProfile, openModal, profile, handleLogout } =
