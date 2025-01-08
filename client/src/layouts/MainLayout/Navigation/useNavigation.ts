@@ -8,7 +8,9 @@ import { handleError } from '../../../libs';
 import { CUSTOMER_PATHS } from '../../../constants';
 import { useForm } from 'react-hook-form';
 import queryString from 'query-string';
+import { useMainContext } from '../../../context/MainContextProvider';
 export const useNavigation = () => {
+  const { toggleNavMobile } = useMainContext();
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const { cart } = useSelector((state) => state.cart);
   const dispatch = useDispatch<AppDispatch>();
@@ -68,5 +70,6 @@ export const useNavigation = () => {
     handleRemoveCart,
     control,
     watch,
+    toggleNavMobile,
   };
 };

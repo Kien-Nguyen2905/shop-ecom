@@ -107,7 +107,7 @@ export const useAccountPage = () => {
         address,
       };
       const res = await dispatch(updateProfileUser(payload)).unwrap();
-      if (res?._id) {
+      if (res?.data._id) {
         message.success('Update success');
       }
     } catch (error) {

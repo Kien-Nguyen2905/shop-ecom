@@ -9,7 +9,7 @@ import {
   TResendVerifyEmailPayload,
   TLoginPayload,
   TLoginResponse,
-  TProfileResponse,
+  TUserProfileResponse,
   TForgotPasswordResponse,
   TResendForgotPasswordPayload,
   TResendForgotPasswordResponse,
@@ -46,7 +46,9 @@ const authServices = {
     );
   },
   getProfile: () => {
-    return instance.get<SuccessResponse<TProfileResponse>>(`/users/profile`);
+    return instance.get<SuccessResponse<TUserProfileResponse>>(
+      `/users/profile`,
+    );
   },
   forgotPassword: (payload: TForgotPasswordPayload) => {
     return instance.post<SuccessResponse<TForgotPasswordResponse>>(
@@ -70,7 +72,7 @@ const authServices = {
     return instance.post<SuccessResponse<{}>>(`/users/logout`, payload);
   },
   updateProfile: (payload: TUpdateProfilePayload) => {
-    return instance.put<SuccessResponse<TProfileResponse>>(
+    return instance.put<SuccessResponse<TUserProfileResponse>>(
       `/users/profile`,
       payload,
     );

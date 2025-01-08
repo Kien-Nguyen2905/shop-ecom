@@ -61,7 +61,7 @@ const PaymentQR: FC<TPaymentQRProps> = ({
   return (
     <div className={`${isOpen ? '' : 'hidden'} container`}>
       <div className="h-screen">
-        <div className=""></div>
+        <div></div>
         <Modal
           title={`Thanh toán qua QR: ${formatTime(timeLeft)}`}
           open={isOpen}

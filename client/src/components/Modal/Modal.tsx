@@ -5,40 +5,37 @@ import Button from '../Button/Button';
 import { useModal } from './useModal';
 import { Link } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
-import { TVerifyEmailPayload } from '../../services/Auth/typings';
-import { CUSTOMER_PATHS } from '../../constants';
+import { CUSTOMER_PATHS, MODAL_TABS } from '../../constants';
+import { OverPlay } from '../OverPlay';
 
 const Modal = () => {
   const {
     activeTab,
     handleSignInClick,
     handleSignUpClick,
-    hanldeRegister,
-    hanldeLogin,
-    isOpen,
+    onSubmit,
+    isOpenModal,
     closeModal,
-    handleSubmit,
     control,
-    isLoadingVerifyEmail,
+    isLoadingResgiter,
     googleOAuthUrl,
     isLoadingLogin,
   } = useModal();
-  if (!isOpen) return null;
-  const onSubmit = (values: TVerifyEmailPayload) => {
-    if (activeTab === 'signIn') {
-      hanldeLogin?.(values);
-    } else {
-      hanldeRegister?.(values);
-    }
-  };
+
   return ReactDOM.createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center w-full h-full ">
-      <div className=" absolute inset-0 bg-[#000] opacity-80 overlay"></div>
-      <div className=" relative px-[60px] pt-[37px] pb-[60px] bg-[#fff] rounded-lg w-[550px]">
+    <div
+      className={`${
+        isOpenModal ? 'block' : 'hidden'
+      } fixed inset-0 z-50 flex items-center justify-center w-full h-full`}
+    >
+      <OverPlay />
+      <div className="relative z-20 px-[60px] pt-[37px] pb-[60px] bg-white rounded-lg w-[550px]">
         <div className="flex items-center border-b ">
           <span
             className={`nav-link relative signIn-class font-PpLight text-2xl py-[9px] px-[10px] w-1/2 text-center cursor-pointer ${
-              activeTab === 'signIn' ? 'text-primary active' : 'text-backFont'
+              activeTab === MODAL_TABS.SIGN_IN
+                ? 'text-primary active'
+                : 'text-backPrimary'
             }`}
             onClick={handleSignInClick}
           >
@@ -46,18 +43,17 @@ const Modal = () => {
           </span>
           <span
             className={`nav-link relative signUp-class font-PpLight text-2xl py-[9px] px-[10px] w-1/2 text-center cursor-pointer ${
-              activeTab === 'signUp' ? 'text-primary active' : 'text-backFont'
+              activeTab === MODAL_TABS.SIGN_UP
+                ? 'text-primary active'
+                : 'text-backPrimary'
             }`}
             onClick={handleSignUpClick}
           >
             Register
           </span>
         </div>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-4 pt-5"
-        >
-          {activeTab === 'signUp' && (
+        <form onSubmit={onSubmit} className="flex flex-col gap-4 pt-5">
+          {activeTab === MODAL_TABS.SIGN_UP && (
             <Input
               required
               lable="Full name"
@@ -68,7 +64,9 @@ const Modal = () => {
           <Input
             required
             lable={`${
-              activeTab === 'signIn' ? 'Email address' : 'Your email address'
+              activeTab === MODAL_TABS.SIGN_IN
+                ? 'Email address'
+                : 'Your email address'
             }`}
             control={control}
             name="email"
@@ -80,7 +78,7 @@ const Modal = () => {
             control={control}
             name="password"
           ></Input>
-          {activeTab === 'signUp' && (
+          {activeTab === MODAL_TABS.SIGN_UP && (
             <Input
               type="password"
               required
@@ -98,9 +96,11 @@ const Modal = () => {
               Forgot Your Password?
             </Link>
             <Button
-              loading={isLoadingLogin || isLoadingVerifyEmail}
+              loading={isLoadingLogin || isLoadingResgiter}
               className="ml-auto"
-              text={`${activeTab === 'signIn' ? 'LOG IN' : 'REGISTER'}`}
+              text={`${
+                activeTab === MODAL_TABS.SIGN_IN ? 'LOG IN' : 'REGISTER'
+              }`}
             ></Button>
           </div>
         </form>
@@ -120,7 +120,7 @@ const Modal = () => {
         />
       </div>
     </div>,
-    document.querySelector('body')!,
+    document.querySelector('body') as Element,
   );
 };
 

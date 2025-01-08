@@ -63,7 +63,7 @@ const DisplayProductInfor: FC<TDisplayProductInforProps> = ({
         ))}
       </div>
       <div className="flex items-center gap-5">
-        <span className="">Quantity</span>
+        <span>Quantity</span>
         <QuantityInput
           max={variant?.stock!}
           value={+quantityForm?.watch('quantity')}
@@ -71,8 +71,8 @@ const DisplayProductInfor: FC<TDisplayProductInforProps> = ({
             quantityForm?.setValue('quantity', value.toString())
           }
         />
-        <div className="">
-          <span className="">{variant?.stock}</span> items available
+        <div>
+          <span>{variant?.stock}</span> items available
         </div>
       </div>
       <div className="flex gap-4">
@@ -108,8 +108,8 @@ const DisplayProductInfor: FC<TDisplayProductInforProps> = ({
           <IoIosHeartEmpty />
         </Button>
       </div>
-      <div className="">Category: {categoryData?.name}</div>
-      <div className="">
+      <div>Category: {categoryData?.name}</div>
+      <div>
         Brand:{' '}
         {brandData?.find((item) => item._id === productData.brand_id)?.name}
       </div>

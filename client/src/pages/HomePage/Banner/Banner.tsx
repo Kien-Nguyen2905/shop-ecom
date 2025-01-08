@@ -13,11 +13,8 @@ const Banner = () => {
       speed={500}
     >
       {CAROUSEL.map((item) => (
-        <SwiperSlide
-          key={item}
-          className=" w-[197.266px] md:w-[425px] xl:w-[332px] 2xl:w-[466px]"
-        >
-          <img src={item} alt="" />
+        <SwiperSlide key={item}>
+          <img src={item} alt="banner" />
         </SwiperSlide>
       ))}
     </Swiper>

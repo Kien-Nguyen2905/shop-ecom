@@ -80,7 +80,7 @@ const FilterProduct: FC<TFilterProductProps> = ({
   return (
     <div className="max-w-[300px] h-max p-4 space-y-6 border rounded shadow">
       <div className="flex items-center justify-between">
-        <p className="">Filters</p>
+        <p>Filters</p>
         <Button onClick={handleCleanAll} type text="Clear all"></Button>
       </div>
       <Menu
@@ -91,7 +91,7 @@ const FilterProduct: FC<TFilterProductProps> = ({
         mode="inline"
         items={items}
       />
-      <div className="">
+      <div>
         <h3 className="mb-2">Featured</h3>
         <div className="flex items-center justify-between">
           <Checkbox

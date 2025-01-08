@@ -6,6 +6,7 @@ export const CUSTOMER_PATHS = {
   FORGOT_PASSWORD: '/forgot-password',
   PRODUCT: '/product',
   PRODUCT_DETAIL: '/product/:id',
+  CONTACTUS: '/contact-us',
   CART: '/cart',
   CHECKOUT: '/checkout',
   CHECKOUT_SUCCESS: '/checkout-success',

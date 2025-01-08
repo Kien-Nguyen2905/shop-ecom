@@ -13,7 +13,9 @@ const ProductItem: FC<TProductItemProps> = ({ className = '', product }) => {
   const { onAddWishlist, wishlist, dispatch, profile } = useProductItem();
   if (!product) return;
   return (
-    <div className={`!w-[257px] border-[0.5px] relative group ${className}`}>
+    <div
+      className={`w-[257px] h-max border-[1px] shadow-sm xl:border-[0.5px] relative group ${className}`}
+    >
       <Link
         to={
           CUSTOMER_PATHS.PRODUCT +
@@ -74,7 +76,7 @@ const ProductItem: FC<TProductItemProps> = ({ className = '', product }) => {
             CUSTOMER_PATHS.PRODUCT +
             `/${product._id}?variant=${product.variants[0]?._id}`
           }
-          className="text-[16px] font-PpMd hover:text-primary transition-all font-bold text-backFont truncate"
+          className="text-[16px] font-PpMd hover:text-primary transition-all font-bold text-backPrimary truncate"
         >
           {product?.name}
         </Link>
@@ -91,7 +93,7 @@ const ProductItem: FC<TProductItemProps> = ({ className = '', product }) => {
             </div>
           )}
         </div>
-        <div className="">
+        <div>
           <Rate disabled value={product.rate} />
         </div>
       </div>

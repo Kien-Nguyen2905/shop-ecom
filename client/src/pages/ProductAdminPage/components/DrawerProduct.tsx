@@ -246,7 +246,7 @@ const DrawerProduct: FC<TAddProductProps> = ({
               )}
             </div>
           </div>
-          <div className="">
+          <div>
             <Controller
               name="thumbnail"
               control={control}

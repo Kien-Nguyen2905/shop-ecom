@@ -33,7 +33,7 @@ const CheckoutPage = () => {
           )}
           <CheckoutInfor {...checkoutInforProps!} />
         </div>
-        <div className="">
+        <div>
           <SummaryCheckout {...cart!} />
 
           <form
@@ -49,7 +49,7 @@ const CheckoutPage = () => {
                   className="mr-2 w-max"
                   value={0}
                 />
-                <div className="">Cash on Delivery (COD)</div>
+                <div>Cash on Delivery (COD)</div>
               </label>
               <label className="flex items-center mt-2">
                 <Input

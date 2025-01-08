@@ -17,13 +17,13 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch, useSelector } from '../../store/store';
 import { addToCart } from '../../store/middlewares/cartMiddleware';
 import { useReviewByProductIdQuery } from '../../queries/useReview';
-import { useMainContext } from '../../context/MainConTextProvider';
+import { useMainContext } from '../../context/MainContextProvider';
 import { THUNK_STATUS } from '../../constants';
 import { updateWishlist } from '../../store/middlewares/wishlistMiddleWare';
 import { message } from 'antd';
 import { TUpdateWishlistPayload } from '../../services/Wishlist/tyings';
 export const useProductDetailPage = () => {
-  const { openModal } = useMainContext();
+  const { toggleModal: openModal } = useMainContext();
   const { profile } = useSelector((state) => state.auth);
   const { cart } = useSelector((state) => state.cart);
 

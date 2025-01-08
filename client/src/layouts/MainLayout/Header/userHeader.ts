@@ -1,26 +1,23 @@
 import { useState } from 'react';
-import { useMainContext } from '../../../context/MainConTextProvider';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store/store';
 import { logout } from '../../../store/middlewares/authMiddleWare';
-import { handleError, showToast } from '../../../libs';
+import { handleError } from '../../../libs';
 import { LOCAL_STORAGE } from '../../../constants';
+import { useMainContext } from '../../../context/MainContextProvider';
 
 const useHeader = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const { openModal, closeModal, isOpen } = useMainContext();
+  const { toggleModal: openModal, toggleModal: closeModal } = useMainContext();
+  const [showProfile, setShowProfile] = useState<boolean>(false);
+
   const { profile } = useSelector((state: RootState) => state.auth);
+
   const handleLogout = async () => {
     try {
       const refresh_token = localStorage.getItem(LOCAL_STORAGE.REFRESH_TOKEN);
       if (refresh_token) {
         await dispatch(logout({ refresh_token }));
-      } else {
-        showToast({
-          type: 'error',
-          message: 'Error',
-        });
       }
     } catch (error) {
       handleError({
@@ -28,12 +25,13 @@ const useHeader = () => {
       });
     }
   };
+
+  const toggleProfile = () => setShowProfile((prev) => !prev);
   return {
-    showModal,
-    setShowModal,
+    showProfile,
+    toggleProfile,
     openModal,
     closeModal,
-    isOpen,
     profile,
     dispatch,
     handleLogout,

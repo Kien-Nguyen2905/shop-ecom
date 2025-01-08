@@ -1,10 +1,12 @@
 import { SetStateAction } from 'react';
 
 export type TMainContextProviderProps = {
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<SetStateAction<boolean>>;
-  openModal: () => void;
-  closeModal: () => void;
+  isOpenModal: boolean;
+  setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  toggleModal: () => void;
+  isOpenNav: boolean;
+  setIsOpenNav: React.Dispatch<React.SetStateAction<boolean>>;
+  toggleNavMobile: () => void;
   checkAuthen: boolean;
-  setCheckAuthen: React.Dispatch<SetStateAction<boolean>>;
+  setCheckAuthen: React.Dispatch<React.SetStateAction<boolean>>;
 };

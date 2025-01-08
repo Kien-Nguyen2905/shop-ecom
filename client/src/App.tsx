@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { ADMIN_PATHS, CUSTOMER_PATHS } from './constants';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { Loading } from './components';
 const MainLayout = lazy(() => import('./layouts/MainLayout/MainLayout'));
 const AdminLayout = lazy(() => import('./layouts/AdminLayout/AdminLayout'));
 const OauthPage = lazy(() => import('./pages/OauthPage/OauthPage'));
@@ -61,7 +62,7 @@ const TransactionAdminPage = lazy(
 );
 function App() {
   return (
-    <Suspense>
+    <Suspense fallback={<Loading />}>
       <Routes>
         <Route path={CUSTOMER_PATHS.ROOT} element={<MainLayout />}>
           <Route path={CUSTOMER_PATHS.OAUTH} element={<OauthPage />} />

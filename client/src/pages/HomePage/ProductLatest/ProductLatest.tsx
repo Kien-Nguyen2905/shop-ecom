@@ -11,8 +11,8 @@ import { FC } from 'react';
 
 const ProductLatest: FC<TTBrandPropsProps> = ({ listProduct }) => {
   return (
-    <div className="">
-      <h2 className="mb-10 ml-5 text-[36px] font-bold uppercase text-primary border-b-[1.5px] border-primary w-max">
+    <div className="pb-[10px] md:pb-[50px]">
+      <h2 className="mb-10 ml-5 md:text-[24px] font-bold uppercase text-primary border-b-[1.5px] border-primary w-max">
         The newest product
       </h2>
       <Swiper
@@ -24,11 +24,11 @@ const ProductLatest: FC<TTBrandPropsProps> = ({ listProduct }) => {
         slidesPerView="auto"
         spaceBetween={30}
         modules={[Autoplay]}
-        className="h-[460px]"
+        className="h-[460px] md:h-[400px]"
       >
         {listProduct?.length > 0 &&
           listProduct?.slice(0, 10).map((product) => (
-            <SwiperSlide className="max-w-[277px]" key={product._id}>
+            <SwiperSlide className="max-w-[257px]" key={product._id}>
               <ProductItem product={product} />
             </SwiperSlide>
           ))}

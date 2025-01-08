@@ -8,7 +8,7 @@ export default {
         primary: '#fcb941',
         danger: '#FF4D4F',
         bBottom: '#ebebeb',
-        backFont: '#1A1A1A',
+        backPrimary: '#1A1A1A',
         textGrey: '#666666',
         borderGrey: '#f4f4f4',
       },

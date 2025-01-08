@@ -2,12 +2,11 @@ import { Link, NavLink } from 'react-router-dom';
 import { CiSearch } from 'react-icons/ci';
 import { AiOutlineShoppingCart } from 'react-icons/ai';
 import { FaShopify } from 'react-icons/fa';
-import { HiOutlineMenuAlt3 } from 'react-icons/hi';
+import { RxHamburgerMenu } from 'react-icons/rx';
 import { CUSOTMER_NAV_LINKS, CUSTOMER_PATHS } from '../../../constants';
 import Input from '../../../components/Input/Input';
 import { useNavigation } from './useNavigation';
 import { DropdownCart } from './components';
-import { useState } from 'react';
 
 const Navigation = () => {
   const {
@@ -18,27 +17,35 @@ const Navigation = () => {
     isDropdownVisible,
     setDropdownVisible,
     handleRemoveCart,
+    toggleNavMobile,
   } = useNavigation();
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // State to toggle menu
-
   return (
-    <div className="border border-b-bBottom">
-      <div className="container flex items-center justify-between text-black font-PpMd">
-        {/* Logo */}
-        <Link to={CUSTOMER_PATHS.ROOT} className="w-12 h-12 cursor-pointer">
-          <FaShopify className="object-cover w-full h-full text-primary" />
-        </Link>
-
-        {/* Navigation Links */}
-        <div className="hidden cursor-pointer lg:flex">
+    <div className="relative border border-b-bBottom">
+      <div className="container flex items-center 2xl:h-[100px] justify-between text-black font-PpMd">
+        <div className="flex items-center gap-3">
+          <div className="flex xl:hidden">
+            <RxHamburgerMenu
+              size={50}
+              onClick={toggleNavMobile}
+              className="cursor-pointer w-[20px]"
+            />
+          </div>
+          <Link
+            to={CUSTOMER_PATHS.ROOT}
+            className="hidden w-12 h-12 2xl:w-[60px] 2xl:h-[60px] cursor-pointer xl:block"
+          >
+            <FaShopify className="object-cover w-full h-full text-primary" />
+          </Link>
+        </div>
+        <div className="absolute hidden -translate-x-1/2 -translate-y-1/2 cursor-pointer xl:flex left-1/2 top-1/2">
           <ul className="flex items-center justify-center">
             {CUSOTMER_NAV_LINKS.map((link) => (
               <NavLink
                 key={link.path}
                 to={link.path}
                 className={({ isActive }) =>
-                  `px-4 py-7 ${isActive ? 'text-primary' : ''}`
+                  `px-4 py-6 2xl:text-[20px] ${isActive ? 'text-primary' : ''}`
                 }
               >
                 {link.name}
@@ -46,22 +53,19 @@ const Navigation = () => {
             ))}
           </ul>
         </div>
-
         <div className="flex items-center">
-          {/* Cart */}
-          <div className="absolute right-[15%]">
+          <div className="relative w-[200px] 2xl:w-[250px] hidden xl:block">
             <Input
               onChange={onSearch}
               name="search"
               control={control}
               value={watch('search')}
-              className="pl-[10px] pr-[25px] xl:py-[3px] xl:pl-[10px] xl:pr-[25px]"
+              classNameInput="!py-[3px] pr-[20px] 2xl:!py-[9px]"
               type="text"
             />
-            <CiSearch
-              className="absolute right-[30px] -translate-y-1/2 top-1/2"
-              size={25}
-            />
+            <div className="absolute text-darkGrey w-[17px] h-[17px] 2xl:w-[30px] 2xl:h-[30px] flex justify-center items-center right-1 -translate-y-1/2 top-1/2">
+              <CiSearch size={30} />
+            </div>
           </div>
           <div className="relative flex items-center justify-center">
             <div
@@ -69,9 +73,11 @@ const Navigation = () => {
               onMouseEnter={() => setDropdownVisible(true)}
               onMouseLeave={() => setDropdownVisible(false)}
             >
-              <AiOutlineShoppingCart size={25} />
+              <div className="w-[25px] text-darkGrey h-[25px] 2xl:w-[40px] 2xl:h-[40px] cursor-pointer flex items-center justify-center">
+                <AiOutlineShoppingCart size={40} />
+              </div>
               {cart?.products?.length! > 0 && (
-                <span className="flex items-center justify-center w-5 h-5 text-[9px] text-center text-white rounded-full bg-primary">
+                <span className="flex items-center mb-5 justify-center 2xl:w-7 2xl:h-7 2xl:text-[16px] w-5 h-5 text-[9px] text-center text-white rounded-full bg-primary">
                   {cart?.products?.length}
                 </span>
               )}
@@ -85,37 +91,8 @@ const Navigation = () => {
                 )}
             </div>
           </div>
-
-          {/* Hamburger Menu for Tablet and Mobile */}
-          <div className="flex lg:hidden">
-            <HiOutlineMenuAlt3
-              size={30}
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="cursor-pointer"
-            />
-          </div>
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div className="absolute z-10 w-full bg-white shadow-md lg:hidden">
-          <ul className="flex flex-col items-start px-4 py-2">
-            {CUSOTMER_NAV_LINKS.map((link) => (
-              <NavLink
-                key={link.path}
-                to={link.path}
-                className={({ isActive }) =>
-                  `py-2 ${isActive ? 'text-primary' : ''}`
-                }
-                onClick={() => setIsMenuOpen(false)} // Close menu on link click
-              >
-                {link.name}
-              </NavLink>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 };

@@ -5,4 +5,5 @@ export { Button } from './Button';
 export { ProductItem } from './ProductItem';
 export { QuantityInput } from './QuantityInput';
 export { SkeletonCard } from './SkeletonCard';
-export * as Loading from './Loading';
+export { Loading } from './Loading';
+export { OverPlay } from './OverPlay';

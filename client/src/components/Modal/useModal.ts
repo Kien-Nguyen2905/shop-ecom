@@ -1,17 +1,16 @@
 import { useState } from 'react';
-import { useMainContext } from '../../context/MainConTextProvider';
+import { useMainContext } from '../../context/MainContextProvider';
 import {
   TLoginPayload,
-  TProfileResponse,
+  TUserProfileResponse,
   TVerifyEmailPayload,
 } from '../../services/Auth/typings';
 import { useNavigate } from 'react-router-dom';
 import {
   ADMIN_PATHS,
   CUSTOMER_PATHS,
-  GOOGLE_CLIENT_ID,
-  GOOGLE_REDIRECT_URI,
   LOCAL_STORAGE,
+  MODAL_TABS,
 } from '../../constants';
 import { useVerifyEmailMutation } from '../../queries';
 import { handleError, showToast } from '../../libs';
@@ -21,13 +20,14 @@ import { login } from '../../store/middlewares/authMiddleWare';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { SuccessResponse } from '../../services/tyings';
 import { AppDispatch } from '../../store/store';
+import { ROLE } from '../../constants/enum';
+import { googleOAuthUrl } from '../../utils/googleAuthUrl';
 
 export const useModal = () => {
   const dispatch = useDispatch<AppDispatch>();
   const verifyEmail = useVerifyEmailMutation();
   const { handleSubmit, control, setError, reset } =
     useForm<TVerifyEmailPayload>({
-      mode: 'onChange',
       defaultValues: {
         email: '',
         password: '',
@@ -36,31 +36,32 @@ export const useModal = () => {
       },
     });
   const navigate = useNavigate();
-  const { isOpen, closeModal } = useMainContext();
+  const { isOpenModal, toggleModal: closeModal } = useMainContext();
   const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState('signIn');
+  const [activeTab, setActiveTab] = useState(MODAL_TABS.SIGN_IN);
 
   const handleSignInClick = () => {
     reset();
-    setActiveTab('signIn');
+    setActiveTab(MODAL_TABS.SIGN_IN);
   };
 
   const handleSignUpClick = () => {
     reset();
-    setActiveTab('signUp');
+    setActiveTab(MODAL_TABS.SIGN_UP);
   };
 
   const hanldeLogin = async (values: TLoginPayload) => {
     try {
       setIsLoading(true);
       const res = await dispatch(login(values));
-      const dataUser: SuccessResponse<TProfileResponse> =
+      const dataUser: SuccessResponse<TUserProfileResponse> =
         unwrapResult<any>(res);
       if (dataUser?.data._id) {
-        dataUser?.data?.role === 1
+        dataUser?.data?.role === ROLE.CUSTOMER
           ? navigate(CUSTOMER_PATHS.ROOT)
           : navigate(ADMIN_PATHS.ROOT);
         closeModal();
+        reset();
         showToast({
           type: 'success',
           message: dataUser.message,
@@ -73,7 +74,6 @@ export const useModal = () => {
       });
     } finally {
       setIsLoading(false);
-      reset();
     }
   };
 
@@ -93,23 +93,13 @@ export const useModal = () => {
     }
   };
 
-  const getGoogleAuthUrl = () => {
-    const url = 'https://accounts.google.com/o/oauth2/v2/auth';
-    const query = {
-      client_id: GOOGLE_CLIENT_ID,
-      redirect_uri: GOOGLE_REDIRECT_URI,
-      response_type: 'code',
-      scope: [
-        'https://www.googleapis.com/auth/userinfo.profile',
-        'https://www.googleapis.com/auth/userinfo.email',
-      ].join(' '),
-      prompt: 'consent',
-      access_type: 'offline',
-    };
-    const queryString = new URLSearchParams(query).toString();
-    return `${url}?${queryString}`;
+  const onSubmit = (values: TVerifyEmailPayload) => {
+    if (activeTab === MODAL_TABS.SIGN_IN) {
+      hanldeLogin?.(values);
+    } else {
+      hanldeRegister?.(values);
+    }
   };
-  const googleOAuthUrl = getGoogleAuthUrl();
 
   return {
     activeTab,
@@ -118,10 +108,10 @@ export const useModal = () => {
     hanldeRegister,
     hanldeLogin,
     closeModal,
-    isLoadingVerifyEmail: verifyEmail.isPending,
+    isLoadingResgiter: verifyEmail.isPending,
     isLoadingLogin: isLoading,
-    isOpen,
-    handleSubmit,
+    isOpenModal,
+    onSubmit: handleSubmit(onSubmit),
     control,
     googleOAuthUrl,
   };

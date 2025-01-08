@@ -19,13 +19,13 @@ const DisplayProductTabs: FC<TDisplayProductTabsProps> = ({
     {
       key: '1',
       label: 'Description',
-      children: <p className="">{description}</p>,
+      children: <p>{description}</p>,
     },
     {
       key: '2',
       label: 'Review',
       children: (
-        <div className="">
+        <div>
           {paginatedData?.map((review) => (
             <Card
               key={review._id}
@@ -35,9 +35,9 @@ const DisplayProductTabs: FC<TDisplayProductTabsProps> = ({
             >
               <Row gutter={16}>
                 <Col span={16} className="flex gap-[100px]">
-                  <div className="">
+                  <div>
                     <p className="reviewer-name">
-                      <strong>{review.user.full_name}</strong>
+                      <strong>{review?.user?.full_name}</strong>
                     </p>
                     <p>Color: {review.variant.color}</p>
                     <div className="flex gap-1">
@@ -48,7 +48,7 @@ const DisplayProductTabs: FC<TDisplayProductTabsProps> = ({
                       <span>{dayjs(review.created_at).format('HH:mm:ss')}</span>
                     </div>
                   </div>
-                  <div className="">
+                  <div>
                     <p className="review-title">{review.title}</p>
                     <p className="review-description">{review.description}</p>
                     <Rate disabled value={review.rate} />

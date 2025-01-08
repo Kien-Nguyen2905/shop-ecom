@@ -14,17 +14,14 @@
   body {
     font: 14px 'PoppinsRegular';
     line-height: 1.5;
-    // -webkit-font-smoothing: antialiased;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     color: #777;
     background-color: #fff;
   }
 }
 .container {
   width: 100%;
-  max-width: 1188px;
   margin: 0 auto;
-  padding: 0 10px;
+  padding: 0 15px;
 }
 .arrow--right,
 .arrow--left {
@@ -42,12 +39,8 @@
 .arrow--right {
   right: 5px !important;
 }
-// .text-feature {
-//   padding: 8px 10px;
-//   color: #ccc;
-//   font-weight: 600;
-//   font-size: 24px;
-// }
+
+// ------------------TAB FEATURED------------------
 .nav-link:before {
   content: '';
   display: block;
@@ -75,45 +68,6 @@
 .feature .nav-link.active:before {
   background-color: #333;
   height: 1.2px;
-}
-.modal {
-  visibility: hidden;
-  opacity: 0;
-  transition: visibility 0s, opacity 0.3s ease-in-out;
-}
-.modal.visible {
-  visibility: visible;
-  opacity: 1;
-}
-.hover-animation {
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 50%;
-  height: 2px;
-  background-color: #fcb941; /* Màu sắc của thanh chuyển động */
-  transform: scaleX(0); /* Bắt đầu với độ rộng là 0 */
-  transform-origin: left; /* Phần gốc của phép biến đổi */
-  -webkit-transform-origin: left;
-  transition: 0.35s; /* Hiệu ứng chuyển động */
-  &.register {
-    left: 50%;
-  }
-}
-.hover-animation.active {
-  transform: scaleX(1); /* Bắt đầu với độ rộng là 0 */
-  transition: 0.35s; /* Hiệu ứng chuyển động */
-
-  transform-origin: left right; /* Phần gốc của phép biến đổi */
-  -webkit-transform-origin: left right;
-
-  &.register {
-    transform: scaleX(1); /* Bắt đầu với độ rộng là 0 */
-    transition: 0.35s; /* Hiệu ứng chuyển động */
-
-    transform-origin: left right; /* Phần gốc của phép biến đổi */
-    -webkit-transform-origin: left right;
-  }
 }
 
 //-------------------STARS-------------------
@@ -356,4 +310,8 @@ input[type='number'] {
     border: none !important;
     box-shadow: none !important;
   }
+}
+
+.no-scroll {
+  overflow-y: hidden;
 }

@@ -9,8 +9,8 @@ import { CUSTOMER_PATHS } from '../../../../constants';
 const DropdownCart: FC<TDropdownCartProps> = (dropdownCart) => {
   const cart = dropdownCart.products;
   return (
-    <div className="z-10 top-[100%] px-[10px] pb-[15px] right-0 absolute w-[270px] h-max bg-white">
-      <div className="max-h-[270px] overflow-hidden overflow-y-auto custom-scrollbar">
+    <div className="z-10 top-[100%] px-[10px] pb-[15px] right-0 absolute w-[270px] 2xl:w-[340px] h-max bg-white">
+      <div className="max-h-[270px] 2xl:max-h-[300px] overflow-hidden overflow-y-auto custom-scrollbar">
         {cart?.length > 0 &&
           cart?.map((item) => (
             <DropdownCartItem

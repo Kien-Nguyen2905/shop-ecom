@@ -20,10 +20,8 @@ const CartView: FC<TCartViewProps> = ({
           <div className="py-[30px] max-w-[710px] flex items-center justify-between border-t border-borderGrey">
             <img src={item.image} className="w-[50px] h-[50px]" alt="" />
             <p className="w-[140px] min-h-full">{item.name}</p>
-            <p className="">{item.color}</p>
-            <p className="">
-              {formatCurrency(item.price * (1 - item.discount))}
-            </p>
+            <p>{item.color}</p>
+            <p>{formatCurrency(item.price * (1 - item.discount))}</p>
             <QuantityInput
               max={
                 warehouseData?.find(
@@ -40,9 +38,7 @@ const CartView: FC<TCartViewProps> = ({
                 })
               }
             />
-            <p className="">
-              {formatCurrency(item.price * item.quantity || 0)}
-            </p>
+            <p>{formatCurrency(item.price * item.quantity || 0)}</p>
             <div
               onClick={() => handleRemoveCart(item.variant_id)}
               className="cursor-pointer"

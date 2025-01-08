@@ -19,7 +19,7 @@ const ModalReview: FC<TModalRiewProps> = ({
       footer={null}
       onCancel={closeModal}
     >
-      <div className="">
+      <div>
         <Rate onChange={(valueRate) => onChangeRate(valueRate)} />
       </div>
       <form onSubmit={handleSubmit(handlePostReview)}>

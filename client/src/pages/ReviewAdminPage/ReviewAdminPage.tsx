@@ -27,7 +27,7 @@ const ReviewAdminPage = () => {
         return (
           <div className="flex items-center gap-2">
             <img className="w-[70px] h-[70px]" src={record?.thumbnail} alt="" />
-            <div className="">
+            <div>
               <p>{record?.name}</p>
               <p>{record?.color}</p>
             </div>

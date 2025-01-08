@@ -1,1 +1,1 @@
-export { MainConTextProvider } from './MainConTextProvider';
+export { MainContextProvider } from './MainContextProvider';

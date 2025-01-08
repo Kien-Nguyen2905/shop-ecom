@@ -116,7 +116,7 @@ const ProductAdminPage: React.FC = () => {
       render: (text: string) => (
         <div className="flex">
           <CalendarOutlined style={{ marginRight: 4 }} />
-          <div className="">{text}</div>
+          <div>{text}</div>
         </div>
       ),
       sorter: (a: TProductTableProps, b: TProductTableProps) =>

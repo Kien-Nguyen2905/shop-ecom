@@ -33,13 +33,13 @@ export type TLoginResponse = {
   role: number;
 };
 
-export type TProfileResponse = {
-  _id: string; // Assuming _id is a string, adjust if necessary
+export type TUserProfileResponse = {
+  _id: string;
   email: string;
-  role: number; // Assuming role is a number, adjust if it can be a different type (e.g., string)
+  role: number;
   full_name: string;
   phone: string;
-  address: Address; // Can be extended later
+  address: Address;
   earn_point: number;
   total_paid: number;
 };

@@ -7,7 +7,7 @@ const CheckoutSuccessPage = () => {
     <div className="container">
       <div className="flex flex-col gap-5 items-center pt-[200px] h-screen">
         <h3 className="font-PpBold text-[34px]">Your Order is Completed!</h3>
-        <p className="">
+        <p>
           Your order has been completed. Your order details are shown for your
           personal accont.
         </p>

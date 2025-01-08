@@ -19,7 +19,7 @@ const AccountPage = () => {
     handleUpdateProfile,
   } = useAccountPage();
   return (
-    <div className="">
+    <div>
       <form
         action=""
         className="flex flex-col gap-7"
@@ -46,7 +46,7 @@ const AccountPage = () => {
             name="province"
             control={control}
             required
-            renderProp={(props, invalid, field) => (
+            renderProp={(_, invalid, field, error) => (
               <div className="flex flex-col w-full">
                 <label>Province/City *</label>
                 <Select
@@ -76,6 +76,9 @@ const AccountPage = () => {
                     handleChangeProvince(value.toString());
                   }}
                 />
+                {invalid && (
+                  <p className="text-sm text-red-600">{error?.message}</p>
+                )}
               </div>
             )}
           />
@@ -83,7 +86,7 @@ const AccountPage = () => {
             name="district"
             control={control}
             required
-            renderProp={(props, invalid, field) => (
+            renderProp={(_, invalid, field, error) => (
               <div className="flex flex-col w-full">
                 <label>District *</label>
                 <Select
@@ -113,6 +116,9 @@ const AccountPage = () => {
                     handleChangeDistrict(value);
                   }}
                 />
+                {invalid && (
+                  <p className="text-sm text-red-600">{error?.message}</p>
+                )}
               </div>
             )}
           />
@@ -120,7 +126,7 @@ const AccountPage = () => {
             name="ward"
             control={control}
             required
-            renderProp={(props, invalid, field) => (
+            renderProp={(_, invalid, field, error) => (
               <div className="flex flex-col w-full">
                 <label>Ward *</label>
                 <Select
@@ -152,6 +158,9 @@ const AccountPage = () => {
                     handleChangeWard(value);
                   }}
                 />
+                {invalid && (
+                  <p className="text-sm text-red-600">{error?.message}</p>
+                )}
               </div>
             )}
           />

@@ -10,47 +10,47 @@ import { BiCommentDetail } from 'react-icons/bi';
 
 export const NAV_LINKS = [
   {
-    to: ADMIN_PATHS.ROOT,
+    path: ADMIN_PATHS.ROOT,
     icon: AiOutlineHome,
     label: 'Dashboard',
   },
   {
-    to: ADMIN_PATHS.CATEGORY,
+    path: ADMIN_PATHS.CATEGORY,
     icon: MdOutlineCategory,
     label: 'Category',
   },
   {
-    to: ADMIN_PATHS.BRAND,
+    path: ADMIN_PATHS.BRAND,
     icon: TbBrandDatabricks,
     label: 'Brand',
   },
   {
-    to: ADMIN_PATHS.PRODUCT,
+    path: ADMIN_PATHS.PRODUCT,
     icon: LiaProductHunt,
     label: 'Product',
   },
   {
-    to: ADMIN_PATHS.WAREHOUSE,
+    path: ADMIN_PATHS.WAREHOUSE,
     icon: PiWarehouse,
     label: 'Warehouse',
   },
   {
-    to: ADMIN_PATHS.ORDER,
+    path: ADMIN_PATHS.ORDER,
     icon: BsBox,
     label: 'Order',
   },
   {
-    to: ADMIN_PATHS.TRANSACTION,
+    path: ADMIN_PATHS.TRANSACTION,
     icon: FaMoneyCheck,
     label: 'Transaction',
   },
   {
-    to: ADMIN_PATHS.CUSTOMER,
+    path: ADMIN_PATHS.CUSTOMER,
     icon: FaRegUser,
     label: 'Customer',
   },
   {
-    to: ADMIN_PATHS.REVIEW,
+    path: ADMIN_PATHS.REVIEW,
     icon: BiCommentDetail,
     label: 'Review',
   },

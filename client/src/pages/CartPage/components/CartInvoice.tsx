@@ -12,7 +12,7 @@ const CartInvoice: FC<TCartInvoice> = ({
   discount,
 }) => {
   return (
-    <div className="">
+    <div>
       <div className="p-[30px] w-[400px] border border-dashed border-darkGrey">
         <h3 className="block px-6 py-2 mx-auto mb-5 border border-dashed border-darkGrey w-max">
           INVOICE
@@ -24,7 +24,7 @@ const CartInvoice: FC<TCartInvoice> = ({
               key={item.name}
             >
               <h3 className="w-[200px]">{item.name}</h3>
-              <p className="">{item.quantity}</p>
+              <p>{item.quantity}</p>
               <div className="flex flex-col">
                 <p>{formatCurrency(item.price * (1 - item.discount))}</p>
                 {item.discount > 0 && (

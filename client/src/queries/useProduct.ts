@@ -23,9 +23,8 @@ export const useProductByIdQuery = (id: string | undefined) => {
       const response = await productServices.getProductById(id);
       return response?.data?.data || {};
     },
-    enabled: !!id, // Chỉ gọi API khi `id` có giá trị
-    refetchOnWindowFocus: false, // Không tự động refetch khi focus vào window
-    staleTime: 0, // Luôn fetch dữ liệu mới nhất
+    enabled: !!id,
+    refetchOnWindowFocus: false,
   });
 };
 

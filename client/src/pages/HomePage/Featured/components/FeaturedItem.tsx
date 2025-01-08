@@ -7,7 +7,7 @@ import { ProductItem } from '../../../../components';
 import { TFeaturedItemProps } from './tyings';
 import { Keyboard, Navigation, Pagination } from 'swiper/modules';
 
-import './FeaturedItem.css';
+import './FeaturedItem.scss';
 import ArrowSlide from './ArrowSlide';
 import { SlArrowLeft, SlArrowRight } from 'react-icons/sl';
 
@@ -15,22 +15,20 @@ const FeaturedItem: FC<TFeaturedItemProps> = ({
   productList,
   className = '',
 }) => {
-  const slidesPerView = 4;
-
   const swiperRef = useRef<any>(null);
 
   return (
-    <div className={`${className} relative px-10`}>
+    <div className={`${className} relative px-[50px] md:px-[30px]`}>
       <ArrowSlide
         onClick={() => swiperRef.current?.slidePrev()}
-        className="absolute left-0 z-10 -translate-x-1/2 top-1/2 w-max"
+        className="absolute left-[20px] z-10 -translate-x-1/2 top-[30%] md:left-[10px] w-[30px] md:w-max"
       >
         <SlArrowLeft size={50} />
       </ArrowSlide>
 
       <ArrowSlide
         onClick={() => swiperRef.current?.slideNext()}
-        className="absolute right-[-50px] z-10 -translate-x-1/2 top-1/2 w-max"
+        className="absolute right-[-5px] md:right-[-43px] z-10 -translate-x-1/2 top-[30%] w-[30px] md:w-max"
       >
         <SlArrowRight size={50} />
       </ArrowSlide>
@@ -40,14 +38,29 @@ const FeaturedItem: FC<TFeaturedItemProps> = ({
           modules={[Navigation, Pagination, Keyboard]}
           pagination={{ clickable: true }}
           loop
-          spaceBetween={20}
-          slidesPerView={slidesPerView}
+          breakpoints={{
+            0: {
+              slidesPerView: 'auto',
+            },
+            768: {
+              spaceBetween: 10,
+              slidesPerView: 3,
+            },
+            1280: {
+              spaceBetween: 15,
+              slidesPerView: 4,
+            },
+            1536: {
+              spaceBetween: 15,
+              slidesPerView: 5,
+            },
+          }}
           onSwiper={(swiper) => (swiperRef.current = swiper)}
-          className="h-[440px]"
+          className="featured-carousel"
         >
           {productList.map((product) => (
-            <SwiperSlide key={product._id} className="!min-w-[277px]">
-              <ProductItem product={product} />
+            <SwiperSlide key={product._id}>
+              <ProductItem className="md:w-[270px]" product={product} />
             </SwiperSlide>
           ))}
         </Swiper>

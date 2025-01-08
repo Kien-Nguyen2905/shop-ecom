@@ -18,7 +18,7 @@ const CheckoutEarnPoint: React.FC<TCheckoutEarnPointProps> = ({
 
   return (
     <div className="w-[380px] pb-7 flex flex-col gap-3">
-      <div className="">
+      <div>
         <span>
           Available Points: <b className="text-primary">{availablePoints}</b>
         </span>

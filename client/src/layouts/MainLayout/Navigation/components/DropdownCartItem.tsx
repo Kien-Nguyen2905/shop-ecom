@@ -18,14 +18,14 @@ const DropdownCartItem: FC<TDropdownCartItemProps> = ({
   return (
     <div className="py-[10px] flex items-start justify-between border-b border-b-borderGrey">
       <div className="flex flex-col items-start justify-between">
-        <div className="">
-          <h3 className="">{name}</h3>
-          <h3 className="">{color}</h3>
+        <div>
+          <h3>{name}</h3>
+          <h3>{color}</h3>
         </div>
         <div className="text-darkGrey">
-          <span className="">{quantity}</span>
+          <span>{quantity}</span>
           {' x '}
-          <span className="">{formatCurrency(price * (1 - discount))}</span>
+          <span>{formatCurrency(price * (1 - discount))}</span>
           {discount > 0 && (
             <div className="line-through text-primary pl-[23px]">
               {formatCurrency(price)}

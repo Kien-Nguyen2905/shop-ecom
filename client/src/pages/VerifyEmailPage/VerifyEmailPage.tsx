@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { LoadingVerify } from '../../components/Loading';
+import { Loading } from '../../components/Loading';
 import { LOCAL_STORAGE } from '../../constants';
 import { Button } from '../../components/Button';
 import { useVerifyEmailPage } from './useVerifyEmailPage';
@@ -22,7 +22,7 @@ const VerifyEmailPage = () => {
     <>
       {token && (
         <div className="absolute top-0 flex items-center justify-center w-full h-full bg-white z-1">
-          <LoadingVerify />
+          <Loading />
         </div>
       )}
       <div className="flex items-center gap-8 flex-col pt-[150px] w-full h-full">

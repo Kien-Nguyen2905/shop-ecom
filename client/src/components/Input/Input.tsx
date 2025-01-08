@@ -8,27 +8,26 @@ const Input: React.FC<TInputProps> = ({
   required,
   onChange,
   control,
+  defaultType = false,
   name = '',
   type = 'text',
-  variant = '',
   className = '',
+  classNameInput = '',
   renderProp,
   ...props
 }) => {
-  // Render a normal input without using react-hook-form
-  if (variant === '') {
-    // Use react-hook-form for controlled inputs
+  if (!defaultType) {
     const {
       field,
       fieldState: { invalid, error },
     } = useController({
       control,
       name,
-      rules: props.rules || RULES[name] || {}, // Fallback to an empty object if no rules exist
+      rules: props.rules || RULES[name] || {},
       defaultValue: '',
     });
     return renderProp ? (
-      renderProp(props, invalid, field)
+      renderProp(props, invalid, field, error)
     ) : (
       <div className={`${className} flex flex-col w-full`}>
         {lable && (
@@ -43,7 +42,7 @@ const Input: React.FC<TInputProps> = ({
         <input
           id={name}
           type={type}
-          className={`w-full py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
+          className={`${classNameInput} w-full text-darkGrey py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
             invalid ? 'border-red-600' : ''
           }`}
           {...field}
@@ -57,14 +56,6 @@ const Input: React.FC<TInputProps> = ({
       </div>
     );
   } else {
-    return (
-      <input
-        type={type}
-        onChange={(e) => onChange?.(e.target.value)}
-        className={`w-full py-2 px-3 border outline-none bg-transparent focus:border-primary ${className}`}
-        {...props}
-      />
-    );
   }
 };
 

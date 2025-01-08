@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   TLoginPayload,
   TLogoutPayload,
-  TProfileResponse,
+  TUserProfileResponse,
   TUpdateProfilePayload,
 } from '../../services/Auth/typings';
 import { authServices } from '../../services/Auth';
@@ -12,27 +12,30 @@ import { SuccessResponse } from '../../services/tyings';
 import { getCart } from './cartMiddleware';
 import { getWishlist } from './wishlistMiddleWare';
 import { getOrder } from './orderMiddleWare';
+import { removeLocalStorage, setLocalStorage } from '../../utils/localStorage';
 
 export const login = createAsyncThunk<
-  SuccessResponse<TProfileResponse>,
+  SuccessResponse<TUserProfileResponse>,
   TLoginPayload,
   { rejectValue: string }
 >('auth/login', async (payload, thunkAPI) => {
   try {
     const res = await authServices.login(payload);
-    localStorage.setItem(
-      LOCAL_STORAGE.ACCESS_TOKEN,
-      res.data?.data.access_token,
-    );
-    localStorage.setItem(
-      LOCAL_STORAGE.REFRESH_TOKEN,
-      res.data?.data.refresh_token,
-    );
-    localStorage.setItem(LOCAL_STORAGE.ROLE, res.data.data.role.toString());
-    await thunkAPI.dispatch(getCart());
-    await thunkAPI.dispatch(getWishlist());
-    await thunkAPI.dispatch(getOrder());
-    return await thunkAPI.dispatch(profileUser()).unwrap();
+    const { access_token, refresh_token, role } = res.data.data;
+    if (access_token && refresh_token && role) {
+      setLocalStorage({
+        [LOCAL_STORAGE.ACCESS_TOKEN]: access_token,
+        [LOCAL_STORAGE.REFRESH_TOKEN]: refresh_token,
+        [LOCAL_STORAGE.ROLE]: role.toString(),
+      });
+      await Promise.all([
+        thunkAPI.dispatch(getCart()).unwrap(),
+        thunkAPI.dispatch(getWishlist()).unwrap(),
+        thunkAPI.dispatch(getOrder()).unwrap(),
+      ]);
+      return await thunkAPI.dispatch(profileUser()).unwrap();
+    }
+    return thunkAPI.rejectWithValue('Error');
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error);
   }
@@ -46,11 +49,16 @@ export const logout = createAsyncThunk<
   try {
     const res = await authServices.logout(payload);
     if (res.data.status === 200) {
-      localStorage.removeItem(LOCAL_STORAGE.ACCESS_TOKEN);
-      localStorage.removeItem(LOCAL_STORAGE.REFRESH_TOKEN);
-      localStorage.removeItem(LOCAL_STORAGE.ROLE);
-      thunkAPI.dispatch(authActions.setProfile(null));
-      thunkAPI.dispatch(cartActions.clearCart());
+      removeLocalStorage([
+        LOCAL_STORAGE.ACCESS_TOKEN,
+        LOCAL_STORAGE.REFRESH_TOKEN,
+        LOCAL_STORAGE.ROLE,
+      ]);
+
+      await Promise.all([
+        thunkAPI.dispatch(authActions.setProfile(null)),
+        thunkAPI.dispatch(cartActions.clearCart()),
+      ]);
     }
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error);
@@ -58,30 +66,29 @@ export const logout = createAsyncThunk<
 });
 
 export const profileUser = createAsyncThunk<
-  SuccessResponse<TProfileResponse>,
+  SuccessResponse<TUserProfileResponse>,
   void,
   { rejectValue: string }
 >('auth/profile', async (_, thunkAPI) => {
   try {
-    const resProfile = await authServices.getProfile();
+    const res = await authServices.getProfile();
 
-    const profileData = resProfile.data;
-    thunkAPI.dispatch(authActions.setProfile(profileData.data));
-    return profileData;
+    thunkAPI.dispatch(authActions.setProfile(res.data.data));
+    return res.data;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error);
   }
 });
 
-export const updateProfileUser = createAsyncThunk(
-  'auth/updateProfile',
-  async (actionPayload: TUpdateProfilePayload, thunkAPI) => {
-    try {
-      const resProfile = await authServices.updateProfile(actionPayload);
-      thunkAPI.dispatch(profileUser());
-      return resProfile.data.data;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error);
-    }
-  },
-);
+export const updateProfileUser = createAsyncThunk<
+  SuccessResponse<TUserProfileResponse>,
+  TUpdateProfilePayload,
+  { rejectValue: string }
+>('auth/updateProfile', async (payload, thunkAPI) => {
+  try {
+    await authServices.updateProfile(payload);
+    return thunkAPI.dispatch(profileUser()).unwrap();
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error);
+  }
+});

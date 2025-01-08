@@ -186,7 +186,7 @@ const OrderPage = () => {
           </Collapse>
         </>
       ) : (
-        <div className="">Not exist order ...</div>
+        <div>Not exist order ...</div>
       )}
 
       <ModalReview {...modalProps!} />
