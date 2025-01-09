@@ -1,6 +1,6 @@
 export const setLocalStorage = (data: Record<string, string>) => {
-  Object.entries(data).forEach(([keyBy, value]) => {
-    localStorage.setItem(keyBy, value);
+  Object.entries(data).forEach(([key, value]) => {
+    localStorage.setItem(key, value);
   });
 };
 export const removeLocalStorage = (keys: string[]) => {

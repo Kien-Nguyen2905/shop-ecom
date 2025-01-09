@@ -48,14 +48,39 @@ const Input: React.FC<TInputProps> = ({
           {...field}
           {...props}
           onChange={(e) => {
-            field.onChange(e); // Gọi react-hook-form để cập nhật giá trị
-            if (onChange) onChange(e.target.value); // Gọi onChange từ props nếu có
+            field.onChange(e);
+            if (onChange) onChange(e.target.value);
           }}
         />
         {invalid && <p className="text-sm text-red-600">{error?.message}</p>}
       </div>
     );
   } else {
+    return renderProp ? (
+      renderProp()
+    ) : (
+      <div className={`${className} flex flex-col w-full`}>
+        {lable && (
+          <label
+            htmlFor={name}
+            className="w-full mb-2 font-light text-textGrey font-PpLight"
+          >
+            {lable}
+            {required ? ' *' : ''}
+          </label>
+        )}
+        <input
+          id={name}
+          type={type}
+          className={`${classNameInput} w-full text-darkGrey py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary
+          `}
+          {...props}
+          onChange={(e) => {
+            if (onChange) onChange(e.target.value);
+          }}
+        />
+      </div>
+    );
   }
 };
 

@@ -94,6 +94,7 @@
   transform: translateX(15px);
   z-index: -1;
 }
+
 .btn-expandable:hover span,
 .btn-expandable:focus span {
   transition: all 0.35s ease;
@@ -302,6 +303,19 @@ input[type='number'] {
   scrollbar-width: none; /* Firefox */
 }
 // --------------CUSTOME-SELECT PROFILE--------------
+.custome-select-product {
+  height: 30px !important;
+  width: 180px !important;
+  @media (min-width: 1537px) {
+    height: 43px !important;
+  }
+  & .ant-select-selector {
+    padding: 8.5px 12px !important;
+    background-color: #fafafa !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
 .custome-select {
   height: 40px !important;
   & .ant-select-selector {

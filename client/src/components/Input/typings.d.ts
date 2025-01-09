@@ -16,9 +16,9 @@ export type TInputProps = {
   checked?: boolean;
   defaultValue?: string | number;
   renderProp?: (
-    props: Omit<TInputProps<T>, 'renderProp'>,
-    invalid: boolean,
-    field: {
+    props?: Omit<TInputProps<T>, 'renderProp'>,
+    invalid?: boolean,
+    field?: {
       value: string;
       onChange: (...event: any[]) => void;
       onBlur: () => void;

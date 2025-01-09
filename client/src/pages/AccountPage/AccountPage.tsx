@@ -72,7 +72,7 @@ const AccountPage = () => {
                     invalid ? 'border-red-600' : ''
                   }`}
                   onChange={(value) => {
-                    field.onChange(value);
+                    field?.onChange(value);
                     handleChangeProvince(value.toString());
                   }}
                 />
@@ -112,7 +112,7 @@ const AccountPage = () => {
                     invalid ? 'border-red-600' : ''
                   }`}
                   onChange={(value) => {
-                    field.onChange(value);
+                    field?.onChange(value);
                     handleChangeDistrict(value);
                   }}
                 />
@@ -154,7 +154,7 @@ const AccountPage = () => {
                     invalid ? 'border-red-600' : ''
                   }`}
                   onChange={(value) => {
-                    field.onChange(value);
+                    field?.onChange(value);
                     handleChangeWard(value);
                   }}
                 />

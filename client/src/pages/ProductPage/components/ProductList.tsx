@@ -1,36 +1,33 @@
 import { FC } from 'react';
 import { ProductItem, SkeletonCard } from '../../../components';
 import { TProductListProps } from './tyings';
-import { Pagination } from 'antd';
+import './ProductList.scss';
 
-const ProductList: FC<TProductListProps> = ({ listProduct, onPageChange }) => {
-  if (!listProduct) return <SkeletonCard></SkeletonCard>;
-
-  const { products, pagination } = listProduct;
-
+const ProductList: FC<TProductListProps> = ({
+  isLoadingProduct,
+  listProduct,
+}) => {
+  if (isLoadingProduct)
+    return (
+      <div className="h-[840px] xl:h-[870px] 2xl:h-[1000px] w-full relative ml-auto">
+        <SkeletonCard></SkeletonCard>
+      </div>
+    );
   return (
     <div className="flex-1">
-      {products.length > 0 ? (
+      {listProduct?.length > 0 ? (
         <>
-          <div className="h-[790px] w-max relative">
-            <div className="grid w-full h-full grid-cols-3 gap-[30px] ml-auto">
-              {products.map((product) => (
-                <div
-                  key={product._id}
-                  className="col-6 h-max col-md-4 col-lg-4 w-max"
-                >
-                  <ProductItem product={product} />
+          <div className="w-full xl:h-[870px] 2xl:h-[1000px] relative ml-auto">
+            <div className="grid w-full h-full grid-cols-2 gap-[15px] lg:grid-cols-3 md:gap-[30px] ml-auto">
+              {listProduct.map((product) => (
+                <div key={product._id} className="w-full h-full">
+                  <ProductItem
+                    className="max-w-[275px] md:max-w-[355px]"
+                    product={product}
+                  />
                 </div>
               ))}
             </div>
-          </div>
-          <div className="flex justify-center py-[30px]">
-            <Pagination
-              current={pagination.currentPage}
-              total={pagination.totalProducts}
-              pageSize={pagination.limit}
-              onChange={onPageChange}
-            />
           </div>
         </>
       ) : (
