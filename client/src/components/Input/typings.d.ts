@@ -15,6 +15,7 @@ export type TInputProps = {
   value?: string | number;
   checked?: boolean;
   defaultValue?: string | number;
+  placeholder?: string;
   renderProp?: (
     props?: Omit<TInputProps<T>, 'renderProp'>,
     invalid?: boolean,

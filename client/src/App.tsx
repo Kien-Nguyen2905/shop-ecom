@@ -9,7 +9,6 @@ const OauthPage = lazy(() => import('./pages/OauthPage/OauthPage'));
 const DashboardAdminpage = lazy(
   () => import('./pages/DashboardAdminpage/DashboardAdminpage'),
 );
-
 const CustomerRoute = lazy(
   () => import('./components/CustomerRoute/CustomerRoute'),
 );
@@ -39,7 +38,7 @@ const ForgotPasswordPage = lazy(
 );
 const ProductPage = lazy(() => import('./pages/ProductPage/ProductPage'));
 const AboutUsPage = lazy(() => import('./pages/AboutUsPage/AboutUsPage'));
-
+const ContactUsPage = lazy(() => import('./pages/ContactUsPage/ContactUsPage'));
 const ProductDetailPage = lazy(
   () => import('./pages/ProductDetailPage/ProductDetailPage'),
 );
@@ -73,7 +72,7 @@ function App() {
           <Route path={CUSTOMER_PATHS.ROOT} element={<HomePage />} />
           <Route path={CUSTOMER_PATHS.PRODUCT} element={<ProductPage />} />
           <Route path={CUSTOMER_PATHS.ABOUTUS} element={<AboutUsPage />} />
-
+          <Route path={CUSTOMER_PATHS.CONTACTUS} element={<ContactUsPage />} />
           <Route
             path={CUSTOMER_PATHS.PRODUCT_DETAIL}
             element={<ProductDetailPage />}

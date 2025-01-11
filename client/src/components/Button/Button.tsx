@@ -10,8 +10,8 @@ const Button: React.FC<TButtonProps> = ({
   onClick,
   loading = false,
   children,
-  type = false,
-  variant = 'default', // Variant: default | delete
+  arrow = false,
+  variant = 'default',
 }) => {
   const variantStyles: Record<string, string> = {
     default: 'text-primary border-primary hover:bg-primary hover:text-white',
@@ -31,17 +31,15 @@ const Button: React.FC<TButtonProps> = ({
     >
       {loading ? (
         <Spin size="small" className="text-primary " />
+      ) : arrow ? (
+        <>
+          {text} <IoIosArrowRoundForward size={20} />
+        </>
       ) : (
-        (
-          <>
-            {text}
-            {children}
-          </>
-        ) || (
-          <>
-            {text} {type ? '' : <IoIosArrowRoundForward size={20} />}
-          </>
-        )
+        <>
+          {text}
+          {children}
+        </>
       )}
     </button>
   );

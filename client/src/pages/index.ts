@@ -21,3 +21,4 @@ export { OrderAdminPage } from './OrderAdminPage';
 export { TransactionAdminPage } from './TransactionAdminPage';
 export { WishlistPage } from './WishlistPage';
 export { DashboardAdminpage } from './DashboardAdminpage';
+export { ContactUsPage } from './ContactUsPage';
