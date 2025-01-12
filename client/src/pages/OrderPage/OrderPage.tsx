@@ -22,17 +22,19 @@ import { IoMdArrowForward } from 'react-icons/io';
 const { Panel } = Collapse;
 
 const OrderPage = () => {
-  const { orderInfo, modalProps, openModal, handleCancleOrder } =
-    useOrderPage();
-  const { data: provinceData } = useProvicesQuery();
-  const { data: districtData } = useDistrictsQuery();
-  const { data: wardData } = useWardsQuery();
-
-  if (!orderInfo) return <div>Loading...</div>;
+  const {
+    provinceData,
+    districtData,
+    wardData,
+    orderInfo,
+    modalProps,
+    openModal,
+    handleCancleOrder,
+  } = useOrderPage();
 
   return (
     <div>
-      {orderInfo.length > 0 ? (
+      {orderInfo && orderInfo.length > 0 ? (
         <>
           <h2>Orders</h2>
           <Collapse accordion className="max-h-[420px] overflow-x-auto">
@@ -50,7 +52,7 @@ const OrderPage = () => {
                 <Panel
                   key={order._id!}
                   header={
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between text-[12px] md:text-[14px]">
                       <span className="font-semibold">
                         Order ID: {order?._id?.slice(-5).toUpperCase()}
                       </span>
@@ -58,10 +60,10 @@ const OrderPage = () => {
                         <span className="font-semibold">
                           {order?.transaction?.[0].status ===
                           STATUS_TRANSACTION.PENDING
-                            ? order?.transaction?.[0].status ===
+                            ? 'Chưa thanh toán'
+                            : order?.transaction?.[0].status ===
                               STATUS_TRANSACTION.FAILED
-                              ? 'Thanh toán thất bại'
-                              : 'Chưa thanh toán'
+                            ? 'Thanh toán thất bại'
                             : 'Đã thanh toán'}
                         </span>
                         <span>|</span>

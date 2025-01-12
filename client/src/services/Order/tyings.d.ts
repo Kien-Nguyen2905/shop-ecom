@@ -1,4 +1,4 @@
-import { TYPE_PAYMENT } from '../../constants/enum';
+import { STATUS_TRANSACTION, TYPE_PAYMENT } from '../../constants/enum';
 import { TAddessProps } from '../../store/reducers/tyings';
 import { TAddress } from '../Auth/typings';
 
@@ -41,6 +41,18 @@ export type TRevenueOrder = {
 };
 type TProductOrderResponse = TProductOrder & { isReviewed: boolean };
 
+type TTransactionItem = {
+  _id: string;
+  user_id: string;
+  order_id: string;
+  type_payment: TYPE_PAYMENT;
+  status: STATUS_TRANSACTION;
+  method_payment: string;
+  value: number;
+  content: '';
+  created_at?: Date;
+  updated_at?: Date;
+};
 export type TOrderResponseItem = {
   _id?: string;
   user_id: string;
@@ -51,7 +63,7 @@ export type TOrderResponseItem = {
   address: TAddress;
   phone: string;
   status: number;
-  transaction_id: string;
+  transaction: TTransactionItem[];
   created_at?: Date;
   updated_at?: Date;
 };

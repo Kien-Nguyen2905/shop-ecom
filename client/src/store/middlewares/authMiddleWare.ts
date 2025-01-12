@@ -72,7 +72,6 @@ export const profileUser = createAsyncThunk<
 >('auth/profile', async (_, thunkAPI) => {
   try {
     const res = await authServices.getProfile();
-
     thunkAPI.dispatch(authActions.setProfile(res.data.data));
     return res.data;
   } catch (error: any) {

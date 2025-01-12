@@ -7,7 +7,6 @@ import { TModalRiewProps } from './tyings';
 const ModalReview: FC<TModalRiewProps> = ({
   closeModal,
   isModalOpen,
-  handleSubmit,
   control,
   onChangeRate,
   handlePostReview,
@@ -22,7 +21,7 @@ const ModalReview: FC<TModalRiewProps> = ({
       <div>
         <Rate onChange={(valueRate) => onChangeRate(valueRate)} />
       </div>
-      <form onSubmit={handleSubmit(handlePostReview)}>
+      <form onSubmit={handlePostReview}>
         <Input lable="Title review" name="title" required control={control} />
         <Input
           lable="Description review"

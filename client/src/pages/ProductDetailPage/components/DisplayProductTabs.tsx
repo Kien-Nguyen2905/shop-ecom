@@ -55,7 +55,7 @@ const DisplayProductTabs: FC<TDisplayProductTabsProps> = ({
           ))}
           {reviewData?.length > 0 && (
             <Pagination
-              className="block ml-auto w-max"
+              className="block ml-auto w-max panigation-product-page"
               current={currentPage}
               pageSize={pageSize}
               total={reviewData?.length}

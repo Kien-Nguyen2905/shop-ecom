@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import { ProductItem, SkeletonCard } from '../../../components';
 import { TProductListProps } from './tyings';
-import './ProductList.scss';
 
 const ProductList: FC<TProductListProps> = ({
   isLoadingProduct,

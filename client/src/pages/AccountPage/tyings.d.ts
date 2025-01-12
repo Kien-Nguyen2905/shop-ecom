@@ -1,17 +1,17 @@
 export type TValueForm = {
-  district: string; // Represents the district ID as a string
-  email: string; // The email address
-  full_name: string; // The full name of the individual
-  phone: string; // The phone number
-  province: string; // Represents the province ID as a string
-  street_address: string; // The street address
-  ward: string; // Represents the ward ID as a string
+  district: string;
+  email: string;
+  full_name: string;
+  phone: string;
+  province: string;
+  street_address: string;
+  ward: string;
 };
 
 export type TUpdateProfilePayload = {
-  email: string; // The email address
-  full_name: string; // The full name of the individual
-  phone: string; // The phone number
+  email: string;
+  full_name: string;
+  phone: string;
   address: TAddressModify;
 };
 

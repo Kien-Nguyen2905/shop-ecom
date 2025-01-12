@@ -9,14 +9,14 @@ const Sidebar = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   return (
-    <div className="flex flex-col items-start min-h-[400px]">
-      <div className="flex flex-col gap-2 w-[290px]">
+    <div className="flex flex-col items-start">
+      <div className="flex flex-col gap-2 w-full xl:w-[290px]">
         {ACCOUNT_ROUTES.map((item) => (
           <NavLink
             key={item.route}
             to={item.route}
             className={`pb-5 transition-all border-b border-darkGrey hover:text-primary hover:pl-3 ${
-              item.route === pathname ? 'text-primary font-bold' : ''
+              item.route === pathname ? 'text-primary font-bold pl-3' : ''
             }`}
           >
             {item.title}

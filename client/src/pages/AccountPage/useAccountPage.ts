@@ -58,8 +58,8 @@ export const useAccountPage = () => {
     }
   };
   const getDataWard = async (id: string) => {
-    const res = await addressServices.getWards(id);
     try {
+      const res = await addressServices.getWards(id);
       if (res.data.data) {
         const ward = res.data.data.map((e) => {
           return {
@@ -76,7 +76,6 @@ export const useAccountPage = () => {
       });
     }
   };
-
   const handleChangeProvince = (idProvince: string) => {
     getDataDistrict(idProvince);
     setValueProvince(idProvince);
@@ -143,20 +142,17 @@ export const useAccountPage = () => {
     getDataProvince();
   }, [profile, reset]);
   return {
+    control,
     handleSubmit,
-    handleChangeProvince,
     valueProvince,
     dataProvince,
+    handleChangeProvince,
     handleChangeDistrict,
     dataDistrict,
     valueDistrict,
     handleChangeWard,
     dataWard,
     valueWard,
-    control,
-    setError,
-    reset,
-    profile,
     handleUpdateProfile,
   };
 };

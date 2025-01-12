@@ -1,20 +1,15 @@
+import { TAddress } from '../../services/Auth/typings';
 import { TGetCartResponse } from '../../services/Cart/tyings';
 import { TOrderResponse } from '../../services/Order/tyings';
 import { TWishlistResponse } from '../../services/Wishlist/tyings';
 
-export type TAddessProps = {
-  province?: string;
-  district?: string;
-  ward?: string;
-  street_address?: string;
-};
 export type TProfile = {
   _id: string;
   email: string;
   role: number;
   full_name: string;
   phone: string;
-  address: TAddessProps;
+  address: TAddress;
   earn_point: number;
   total_paid: number;
 };

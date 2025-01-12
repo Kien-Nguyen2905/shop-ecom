@@ -55,16 +55,13 @@ export const useWishlistPage = () => {
     variant_id,
   }: TWishList) => {
     try {
-      const res = await dispatch(
+      await dispatch(
         updateWishlist({
           product_id,
           action,
           variant_id,
         }),
       ).unwrap();
-      if (res.data._id) {
-        message.success(res.message);
-      }
     } catch (error) {
       handleError({ error });
     }

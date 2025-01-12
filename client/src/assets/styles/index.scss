@@ -329,3 +329,13 @@ input[type='number'] {
 .no-scroll {
   overflow-y: hidden;
 }
+
+// CUSTOMIZE PANIGATION
+.panigation-product-page {
+  & .ant-pagination-item-active {
+    border-color: #fcb941 !important;
+    a {
+      color: #fcb941 !important;
+    }
+  }
+}

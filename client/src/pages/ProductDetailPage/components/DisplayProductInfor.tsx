@@ -29,7 +29,7 @@ const DisplayProductInfor: FC<TDisplayProductInforProps> = ({
       <Rate disabled value={productData?.rate} />
       <div className="flex flex-col gap-4 md:flex-row xl:flex-col md:items-start md:justify-between">
         <div className="">
-          <div className="flex items-center gap-4 pb-[16px]">
+          <div className="flex items-centergap-4 pb-[16px]">
             {variant?.discount > 0 && (
               <p className="text-[20px] text-primary">
                 {formatCurrency(variant?.price * (1 - variant?.discount))}
@@ -45,7 +45,7 @@ const DisplayProductInfor: FC<TDisplayProductInforProps> = ({
               {formatCurrency(variant?.price!)}
             </p>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-4 w-full flex-wrap">
             {productData?.variants?.map((item) => (
               <Variant
                 onChangeVariant={onChangeVariant}

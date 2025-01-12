@@ -60,7 +60,10 @@ const FeaturedItem: FC<TFeaturedItemProps> = ({
         >
           {productList.map((product) => (
             <SwiperSlide key={product._id}>
-              <ProductItem className="md:w-[270px]" product={product} />
+              <ProductItem
+                className="w-[257px] md:w-[280px]"
+                product={product}
+              />
             </SwiperSlide>
           ))}
         </Swiper>

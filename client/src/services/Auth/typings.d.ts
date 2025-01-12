@@ -32,14 +32,19 @@ export type TLoginResponse = {
   refresh_token: string;
   role: number;
 };
-
+export type TAddress = {
+  province?: string;
+  district?: string;
+  ward?: string;
+  street_address?: string;
+};
 export type TUserProfileResponse = {
   _id: string;
   email: string;
   role: number;
   full_name: string;
   phone: string;
-  address: Address;
+  address: TAddress;
   earn_point: number;
   total_paid: number;
 };
@@ -62,12 +67,7 @@ export type TResetPasswordResponse = {};
 export type TLogoutPayload = {
   refresh_token: string;
 };
-export type TAddress = {
-  province?: string;
-  district?: string;
-  ward?: string;
-  street_address?: string;
-};
+
 export type TUpdateProfilePayload = {
   full_name: string;
   email: string;

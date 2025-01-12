@@ -8,17 +8,26 @@ import { message } from 'antd';
 import { useDispatch } from 'react-redux';
 import { AppDispatch, useSelector } from '../../store/store';
 import { cancleOrder, getOrder } from '../../store/middlewares/orderMiddleWare';
-import orderServices from '../../services/Order/orderServices';
+import { TModalRiewProps } from './components/tyings';
+import { TFormValues } from '../CategoryAdminPage/tyings.';
+import {
+  useDistrictsQuery,
+  useProvicesQuery,
+  useWardsQuery,
+} from '../../queries/useAddress';
 
 export const useOrderPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { orderInfo } = useSelector((state) => state.order);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const { control, handleSubmit, setError, reset } = useForm();
+  const { data: provinceData } = useProvicesQuery();
+  const { data: districtData } = useDistrictsQuery();
+  const { data: wardData } = useWardsQuery();
+  const { control, handleSubmit, setError, reset } = useForm<TFormValues>();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [rate, setRate] = useState(0);
-  const [productId, setProductId] = useState('');
-  const [variantId, setVariantId] = useState('');
-  const [orderId, setOrderId] = useState('');
+  const [productId, setProductId] = useState<string>('');
+  const [variantId, setVariantId] = useState<string>('');
+  const [orderId, setOrderId] = useState<string>('');
 
   const openModal = (value: TModaOpenValue) => {
     setIsModalOpen(true);
@@ -34,10 +43,7 @@ export const useOrderPage = () => {
   const onChangeRate = (value: number) => {
     setRate(value);
   };
-  const handlePostReview = async (value: {
-    description: string;
-    title: string;
-  }) => {
+  const handlePostReview = async (value: TFormValues) => {
     try {
       const payload: TCreateReviewPayload = {
         description: value.description,
@@ -73,15 +79,22 @@ export const useOrderPage = () => {
   useEffect(() => {
     dispatch(getOrder());
   }, []);
-  const modalProps = {
-    openModal,
+
+  const modalProps: TModalRiewProps = {
     closeModal,
     isModalOpen,
-    handleSubmit,
     control,
     onChangeRate,
-    handlePostReview,
+    handlePostReview: handleSubmit(handlePostReview),
   };
 
-  return { orderInfo, modalProps, openModal, handleCancleOrder };
+  return {
+    provinceData,
+    districtData,
+    wardData,
+    orderInfo,
+    modalProps,
+    openModal,
+    handleCancleOrder,
+  };
 };
