@@ -12,8 +12,8 @@ const CartInvoice: FC<TCartInvoice> = ({
   discount,
 }) => {
   return (
-    <div>
-      <div className="p-[30px] w-[400px] border border-dashed border-darkGrey">
+    <div className="w-full md:w-[400px] ml-auto">
+      <div className="p-[30px] border border-dashed border-darkGrey">
         <h3 className="block px-6 py-2 mx-auto mb-5 border border-dashed border-darkGrey w-max">
           INVOICE
         </h3>

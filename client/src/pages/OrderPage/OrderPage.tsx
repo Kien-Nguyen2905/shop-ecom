@@ -7,11 +7,6 @@ import { formatCurrency, getLocationName } from '../../utils';
 import dayjs from 'dayjs';
 import { CalendarOutlined } from '@ant-design/icons';
 import {
-  useDistrictsQuery,
-  useProvicesQuery,
-  useWardsQuery,
-} from '../../queries/useAddress';
-import {
   STATUS_ORDER,
   STATUS_TRANSACTION,
   TYPE_PAYMENT,
