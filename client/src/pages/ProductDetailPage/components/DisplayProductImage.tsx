@@ -5,7 +5,7 @@ import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
-import './DisplayProduct.css';
+import './DisplayProduct.scss';
 
 import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
 import { Swiper as SwiperType } from 'swiper';
@@ -14,7 +14,7 @@ import { TDisplayProductProps } from './tyings';
 const DisplayProductImage: FC<TDisplayProductProps> = ({ listImage }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
   return (
-    <div className="flex flex-col items-center w-[450px] overflow-hidden">
+    <div className="flex flex-col items-center w-full xl:w-[450px] overflow-hidden">
       <Swiper
         spaceBetween={10}
         thumbs={{ swiper: thumbsSwiper }}
@@ -44,7 +44,7 @@ const DisplayProductImage: FC<TDisplayProductProps> = ({ listImage }) => {
         {listImage?.map((item: string) => (
           <SwiperSlide
             key={item}
-            className="!w-[140px] !h-[120px] cursor-pointer"
+            className="xl:!w-[140px] !h-[120px] md:!h-[190px] xl:!h-[120px] cursor-pointer"
           >
             <img
               src={item}

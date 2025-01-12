@@ -3,7 +3,7 @@ import { TBrandResponse } from '../../../services/Brand/tyings';
 
 export type THandleQueryProps = {
   errors: Record<string, string>;
-  dataBrand: TBrandResponse[];
+  dataBrand: TBrandResponse;
 };
 export type THandleTableProps = {
   form: FormInstance;

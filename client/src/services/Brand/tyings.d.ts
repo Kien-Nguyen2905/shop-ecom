@@ -1,4 +1,5 @@
-export type TBrandResponse = {
+export type TBrandResponse = TBrand[];
+export type TBrand = {
   _id: string;
   name: string;
   created_at: string;

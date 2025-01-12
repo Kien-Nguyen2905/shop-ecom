@@ -27,7 +27,7 @@ export type TDisplayProductInforProps = {
   warehouseData: TWarehouseResponse;
   productData: TProductByIdResponse;
   categoryData: TCategoryResponse;
-  brandData: TBrandResponse[];
+  brandData: TBrandResponse;
   variantId: string;
   onChangeVariant: (variantId: string) => void;
   quantityForm: UseFormReturn<
@@ -39,6 +39,8 @@ export type TDisplayProductInforProps = {
   >;
   handleAddCart: (payload: TAddcartPayload) => void;
   onAddWishlist: (payload: TAddWishlistPayload) => void;
+  handleToggleShowMore: () => void;
+  isModalOpen: boolean;
 };
 export type TDisplayProductTabsProps = {
   description: string;

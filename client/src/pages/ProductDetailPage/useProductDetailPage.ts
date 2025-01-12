@@ -22,17 +22,19 @@ import { THUNK_STATUS } from '../../constants';
 import { updateWishlist } from '../../store/middlewares/wishlistMiddleWare';
 import { message } from 'antd';
 import { TUpdateWishlistPayload } from '../../services/Wishlist/tyings';
+import { TWarehouseResponse } from '../../services/Warehouse/tyings';
+import { TCategoryResponse } from '../../services/Category/tyings';
+import { TBrandResponse } from '../../services/Brand/tyings';
 export const useProductDetailPage = () => {
   const { toggleModal: openModal } = useMainContext();
+  const dispatch = useDispatch<AppDispatch>();
   const { profile } = useSelector((state) => state.auth);
-  const { cart } = useSelector((state) => state.cart);
-
+  const { cart, updateStatus } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
 
   const { id } = useParams();
   const { search } = useLocation();
   const [_, setSearchParams] = useSearchParams();
-  const { updateStatus } = useSelector((state) => state.cart);
   const [variantId, setVariantId] = useState<string>(
     new URLSearchParams(search).get('variant') as string,
   );
@@ -40,28 +42,21 @@ export const useProductDetailPage = () => {
   const { data: categoryData } = useCategoryByIdQuery(productData?.category_id);
   const { data: brandData } = useBrandQuery();
   const { data: reviewData } = useReviewByProductIdQuery(id!);
-  const { data: warehouseData, refetch } = useWarehouse(variantId);
+  const { data: warehouseData } = useWarehouse(variantId);
 
   const [listImage, setListImage] = useState<string[]>();
-  const dispatch = useDispatch<AppDispatch>();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
   const quantityForm = useForm({
     defaultValues: {
       quantity: '1',
     },
   });
 
-  useEffect(() => {
-    const variantIsActive = productData?.variants.find(
-      (item) => item._id === variantId,
-    );
+  const handleToggleShowMore = () => {
+    setIsModalOpen((prev) => !prev);
+  };
 
-    if (variantIsActive) {
-      setListImage(variantIsActive.images);
-    }
-  }, [productData, variantId]);
-  useEffect(() => {
-    refetch();
-  }, [variantId]);
   const onChangeVariant = (variantId: string) => {
     setVariantId(variantId);
     const variant = productData?.variants.find(
@@ -75,6 +70,7 @@ export const useProductDetailPage = () => {
       }));
     }
   };
+
   const handleAddCart = async (payload: TAddcartPayload) => {
     if (!profile) {
       openModal();
@@ -99,6 +95,7 @@ export const useProductDetailPage = () => {
       }
     }
   };
+
   const onAddWishlist = async (payload: TUpdateWishlistPayload) => {
     if (!profile) {
       openModal();
@@ -119,20 +116,33 @@ export const useProductDetailPage = () => {
       }
     }
   };
+
+  useEffect(() => {
+    const variantIsActive = productData?.variants.find(
+      (item) => item._id === variantId,
+    );
+
+    if (variantIsActive) {
+      setListImage(variantIsActive.images);
+    }
+  }, [productData, variantId]);
+
   const displayProductInforProps: TDisplayProductInforProps = {
     productData: productData!,
     variantId,
     onChangeVariant,
     quantityForm,
-    categoryData: categoryData!,
+    categoryData: categoryData as TCategoryResponse,
     handleAddCart,
-    warehouseData: warehouseData!,
+    warehouseData: warehouseData as TWarehouseResponse,
     onAddWishlist,
-    brandData: brandData!,
+    brandData: brandData as TBrandResponse,
+    handleToggleShowMore,
+    isModalOpen,
   };
   const displayProductTabsProps: TDisplayProductTabsProps = {
-    description: productData?.description!,
-    reviewData: reviewData!,
+    description: productData?.description || '',
+    reviewData: reviewData || [],
   };
   return {
     displayProductInforProps,

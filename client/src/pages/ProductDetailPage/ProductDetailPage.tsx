@@ -6,10 +6,17 @@ import {
 } from './components';
 import { useProductDetailPage } from './useProductDetailPage';
 import { CUSTOMER_PATHS } from '../../constants';
+import { Loading } from '../../components';
 
 const ProductDetailPage = () => {
-  const { listImage, displayProductInforProps, displayProductTabsProps, name } =
-    useProductDetailPage();
+  const {
+    listImage,
+    displayProductInforProps,
+    displayProductTabsProps,
+    name,
+    isLoading,
+  } = useProductDetailPage();
+  if (isLoading) return <Loading />;
   return (
     <div className="container">
       <div className="flex gap-4 py-10">
@@ -24,8 +31,8 @@ const ProductDetailPage = () => {
           {name}
         </NavLink>
       </div>
-      <div className="pb-[120px]">
-        <div className="flex gap-[150px]">
+      <div className="pb-[70px] xl:pb-[120px]">
+        <div className="flex flex-col xl:flex-row xl:gap-[150px]">
           <DisplayProductImage listImage={listImage} />
           <DisplayProductInfor {...displayProductInforProps!} />
         </div>

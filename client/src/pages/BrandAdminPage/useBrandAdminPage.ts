@@ -21,7 +21,7 @@ export const useBrandAdminPage = () => {
   const deleteBrand = useDeleteBrandMutation();
   const updateBrand = useUpdateBrandMutation();
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [dataBrand, setDataBrand] = useState<TBrandResponse[]>(data!);
+  const [dataBrand, setDataBrand] = useState<TBrandResponse>(data!);
   const [editingKey, setEditingKey] = useState<string>('');
   const [isInserting, setIsInserting] = useState<boolean>(false);
   const [form] = Form.useForm();

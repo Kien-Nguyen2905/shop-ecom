@@ -7,7 +7,7 @@ export type TViewProductProps = {
   closeModalView: () => void;
   listData: TProductByIdResponse;
   categoryList: TCategoryResponse[];
-  brandList: TBrandResponse[];
+  brandList: TBrandResponse;
 };
 
 export type TAddProductProps = {

@@ -3,7 +3,7 @@ import { brandServices } from '../services/Brand';
 import { TBrandResponse } from '../services/Brand/tyings';
 
 export const useBrandQuery = () => {
-  return useQuery<TBrandResponse[]>({
+  return useQuery<TBrandResponse>({
     queryKey: ['brand'],
     queryFn: async () => {
       const response = await brandServices.getBrand();
