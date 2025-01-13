@@ -6,7 +6,6 @@ import { Button } from '../../components';
 const AccountPage = () => {
   const {
     control,
-    handleSubmit,
     valueProvince,
     dataProvince,
     handleChangeProvince,
@@ -20,10 +19,7 @@ const AccountPage = () => {
   } = useAccountPage();
 
   return (
-    <form
-      className="flex flex-col gap-7"
-      onSubmit={handleSubmit(handleUpdateProfile)}
-    >
+    <form className="flex flex-col gap-7" onSubmit={handleUpdateProfile}>
       <div className="flex flex-col xl:flex-row gap-5">
         <Input
           name="full_name"

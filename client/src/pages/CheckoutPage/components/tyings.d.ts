@@ -1,35 +1,24 @@
 import { Control, FieldValues, SubmitHandler } from 'react-hook-form';
 import { TCart } from '../../../store/reducers/tyings';
+import { TDistrictsCustom, TProVincesCustom, TWardsCustom } from '../tyings';
 
 export type TCheckoutInforProps = {
   control: any;
-  handleSubmit: any;
-  valueProvince: any;
-  dataProvince: any;
+  valueProvince: string;
+  dataProvince: TProVincesCustom;
   handleChangeProvince: (value: string) => void;
   handleChangeDistrict: (value: string) => void;
-  dataDistrict: any;
-  valueDistrict: any;
+  dataDistrict: TDistrictsCustom;
+  valueDistrict: string;
   handleChangeWard: (value: string) => void;
-  dataWard: any;
-  valueWard: any;
+  dataWard: TWardsCustom;
+  valueWard: string;
 };
 
 export type TCheckoutEarnPointProps = {
   availablePoints: number;
   applyEarnPoint: (points: number) => void;
   appliedPoints: number;
-};
-
-export type TPaymentQRProps = {
-  isOpen: boolean;
-  total: number;
-  isConfirmVisible: boolean;
-  desc: string;
-  handleCancel: (isOutTime?: boolean) => void;
-  handleConfirmClose: () => void;
-  setIsConfirmVisible: any;
-  handleTransactionSePay: () => void;
 };
 
 export type TSummaryCheckoutProps = TCart;

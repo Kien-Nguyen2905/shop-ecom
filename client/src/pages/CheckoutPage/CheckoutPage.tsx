@@ -1,10 +1,11 @@
 import { CheckoutEarnPoint, CheckoutInfor } from './components';
 import { useCheckoutPage } from './useChecoutPage';
 import SummaryCheckout from './components/SummaryCheckout';
-import { Button } from '../../components';
+import { BreadCrumb, Button } from '../../components';
 import Input from '../../components/Input/Input';
 import { Navigate } from 'react-router-dom';
 import { CUSTOMER_PATHS } from '../../constants';
+import { TCart } from '../../store/reducers/tyings';
 
 const CheckoutPage = () => {
   const {
@@ -15,30 +16,34 @@ const CheckoutPage = () => {
     availablePoints,
     control,
     handlCheckout,
-    handleSubmit,
   } = useCheckoutPage();
   if (cart?.products?.length! <= 0)
     return <Navigate to={CUSTOMER_PATHS.ROOT} />;
   return (
     <div className="container">
-      <div className="flex h-screen gap-12 pt-10">
+      <BreadCrumb
+        items={[
+          { name: 'Home', path: CUSTOMER_PATHS.ROOT },
+          { name: 'Checkout', path: CUSTOMER_PATHS.CHECKOUT },
+        ]}
+      />
+      <form
+        onSubmit={handlCheckout}
+        className="flex flex-col xl:flex-row gap-12 pb-[30px]"
+      >
         <div className="flex-1">
-          {availablePoints! > 0 && (
+          {(availablePoints as number) > 0 && (
             <CheckoutEarnPoint
               availablePoints={availablePoints!}
               applyEarnPoint={applyEarnPoint}
               appliedPoints={appliedPoints}
             />
           )}
-          <CheckoutInfor {...checkoutInforProps!} />
+          <CheckoutInfor {...checkoutInforProps} />
         </div>
         <div>
-          <SummaryCheckout {...cart!} />
-
-          <form
-            onSubmit={handleSubmit(handlCheckout)}
-            className="flex flex-col items-start gap-3 mt-5 ml-auto w-max"
-          >
+          <SummaryCheckout {...(cart as TCart)} />
+          <div className="flex flex-col items-start gap-3 mt-5 ml-auto w-max">
             <div className="radio">
               <label className="flex items-center">
                 <Input
@@ -62,10 +67,9 @@ const CheckoutPage = () => {
               </label>
             </div>
             <Button className="px-20" text="Check out"></Button>
-          </form>
+          </div>
         </div>
-      </div>
-      {/* <PaymentQR {...paymentQrProps} /> */}
+      </form>
     </div>
   );
 };

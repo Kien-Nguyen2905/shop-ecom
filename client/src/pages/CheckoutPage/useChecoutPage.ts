@@ -1,47 +1,121 @@
 import { useEffect, useState } from 'react';
 import { AppDispatch, useSelector } from '../../store/store';
-import { useAccountPage } from '../AccountPage/useAccountPage';
 import { useDispatch } from 'react-redux';
 import { getCart, updateCart } from '../../store/middlewares/cartMiddleware';
 import { message } from 'antd';
 import { handleError } from '../../libs';
 import { useForm } from 'react-hook-form';
-import { TCheckoutForm } from './tyings';
+import {
+  TCheckoutForm,
+  TDistrictsCustom,
+  TProVincesCustom,
+  TWardsCustom,
+} from './tyings';
 import { useNavigate } from 'react-router-dom';
 import { CUSTOMER_PATHS, THUNK_STATUS } from '../../constants';
 import { createOrder } from '../../store/middlewares/orderMiddleWare';
 import { generateDesc } from '../../utils';
+import { addressServices } from '../../services/Address';
 
 export const useCheckoutPage = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
   const desc = generateDesc();
   const navigate = useNavigate();
-  const { control, setError, handleSubmit, reset } = useForm<any>();
-  const dispatch = useDispatch<AppDispatch>();
+  const { control, setError, setValue, handleSubmit, reset } =
+    useForm<TCheckoutForm>();
   const { profile } = useSelector((state) => state.auth);
   const { cart } = useSelector((state) => state.cart);
   const { checkoutStatus } = useSelector((state) => state.order);
   const [appliedPoints, setAppliedPoints] = useState<number>(0);
   const [isConfirmVisible, setIsConfirmVisible] = useState<boolean>(false);
-  const {
-    valueProvince,
-    dataProvince,
-    handleChangeProvince,
-    handleChangeDistrict,
-    dataDistrict,
-    valueDistrict,
-    handleChangeWard,
-    dataWard,
-    valueWard,
-  } = useAccountPage();
-  const [isOpen, setIsOpen] = useState(false);
-
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [dataProvince, setDataProvince] = useState<TProVincesCustom>([]);
+  const [dataDistrict, setDataDistrict] = useState<TDistrictsCustom>([]);
+  const [dataWard, setDataWard] = useState<TWardsCustom>([]);
+  const [valueProvince, setValueProvince] = useState<string>('');
+  const [valueDistrict, setValueDistrcit] = useState<string>('');
+  const [valueWard, setValueWard] = useState<string>('');
+  const getDataProvince = async () => {
+    try {
+      const response = await addressServices.getProvices();
+      if (response.data.data) {
+        const province = response.data.data.map((e) => {
+          return {
+            value: e.code.toString(),
+            label: e.name,
+          };
+        });
+        setDataProvince(province);
+      }
+    } catch (error) {
+      handleError({
+        error,
+        setError,
+      });
+    }
+  };
+  const getDataDistrict = async (id: string) => {
+    try {
+      const res = await addressServices.getDistricts(id);
+      if (res.data.data) {
+        const district = res.data.data.map((e) => {
+          return {
+            value: e.code.toString(),
+            label: e.name,
+          };
+        });
+        setDataDistrict(district);
+      }
+    } catch (error) {
+      handleError({
+        error,
+        setError,
+      });
+    }
+  };
+  const getDataWard = async (id: string) => {
+    try {
+      const res = await addressServices.getWards(id);
+      if (res.data.data) {
+        const ward = res.data.data.map((e) => {
+          return {
+            value: e.code.toString(),
+            label: e.name,
+          };
+        });
+        setDataWard(ward);
+      }
+    } catch (error) {
+      handleError({
+        error,
+        setError,
+      });
+    }
+  };
+  const handleChangeProvince = (idProvince: string) => {
+    getDataDistrict(idProvince);
+    setValueProvince(idProvince);
+    setValue('district', '');
+    setValue('ward', '');
+    setValueWard('');
+    setValueDistrcit('');
+  };
+  const handleChangeDistrict = (idDistrict: string) => {
+    getDataWard(idDistrict);
+    setValueDistrcit(idDistrict);
+    setValue('ward', '');
+    setValueWard('');
+  };
+  const handleChangeWard = (idWard: string) => {
+    setValueWard(idWard);
+  };
   const handleCancel = (isOutTime?: boolean) => {
     setIsConfirmVisible(true);
     if (isOutTime) {
       handleConfirmClose();
     }
   };
-
   const handleConfirmClose = () => {
     setIsConfirmVisible(false);
     onClose();
@@ -106,21 +180,20 @@ export const useCheckoutPage = () => {
 
   const checkoutInforProps = {
     control,
-    handleSubmit,
-    valueProvince,
-    dataProvince,
-    handleChangeProvince,
-    handleChangeDistrict,
     dataDistrict,
-    valueDistrict,
-    handleChangeWard,
+    dataProvince,
     dataWard,
+    handleChangeDistrict,
+    handleChangeProvince,
+    handleChangeWard,
+    valueDistrict,
+    valueProvince,
     valueWard,
   };
 
   const paymentQrProps = {
     isOpen,
-    total: cart?.total!,
+    total: cart?.total || 0,
     isConfirmVisible,
     desc,
     handleCancel,
@@ -129,18 +202,27 @@ export const useCheckoutPage = () => {
   };
 
   useEffect(() => {
+    if (profile?.address.province) {
+      getDataProvince();
+      getDataDistrict(profile.address.province || '');
+      getDataWard(profile.address.district || '');
+      setValueProvince(profile.address.province || '');
+      setValueDistrcit(profile.address.district || '');
+      setValueWard(profile.address.ward || '');
+    }
     if (profile) {
       reset({
-        full_name: profile.full_name,
-        email: profile.email,
-        phone: profile.phone,
-        province: profile?.address?.province,
-        district: profile?.address?.district,
-        ward: profile?.address?.ward,
-        street_address: profile?.address.street_address,
+        full_name: profile.full_name || '',
+        email: profile.email || '',
+        phone: profile.phone || '',
+        province: profile.address.province || '',
+        district: profile.address.district || '',
+        ward: profile.address.ward || '',
+        street_address: profile.address.street_address || '',
       });
       dispatch(getCart());
     }
+    getDataProvince();
   }, [reset, profile]);
   return {
     checkoutInforProps,
@@ -150,7 +232,6 @@ export const useCheckoutPage = () => {
     availablePoints: profile?.earn_point,
     cart,
     control,
-    handlCheckout,
-    handleSubmit,
+    handlCheckout: handleSubmit(handlCheckout),
   };
 };

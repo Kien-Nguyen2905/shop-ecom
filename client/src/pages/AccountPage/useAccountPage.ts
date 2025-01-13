@@ -8,16 +8,23 @@ import { message } from 'antd';
 import { handleError } from '../../libs';
 import { TAddressModify, TUpdateProfilePayload, TValueForm } from './tyings';
 import { updateProfileUser } from '../../store/middlewares/authMiddleWare';
+import {
+  TDistrictsCustom,
+  TProVincesCustom,
+  TWardsCustom,
+} from '../CheckoutPage/tyings';
 
 export const useAccountPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { profile } = useSelector((state) => state.auth);
-  const [dataProvince, setDataProvince] = useState<any>([]);
-  const [dataDistrict, setDataDistrict] = useState<any>([]);
-  const [dataWard, setDataWard] = useState<any>([]);
-  const [valueProvince, setValueProvince] = useState<string>();
-  const [valueDistrict, setValueDistrcit] = useState<string>();
-  const [valueWard, setValueWard] = useState<string>();
+  const { handleSubmit, setValue, control, setError, reset } =
+    useForm<TValueForm>();
+  const [dataProvince, setDataProvince] = useState<TProVincesCustom>([]);
+  const [dataDistrict, setDataDistrict] = useState<TDistrictsCustom>([]);
+  const [dataWard, setDataWard] = useState<TWardsCustom>([]);
+  const [valueProvince, setValueProvince] = useState<string>('');
+  const [valueDistrict, setValueDistrcit] = useState<string>('');
+  const [valueWard, setValueWard] = useState<string>('');
 
   const getDataProvince = async () => {
     try {
@@ -79,12 +86,15 @@ export const useAccountPage = () => {
   const handleChangeProvince = (idProvince: string) => {
     getDataDistrict(idProvince);
     setValueProvince(idProvince);
+    setValue('district', '');
+    setValue('ward', '');
     setValueWard('');
     setValueDistrcit('');
   };
   const handleChangeDistrict = (idDistrict: string) => {
     getDataWard(idDistrict);
     setValueDistrcit(idDistrict);
+    setValue('ward', '');
     setValueWard('');
   };
   const handleChangeWard = (idWard: string) => {
@@ -117,33 +127,30 @@ export const useAccountPage = () => {
     }
   };
 
-  const { handleSubmit, control, setError, reset } = useForm<any>();
-
   useEffect(() => {
     if (profile?.address.province) {
       getDataProvince();
-      getDataDistrict(profile?.address.province);
-      getDataWard(profile?.address?.district || '');
-      setValueProvince(profile?.address.province);
-      setValueDistrcit(profile?.address?.district || '');
+      getDataDistrict(profile.address.province || '');
+      getDataWard(profile.address.district || '');
+      setValueProvince(profile.address.province);
+      setValueDistrcit(profile.address.district || '');
       setValueWard(profile.address.ward || '');
     }
     if (profile) {
       reset({
-        full_name: profile.full_name,
-        email: profile.email,
-        phone: profile.phone,
-        province: profile?.address?.province,
-        district: profile?.address?.district,
-        ward: profile?.address?.ward,
-        street_address: profile?.address.street_address,
+        full_name: profile.full_name || '',
+        email: profile.email || '',
+        phone: profile.phone || '',
+        province: profile.address.province || '',
+        district: profile.address.district || '',
+        ward: profile.address.ward || '',
+        street_address: profile.address.street_address || '',
       });
     }
     getDataProvince();
   }, [profile, reset]);
   return {
     control,
-    handleSubmit,
     valueProvince,
     dataProvince,
     handleChangeProvince,
@@ -153,6 +160,6 @@ export const useAccountPage = () => {
     handleChangeWard,
     dataWard,
     valueWard,
-    handleUpdateProfile,
+    handleUpdateProfile: handleSubmit(handleUpdateProfile),
   };
 };

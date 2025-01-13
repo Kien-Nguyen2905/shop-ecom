@@ -25,3 +25,11 @@ export type TValueFormBanking = {
   note: string;
   type_payment: number;
 };
+
+export type TAddressCustom = {
+  value: string;
+  label: string;
+};
+export type TProVincesCustom = TAddressCustom[];
+export type TDistrictsCustom = TAddressCustom[];
+export type TWardsCustom = TAddressCustom[];

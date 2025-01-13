@@ -17,7 +17,7 @@ const CheckoutEarnPoint: React.FC<TCheckoutEarnPointProps> = ({
   };
 
   return (
-    <div className="w-[380px] pb-7 flex flex-col gap-3">
+    <div className="w-full md:w-[380px] pb-7 flex flex-col gap-3">
       <div>
         <span>
           Available Points: <b className="text-primary">{availablePoints}</b>
@@ -43,6 +43,7 @@ const CheckoutEarnPoint: React.FC<TCheckoutEarnPointProps> = ({
                 `Points cannot exceed ${availablePoints}`,
             },
           }}
+          className=""
         />
         <Button
           onClick={handleSubmit(handleApplyPoints)}

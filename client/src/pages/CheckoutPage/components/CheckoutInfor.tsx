@@ -11,19 +11,14 @@ const CheckoutInfor: FC<TCheckoutInforProps> = ({
   handleChangeDistrict,
   handleChangeProvince,
   handleChangeWard,
-  handleSubmit,
   valueDistrict,
   valueProvince,
   valueWard,
 }) => {
   return (
     <div className="h-full">
-      <form
-        action=""
-        className="flex flex-col h-full gap-7"
-        onSubmit={handleSubmit(() => {})}
-      >
-        <div className="flex gap-5">
+      <div className="flex flex-col gap-7">
+        <div className="flex flex-col xl:flex-row gap-5">
           <Input
             name="full_name"
             lable="Full name"
@@ -44,7 +39,7 @@ const CheckoutInfor: FC<TCheckoutInforProps> = ({
             name="province"
             control={control}
             required
-            renderProp={(props, invalid, field) => (
+            renderProp={(props, invalid, field, error) => (
               <div className="flex flex-col w-full">
                 <label>Province/City *</label>
                 <Select
@@ -70,10 +65,14 @@ const CheckoutInfor: FC<TCheckoutInforProps> = ({
                     invalid ? 'border-red-600' : ''
                   }`}
                   onChange={(value) => {
-                    field.onChange(value);
+                    field?.onChange(value);
                     handleChangeProvince(value.toString());
                   }}
+                  {...props}
                 />
+                {invalid && (
+                  <p className="text-sm text-red-600">{error?.message}</p>
+                )}
               </div>
             )}
           />
@@ -81,7 +80,7 @@ const CheckoutInfor: FC<TCheckoutInforProps> = ({
             name="district"
             control={control}
             required
-            renderProp={(props, invalid, field) => (
+            renderProp={(props, invalid, field, error) => (
               <div className="flex flex-col w-full">
                 <label>District *</label>
                 <Select
@@ -107,10 +106,14 @@ const CheckoutInfor: FC<TCheckoutInforProps> = ({
                     invalid ? 'border-red-600' : ''
                   }`}
                   onChange={(value) => {
-                    field.onChange(value);
+                    field?.onChange(value);
                     handleChangeDistrict(value);
                   }}
+                  {...props}
                 />
+                {invalid && (
+                  <p className="text-sm text-red-600">{error?.message}</p>
+                )}
               </div>
             )}
           />
@@ -118,7 +121,7 @@ const CheckoutInfor: FC<TCheckoutInforProps> = ({
             name="ward"
             control={control}
             required
-            renderProp={(props, invalid, field) => (
+            renderProp={(props, invalid, field, error) => (
               <div className="flex flex-col w-full">
                 <label>Ward *</label>
                 <Select
@@ -144,10 +147,14 @@ const CheckoutInfor: FC<TCheckoutInforProps> = ({
                     invalid ? 'border-red-600' : ''
                   }`}
                   onChange={(value) => {
-                    field.onChange(value);
+                    field?.onChange(value);
                     handleChangeWard(value);
                   }}
+                  {...props}
                 />
+                {invalid && (
+                  <p className="text-sm text-red-600">{error?.message}</p>
+                )}
               </div>
             )}
           />
@@ -179,7 +186,7 @@ const CheckoutInfor: FC<TCheckoutInforProps> = ({
             </>
           )}
         ></Input>
-      </form>
+      </div>
     </div>
   );
 };

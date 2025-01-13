@@ -1,3 +1,4 @@
+import { Navigate } from 'react-router-dom';
 import { BreadCrumb } from '../../components';
 import { CUSTOMER_PATHS } from '../../constants';
 import { TCart } from '../../store/reducers/tyings';
@@ -6,6 +7,8 @@ import { useCartPage } from './useCartPage';
 
 const CartPage = () => {
   const { cart, handleAddCart, handleRemoveCart } = useCartPage();
+  if (cart?.products?.length! <= 0)
+    return <Navigate to={CUSTOMER_PATHS.ROOT} />;
   return (
     <div className="container md:h-screen">
       <BreadCrumb
