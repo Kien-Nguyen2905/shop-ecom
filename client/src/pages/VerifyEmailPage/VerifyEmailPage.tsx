@@ -19,13 +19,13 @@ const VerifyEmailPage = () => {
   }, []);
 
   return (
-    <>
+    <div className="container">
       {token && (
         <div className="absolute top-0 flex items-center justify-center w-full h-full bg-white z-1">
           <Loading />
         </div>
       )}
-      <div className="flex items-center gap-8 flex-col pt-[150px] w-full h-full">
+      <div className="flex items-center gap-8 flex-col pt-[150px] w-full h-screen">
         <h3 className="xl:text-[30px] text-primary">Vui lòng xác minh email</h3>
         <Button
           onClick={() => handleResendEmail({ email })}
@@ -37,7 +37,7 @@ const VerifyEmailPage = () => {
           loading={isResending}
         ></Button>
       </div>
-    </>
+    </div>
   );
 };
 
