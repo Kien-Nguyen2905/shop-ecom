@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import {
   useOrderAllQuery,
   useUpdateStatusOrderMutation,
@@ -40,35 +39,6 @@ export const useOrderAdminPage = () => {
   const closeModal = () => {
     setIsOpenModal(false);
   };
-  // Calculate totals
-  // Calculate totals
-  const today = dayjs().startOf('day');
-
-  // Tổng số lượng đơn hàng hôm nay
-  const todayOrders =
-    orderData?.filter((order) => dayjs(order.created_at).isSame(today, 'day'))
-      .length || 0;
-
-  // Tổng số lượng đơn hàng chờ hôm nay (pending = 0)
-  const todayPendingOrders =
-    orderData?.filter(
-      (order) =>
-        order.status === 0 && dayjs(order.created_at).isSame(today, 'day'),
-    ).length || 0;
-
-  // Tổng số lượng đơn hàng chấp nhận hôm nay (accepted = 1)
-  const todayAcceptedOrders =
-    orderData?.filter(
-      (order) =>
-        order.status === 1 && dayjs(order.created_at).isSame(today, 'day'),
-    ).length || 0;
-
-  // Tổng số lượng đơn hàng từ chối hôm nay (rejected = 2)
-  const todayRejectedOrders =
-    orderData?.filter(
-      (order) =>
-        order.status === 2 && dayjs(order.created_at).isSame(today, 'day'),
-    ).length || 0;
 
   const tableProductData = orderDetail?.products?.map(
     (product: TProductOrder) => ({
@@ -97,10 +67,6 @@ export const useOrderAdminPage = () => {
   return {
     orderData,
     userData,
-    todayOrders,
-    todayPendingOrders,
-    todayAcceptedOrders,
-    todayRejectedOrders,
     openModal,
     orderDetailProps,
   };

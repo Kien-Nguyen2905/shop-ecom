@@ -1,56 +1,34 @@
-import React from 'react';
 import { Table, Button, Input, Dropdown, Tag, Rate, Modal } from 'antd';
 import { EllipsisOutlined, CalendarOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import { ViewProduct, DrawerProduct } from './components';
+import { DrawerProduct } from './components';
 import { useProductAdminPage } from './useProductAdminPage';
-import { TProductItem } from '../../services/Product/tyings';
 import { TProductTableProps } from './tying';
 import { formatCurrency } from '../../utils';
+import { SpinLoading } from '../../components';
 
-const ProductAdminPage: React.FC = () => {
+const ProductAdminPage = () => {
   const {
-    openModalView,
-    closeModalView,
-    isOpen,
-    productData,
-    categoryList,
-    brandList,
+    mappedProductData,
     handleSearch,
-    productDetails,
     handleDelete,
     closeModalAdd,
     openModelAdd,
     openUpdateModal,
     isAddProductModalOpen,
+    openViewModal,
+    isView,
+    productActionProps,
   } = useProductAdminPage();
 
-  const mappedProductData: TProductTableProps[] | undefined =
-    productData?.products.map((item: TProductItem) => ({
-      key: item._id || '', // Unique key for the row
-      name: item.name || '',
-      category:
-        categoryList?.find((cate) => cate._id === item.category_id)?.name || '', // Default category
-      brand:
-        brandList?.find((brand) => brand._id === item.brand_id)?.name || '', // Default to an empty string
-      price: item.variants[0]?.price,
-      discount: item.variants[0]?.discount || 0, // Default discount to 0
-      thumbnail: item.thumbnail || '', // Provide a placeholder thumbnail
-      rate: item.rate || 0, // Default rate to 0
-      created_at: dayjs(item.created_at).format('DD-MM-YYYY'), // Format created date
-    }));
-  const handleViewDetail = (record: TProductTableProps) => {
-    openModalView(record.key);
-  };
-
-  const columns: any = [
+  const columns = [
     {
       title: 'Product',
       dataIndex: 'name',
       width: '15%',
       className: 'text-left font-medium',
       sorter: (a: TProductTableProps, b: TProductTableProps) =>
-        a.name.localeCompare(b.name), // Sắp xếp theo tên sản phẩm
+        a.name.localeCompare(b.name),
     },
     {
       title: 'Brand',
@@ -58,7 +36,7 @@ const ProductAdminPage: React.FC = () => {
       width: '10%',
       className: 'text-left',
       sorter: (a: TProductTableProps, b: TProductTableProps) =>
-        a.brand.localeCompare(b.brand), // Sắp xếp theo brand
+        a.brand.localeCompare(b.brand),
     },
     {
       title: 'Category',
@@ -66,7 +44,7 @@ const ProductAdminPage: React.FC = () => {
       width: '10%',
       className: 'text-left',
       sorter: (a: TProductTableProps, b: TProductTableProps) =>
-        a.category.localeCompare(b.category), // Sắp xếp theo category
+        a.category.localeCompare(b.category),
     },
     {
       title: 'Image',
@@ -83,7 +61,7 @@ const ProductAdminPage: React.FC = () => {
       className: 'text-left',
       render: (price: number) => <p>{formatCurrency(price)}</p>,
       sorter: (a: TProductTableProps, b: TProductTableProps) =>
-        a.price - b.price, // Sắp xếp theo price
+        a.price - b.price,
     },
     {
       title: 'Discount',
@@ -96,7 +74,7 @@ const ProductAdminPage: React.FC = () => {
         </div>
       ),
       sorter: (a: TProductTableProps, b: TProductTableProps) =>
-        a.discount - b.discount, // Sắp xếp theo discount
+        a.discount - b.discount,
     },
     {
       title: 'Rate',
@@ -106,7 +84,7 @@ const ProductAdminPage: React.FC = () => {
       render: (rate: number) => (
         <Rate allowHalf style={{ fontSize: 10 }} disabled value={rate} />
       ),
-      sorter: (a: TProductTableProps, b: TProductTableProps) => a.rate - b.rate, // Sắp xếp theo rate
+      sorter: (a: TProductTableProps, b: TProductTableProps) => a.rate - b.rate,
     },
     {
       title: 'Date',
@@ -120,7 +98,7 @@ const ProductAdminPage: React.FC = () => {
         </div>
       ),
       sorter: (a: TProductTableProps, b: TProductTableProps) =>
-        dayjs(a.created_at).isBefore(b.created_at) ? -1 : 1, // Sắp xếp theo created_at
+        dayjs(a.created_at).isBefore(b.created_at) ? -1 : 1,
     },
     {
       title: 'Actions',
@@ -140,7 +118,7 @@ const ProductAdminPage: React.FC = () => {
           {
             key: 'view',
             label: 'View',
-            onClick: () => handleViewDetail(record),
+            onClick: () => openViewModal(record.key),
           },
           {
             key: 'Edit',
@@ -166,23 +144,15 @@ const ProductAdminPage: React.FC = () => {
     },
   ];
 
+  if (!mappedProductData) return <SpinLoading />;
   return (
-    <div className="pt-[60px]">
+    <div className="">
       <DrawerProduct
+        isView={isView}
         isOpen={isAddProductModalOpen}
         closeModalAdd={closeModalAdd}
-        brandList={brandList!}
-        categoryList={categoryList!}
+        {...productActionProps}
       />
-
-      <ViewProduct
-        brandList={brandList!}
-        categoryList={categoryList!}
-        listData={productDetails!}
-        closeModalView={closeModalView}
-        isOpen={isOpen}
-      />
-
       <div className="flex items-center justify-between gap-5 pb-5">
         <Input.Search
           placeholder="Search..."
@@ -191,10 +161,7 @@ const ProductAdminPage: React.FC = () => {
           }}
           className="w-[200px] ml-auto block"
         />
-        <Button
-          type="primary"
-          onClick={openModelAdd} // Open AddProduct Modal
-        >
+        <Button type="primary" onClick={openModelAdd}>
           Insert
         </Button>
       </div>
@@ -203,6 +170,7 @@ const ProductAdminPage: React.FC = () => {
         dataSource={mappedProductData}
         pagination={{ pageSize: 6 }}
         rowClassName={() => 'text-left'}
+        scroll={{ x: 'max-content' }}
       />
     </div>
   );

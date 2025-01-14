@@ -1,3 +1,4 @@
+import { TCategoryResponse } from './../../services/Category/tyings.d';
 import { useEffect, useState } from 'react';
 import { handleError, showToast } from '../../libs';
 import {
@@ -25,6 +26,17 @@ import { TUpdateInformationPayload } from '../../services/Information/tyings';
 
 export const useCategoryAdminPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const urlParams = new URLSearchParams(location.search);
+  const categoryId = urlParams.get('categoryId') || '';
+  const { data: informationData } = useInformationByIdQuery(categoryId);
+  const { data: categoryData } = useCategoryByIdQuery(categoryId);
+  const { data: dataCategory, refetch } = useCategoryQuery();
+  const createCategory = useCreateCategoryMutation();
+  const createInformation = useCreateInformationMutation();
+  const deleteCategory = useDeleteCategoryMutation();
+  const updateCategory = useUpdateCategoryMutation();
+  const updadetInformation = useUpdateInformationMutation();
 
   const { control, handleSubmit, reset, setValue, setError } =
     useForm<TFormValues>({
@@ -33,40 +45,15 @@ export const useCategoryAdminPage = () => {
         attributes: undefined,
       },
     });
-  const { data: dataCategory, refetch } = useCategoryQuery();
 
   const [isOpen, setIsOpen] = useState(false);
   const [isMultipleMode, setIsMultipleMode] = useState(false);
   const [newFieldName, setNewFieldName] = useState('');
   const [fieldValues, setFieldValues] = useState<string[]>([]);
   const [singleAttribute, setSingleAttribute] = useState('');
-
-  const createCategory = useCreateCategoryMutation();
-  const createInformation = useCreateInformationMutation();
-  const deleteCategory = useDeleteCategoryMutation();
-  const updateCategory = useUpdateCategoryMutation();
-  const updadetInformation = useUpdateInformationMutation();
-
   const [attributes, setAttributes] = useState<Record<string, any>>({});
-  const location = useLocation();
-  const urlParams = new URLSearchParams(location.search);
-  const categoryId = urlParams.get('categoryId') || '';
-  const { data: informationData } = useInformationByIdQuery(categoryId);
-  const { data: categoryData } = useCategoryByIdQuery(categoryId);
-
   const [isView, setIsView] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-
-  useEffect(() => {
-    if (isOpen) {
-      if (informationData?.attributes) {
-        setAttributes(informationData?.attributes);
-      }
-      if (categoryData) {
-        setValue('name', categoryData.name);
-      }
-    }
-  }, [isOpen, informationData, categoryData]);
 
   const openDrawer = async ({
     categoryId,
@@ -233,13 +220,25 @@ export const useCategoryAdminPage = () => {
   };
 
   const handleRemoveInput = (index: number) => {
-    // Xoá index tồn tại trong mảng theo index được click
     const newAttibute = fieldValues?.filter((_, i) => i != index);
     setFieldValues(newAttibute);
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      if (informationData?.attributes) {
+        setAttributes(informationData?.attributes);
+      }
+      if (categoryData) {
+        setValue('name', categoryData.name);
+      }
+    }
+  }, [isOpen, informationData, categoryData]);
+
   const handleQueryProps = {
-    dataCategory: dataCategory!,
+    dataCategory: dataCategory as TCategoryResponse,
   };
+
   const handleTableProps = {
     handleAddAttribute,
     handleAddMultipleField,
@@ -265,6 +264,7 @@ export const useCategoryAdminPage = () => {
     handleRemoveInput,
     isView,
   };
+
   return {
     handleQueryProps,
     handleTableProps,

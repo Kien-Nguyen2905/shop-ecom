@@ -1,19 +1,14 @@
 import { Select, Table } from 'antd';
-import { useCustomerAdminPage } from './useCustomerAdminPage';
 import dayjs from 'dayjs';
-import {
-  CalendarOutlined,
-  ClockCircleOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
+import { CalendarOutlined, UserOutlined } from '@ant-design/icons';
 import { formatCurrency } from '../../utils';
 import { CiPhone } from 'react-icons/ci';
+import { useUserAllQuery } from '../../queries/useUser';
 const { Option } = Select;
 
 const CustomerAdminPage = () => {
-  const { userAllData } = useCustomerAdminPage();
+  const { data: userAllData } = useUserAllQuery();
 
-  // Create phoneFilters from userAllData
   const phoneFilters = userAllData?.map((user: any) => ({
     label: user.phone,
     value: user.phone,
@@ -123,22 +118,16 @@ const CustomerAdminPage = () => {
       sorter: (a: any, b: any) =>
         dayjs(a.created_at).isBefore(b.created_at) ? -1 : 1,
       render: (text: string) => (
-        <div className="flex flex-col gap-2">
-          <span>
-            <CalendarOutlined style={{ marginRight: 4 }} />
-            {dayjs(text).format('DD-MM-YYYY')}
-          </span>
-          <span>
-            <ClockCircleOutlined style={{ marginRight: 4 }} />
-            {dayjs(text).format('HH:mm:ss')}
-          </span>
-        </div>
+        <span>
+          <CalendarOutlined style={{ marginRight: 4 }} />
+          {dayjs(text).format('DD-MM-YYYY')}
+        </span>
       ),
     },
   ];
 
   return (
-    <div className="pt-[100px]">
+    <div>
       <Table
         columns={columns}
         dataSource={userAllData}

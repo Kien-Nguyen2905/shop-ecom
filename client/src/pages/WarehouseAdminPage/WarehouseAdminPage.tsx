@@ -3,7 +3,8 @@ import { useWarehouseAdminPage } from './useWarehouseAdminPage';
 import { SearchOutlined, EllipsisOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { DrawerWarehouse } from './components';
-import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { CalendarOutlined } from '@ant-design/icons';
+import { SpinLoading } from '../../components';
 
 const WarehouseAdminPage = () => {
   const {
@@ -18,7 +19,7 @@ const WarehouseAdminPage = () => {
     control,
     shipmentColumns,
   } = useWarehouseAdminPage();
-
+  if (!warehouseData) return <SpinLoading />;
   const columns = [
     {
       title: 'Product',
@@ -111,16 +112,10 @@ const WarehouseAdminPage = () => {
       sorter: (a: any, b: any) =>
         dayjs(a.created_at).isBefore(b.created_at) ? -1 : 1,
       render: (text: string) => (
-        <div className="flex flex-col gap-2">
-          <span>
-            <CalendarOutlined style={{ marginRight: 4 }} />
-            {dayjs(text).format('DD-MM-YYYY')}
-          </span>
-          <span>
-            <ClockCircleOutlined style={{ marginRight: 4 }} />
-            {dayjs(text).format('HH:mm:ss')}
-          </span>
-        </div>
+        <span>
+          <CalendarOutlined style={{ marginRight: 4 }} />
+          {dayjs(text).format('DD-MM-YYYY')}
+        </span>
       ),
     },
     {
@@ -129,16 +124,10 @@ const WarehouseAdminPage = () => {
       sorter: (a: any, b: any) =>
         dayjs(a.updated_at).isBefore(b.updated_at) ? -1 : 1,
       render: (text: string) => (
-        <div className="flex flex-col gap-2">
-          <span>
-            <CalendarOutlined style={{ marginRight: 4 }} />
-            {dayjs(text).format('DD-MM-YYYY')}
-          </span>
-          <span>
-            <ClockCircleOutlined style={{ marginRight: 4 }} />
-            {dayjs(text).format('HH:mm:ss')}
-          </span>
-        </div>
+        <span>
+          <CalendarOutlined style={{ marginRight: 4 }} />
+          {dayjs(text).format('DD-MM-YYYY')}
+        </span>
       ),
     },
     {
@@ -185,7 +174,7 @@ const WarehouseAdminPage = () => {
   ];
 
   return (
-    <div className="pt-[100px]">
+    <div>
       <DrawerWarehouse
         shipmentColumns={shipmentColumns}
         isImport={isImport}
@@ -199,7 +188,12 @@ const WarehouseAdminPage = () => {
       <Table
         columns={columns}
         dataSource={warehouseData}
-        pagination={{ pageSize: 6 }}
+        pagination={{
+          pageSize: 8,
+          simple: false,
+          showLessItems: true,
+          showQuickJumper: false,
+        }}
       />
     </div>
   );

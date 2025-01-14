@@ -10,42 +10,39 @@ import {
   Checkbox,
 } from 'antd';
 import { FC, useEffect } from 'react';
-import { FormValues, TAddProductProps } from './tyings';
+import { FormValues, TProductProps } from './tyings';
 import { Controller, FieldErrors } from 'react-hook-form';
 import ImgCrop from 'antd-img-crop';
 import { IoCloudUploadOutline } from 'react-icons/io5';
-import { useAddProduct } from './hooks/useAddProduct';
 
-const DrawerProduct: FC<TAddProductProps> = ({
+const DrawerProduct: FC<TProductProps> = ({
   isOpen,
   closeModalAdd,
   brandList,
   categoryList,
+  isView = false,
+  setCategoryId,
+  variants,
+  setVariants,
+  watch,
+  handleSaveProduct,
+  control,
+  errors,
+  onChange,
+  onPreview,
+  setValue,
+  fileList,
+  activeKey,
+  handleCollapseChange,
+  onChangeVariant,
+  uploadedImages,
+  handleRemoveVariant,
+  handleAddVariant,
+  dataInformation,
+  showAttributeByCategory,
+  productDetails,
+  productId,
 }) => {
-  const {
-    setCategoryId,
-    variants,
-    setVariants,
-    watch,
-    handleSubmit,
-    handleSaveProduct,
-    control,
-    errors,
-    onChange,
-    onPreview,
-    setValue,
-    fileList,
-    activeKey,
-    handleCollapseChange,
-    onChangeVariant,
-    uploadedImages,
-    handleRemoveVariant,
-    handleAddVariant,
-    dataInformation,
-    showAttributeByCategory,
-    productDetails,
-  } = useAddProduct();
-
   const columns = [
     {
       title: 'Color',
@@ -54,6 +51,7 @@ const DrawerProduct: FC<TAddProductProps> = ({
       render: (text: string, record: any) => (
         <Input
           value={text}
+          disabled={isView}
           onChange={(e) => {
             const newVariants = [...variants];
             newVariants[record.index].color = e.target.value;
@@ -71,6 +69,7 @@ const DrawerProduct: FC<TAddProductProps> = ({
           type="number"
           min={1}
           value={text}
+          disabled={isView}
           onKeyUp={(e) => {
             if (!/^\d$/.test(e.key)) {
               e.preventDefault(); // Ngăn chặn nhập ký tự không phải số
@@ -97,6 +96,7 @@ const DrawerProduct: FC<TAddProductProps> = ({
         return (
           <Input
             value={text}
+            disabled={productId ? true : false}
             min={1}
             type="number"
             onKeyUp={(e) => {
@@ -125,7 +125,7 @@ const DrawerProduct: FC<TAddProductProps> = ({
       key: 'discount',
       render: (text: number, record: any) => (
         <Input
-          disabled={!watch('featured.onSale')}
+          disabled={isView ? true : !watch('featured.onSale')}
           value={text * 100}
           min={0}
           max={100}
@@ -161,14 +161,11 @@ const DrawerProduct: FC<TAddProductProps> = ({
       open={isOpen}
       extra={
         <div className="flex gap-5">
-          <Button
-            type="primary"
-            onClick={handleSubmit((data) =>
-              handleSaveProduct(data, closeModalAdd),
-            )}
-          >
-            Save
-          </Button>
+          {!isView && (
+            <Button type="primary" onClick={handleSaveProduct}>
+              Save
+            </Button>
+          )}
           <Button onClick={closeModalAdd}>Close</Button>
         </div>
       }
@@ -186,6 +183,7 @@ const DrawerProduct: FC<TAddProductProps> = ({
                 render={({ field }) => (
                   <Input
                     {...field}
+                    disabled={isView}
                     onChange={(value) => {
                       field.onChange(value);
                     }}
@@ -205,9 +203,10 @@ const DrawerProduct: FC<TAddProductProps> = ({
                 rules={{ required: 'Please select a category' }}
                 render={({ field }) => (
                   <Select
+                    disabled={isView}
                     className="w-full"
-                    {...field}
                     placeholder="Select category"
+                    {...field}
                     onChange={(value) => {
                       field.onChange(value); // Update the form value
                       showAttributeByCategory(value); // Trigger your custom logic
@@ -232,7 +231,11 @@ const DrawerProduct: FC<TAddProductProps> = ({
                 control={control}
                 rules={{ required: 'Please select a brand' }}
                 render={({ field }) => (
-                  <Select {...field} placeholder="Select brand">
+                  <Select
+                    {...field}
+                    disabled={isView}
+                    placeholder="Select brand"
+                  >
                     {brandList?.map((brand: any) => (
                       <Select.Option key={brand._id} value={brand._id}>
                         {brand.name}
@@ -255,6 +258,7 @@ const DrawerProduct: FC<TAddProductProps> = ({
                 <ImgCrop rotationSlider>
                   <Upload
                     {...field}
+                    disabled={isView}
                     listType="picture-card"
                     onChange={onChange}
                     onPreview={onPreview}
@@ -286,6 +290,7 @@ const DrawerProduct: FC<TAddProductProps> = ({
               render={({ field }) => (
                 <Space direction="vertical">
                   <Checkbox
+                    disabled={isView}
                     checked={field.value?.isPopular || false}
                     onChange={(e) =>
                       field.onChange({
@@ -297,6 +302,7 @@ const DrawerProduct: FC<TAddProductProps> = ({
                     Popular
                   </Checkbox>
                   <Checkbox
+                    disabled={isView}
                     checked={field.value?.onSale || false}
                     onChange={(e) => {
                       setValue('featured.onSale', e.target.checked);
@@ -323,7 +329,13 @@ const DrawerProduct: FC<TAddProductProps> = ({
                   value > 0 || 'Minimum stock must be greater than 0',
               }}
               render={({ field }) => (
-                <Input className="w-[100px]" min={1} {...field} type="number" />
+                <Input
+                  disabled={isView}
+                  className="w-[100px]"
+                  min={1}
+                  {...field}
+                  type="number"
+                />
               )}
             />
             {errors.minimum_stock && (
@@ -340,7 +352,12 @@ const DrawerProduct: FC<TAddProductProps> = ({
               required: 'Description is required',
             }}
             render={({ field }) => (
-              <Input.TextArea {...field} rows={4} placeholder="Description" />
+              <Input.TextArea
+                disabled={isView}
+                {...field}
+                rows={4}
+                placeholder="Description"
+              />
             )}
           />
           {errors.description && (
@@ -364,12 +381,14 @@ const DrawerProduct: FC<TAddProductProps> = ({
                         rules={{
                           required: 'Please choose attribute value',
                         }}
+                        // disabled={isView}
                         render={({ field }) => {
                           const fieldValue = Array.isArray(field.value)
                             ? field.value
                             : []; // Đảm bảo giá trị là mảng
                           return (
                             <Checkbox.Group
+                              disabled={isView}
                               className="w-full"
                               {...field}
                               value={fieldValue} // Truyền giá trị đã đảm bảo là mảng
@@ -402,7 +421,9 @@ const DrawerProduct: FC<TAddProductProps> = ({
                         rules={{
                           required: 'Please type attribute value',
                         }}
-                        render={({ field }) => <Input {...field} />}
+                        render={({ field }) => (
+                          <Input disabled={isView} {...field} />
+                        )}
                       />
                       {(errors as FieldErrors<FormValues>)['attributes']?.[
                         key
@@ -445,6 +466,7 @@ const DrawerProduct: FC<TAddProductProps> = ({
                           <div className="flex flex-col gap-10">
                             <ImgCrop rotationSlider>
                               <Upload
+                                disabled={isView}
                                 listType="picture-card"
                                 onChange={(info) =>
                                   onChangeVariant(info, variant.index)
@@ -463,19 +485,21 @@ const DrawerProduct: FC<TAddProductProps> = ({
                                   3 && <IoCloudUploadOutline />}
                               </Upload>
                             </ImgCrop>
-                            <Space>
-                              <Button
-                                onClick={() =>
-                                  handleRemoveVariant(variant.index)
-                                }
-                                danger
-                              >
-                                Remove Variant
-                              </Button>
-                              <Button onClick={handleAddVariant}>
-                                Add Variant
-                              </Button>
-                            </Space>
+                            {!isView && (
+                              <Space>
+                                <Button
+                                  onClick={() =>
+                                    handleRemoveVariant(variant.index)
+                                  }
+                                  danger
+                                >
+                                  Remove Variant
+                                </Button>
+                                <Button onClick={handleAddVariant}>
+                                  Add Variant
+                                </Button>
+                              </Space>
+                            )}
                           </div>
                         )}
                       />

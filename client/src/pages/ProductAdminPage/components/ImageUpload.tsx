@@ -27,8 +27,8 @@ const ImageUpload = forwardRef<HTMLInputElement, ImageUploadProps>(
             )}
           </Upload>
         </ImgCrop>
-        {images.length === 4 && (
-          <p>You can upload up to 4 images per variant.</p>
+        {images.length === 3 && (
+          <p>You can upload up to 3 images per variant.</p>
         )}
       </div>
     );

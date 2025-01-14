@@ -18,7 +18,7 @@ const DashboardAdminpage = () => {
     useDashboardAdminPage();
 
   return (
-    <div className="w-full mx-auto mt-10">
+    <div className="w-full mx-auto">
       <h2 className="mb-6 text-2xl font-bold text-center text-gray-800">
         Monthly Revenue
       </h2>

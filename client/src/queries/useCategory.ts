@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { TCategoryResponse } from '../services/Category/tyings';
+import { TCategory, TCategoryResponse } from '../services/Category/tyings';
 import { categoryServices } from '../services/Category';
 
 export const useCategoryQuery = () => {
-  return useQuery<TCategoryResponse[]>({
+  return useQuery<TCategoryResponse>({
     queryKey: ['category'],
     queryFn: async () => {
       const response = await categoryServices.getCategory();
@@ -13,15 +13,14 @@ export const useCategoryQuery = () => {
 };
 
 export const useCategoryByIdQuery = (id: string = '') => {
-  return useQuery<TCategoryResponse>({
+  return useQuery<TCategory>({
     queryKey: ['category', id],
     queryFn: async () => {
       const response = await categoryServices.getCategoryById(id);
       return response.data?.data;
     },
-    enabled: !!id, // Chỉ gọi API khi `id` có giá trị
-    refetchOnWindowFocus: false, // Không tự động refetch khi focus vào window
-    staleTime: 0, // Luôn fetch dữ liệu mới nhất
+    enabled: !!id,
+    refetchOnWindowFocus: false,
   });
 };
 

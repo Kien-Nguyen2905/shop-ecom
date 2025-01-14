@@ -1,4 +1,3 @@
-import { useReviewAdminPage } from './useReviewAdminPage';
 import { Rate, Select, Table } from 'antd';
 import dayjs from 'dayjs';
 import { TCreateReviewResponse } from '../../services/Review/tyings';
@@ -7,12 +6,13 @@ import {
   ClockCircleOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { useTransactionAdminPage } from '../TransactionAdminPage/useTransactionAdminPage';
+import { useReviewQuery } from '../../queries/useReview';
+import { useUserAllQuery } from '../../queries/useUser';
 const { Option } = Select;
 
 const ReviewAdminPage = () => {
-  const { reviewData } = useReviewAdminPage();
-  const { userData } = useTransactionAdminPage();
+  const { data: reviewData } = useReviewQuery();
+  const { data: userData } = useUserAllQuery();
   const emailFilters =
     userData?.map((user) => ({
       label: user.email,
@@ -121,7 +121,7 @@ const ReviewAdminPage = () => {
   ];
 
   return (
-    <div className="pt-[100px]">
+    <div>
       <Table
         columns={columns}
         pagination={{ pageSize: 6 }}

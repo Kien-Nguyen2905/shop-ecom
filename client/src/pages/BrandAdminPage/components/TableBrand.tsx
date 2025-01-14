@@ -3,8 +3,8 @@ import { Table, Form, Typography, Popconfirm, Button } from 'antd';
 import TableCell from './TableCell';
 import dayjs from 'dayjs';
 import { TEditableTableProps } from './tyings';
-import { TBrandResponse } from '../../../services/Brand/tyings';
-import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { TBrand } from '../../../services/Brand/tyings';
+import { CalendarOutlined } from '@ant-design/icons';
 const TableBrand: React.FC<TEditableTableProps> = ({
   handleQueryProps,
   handleTableProps,
@@ -26,10 +26,9 @@ const TableBrand: React.FC<TEditableTableProps> = ({
     {
       title: 'Brand',
       dataIndex: 'name',
-      width: '35%',
+      width: '25%',
       editable: true,
-      sorter: (a: TBrandResponse, b: TBrandResponse) =>
-        a.name.localeCompare(b.name),
+      sorter: (a: TBrand, b: TBrand) => a.name.localeCompare(b.name),
     },
     {
       title: 'Created',
@@ -39,16 +38,10 @@ const TableBrand: React.FC<TEditableTableProps> = ({
       sorter: (a: any, b: any) =>
         dayjs(a.created_at).isBefore(b.created_at) ? -1 : 1,
       render: (text: string) => (
-        <div className="flex gap-2">
-          <span>
-            <CalendarOutlined style={{ marginRight: 4 }} />
-            {dayjs(text).format('DD-MM-YYYY')}
-          </span>
-          <span>
-            <ClockCircleOutlined style={{ marginRight: 4 }} />
-            {dayjs(text).format('HH:mm:ss')}
-          </span>
-        </div>
+        <span>
+          <CalendarOutlined className="mr-[4px]" />
+          {dayjs(text).format('DD-MM-YYYY')}
+        </span>
       ),
     },
     {
@@ -59,22 +52,16 @@ const TableBrand: React.FC<TEditableTableProps> = ({
       sorter: (a: any, b: any) =>
         dayjs(a.created_at).isBefore(b.created_at) ? -1 : 1,
       render: (text: string) => (
-        <div className="flex gap-2">
-          <span>
-            <CalendarOutlined style={{ marginRight: 4 }} />
-            {dayjs(text).format('DD-MM-YYYY')}
-          </span>
-          <span>
-            <ClockCircleOutlined style={{ marginRight: 4 }} />
-            {dayjs(text).format('HH:mm:ss')}
-          </span>
-        </div>
+        <span>
+          <CalendarOutlined className="mr-[4px]" />
+          {dayjs(text).format('DD-MM-YYYY')}
+        </span>
       ),
     },
     {
       title: 'Actions',
       dataIndex: 'Actions',
-      render: (_: any, record: TBrandResponse) => {
+      render: (_: any, record: TBrand) => {
         const editable = isEditing(record);
         return editable ? (
           <span className="flex gap-5">
@@ -120,7 +107,7 @@ const TableBrand: React.FC<TEditableTableProps> = ({
     }
     return {
       ...col,
-      onCell: (record: TBrandResponse) => ({
+      onCell: (record: TBrand) => ({
         record,
         inputType: 'text',
         dataIndex: col.dataIndex,
@@ -144,7 +131,7 @@ const TableBrand: React.FC<TEditableTableProps> = ({
         </Button>
       </div>
 
-      <Table<TBrandResponse>
+      <Table<TBrand>
         components={{
           body: { cell: TableCell },
         }}

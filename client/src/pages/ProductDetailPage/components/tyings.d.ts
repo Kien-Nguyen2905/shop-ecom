@@ -1,6 +1,9 @@
 import { UseFormReturn } from 'react-hook-form';
 import { TProductByIdResponse } from '../../../services/Product/tyings';
-import { TCategoryResponse } from '../../../services/Category/tyings';
+import {
+  TCategory,
+  TCategoryResponse,
+} from '../../../services/Category/tyings';
 import { TAddcartPayload } from '../../../components/ProductItem/tyings';
 import {
   TCreateReviewResponse,
@@ -26,7 +29,7 @@ export type TVariantProps = {
 export type TDisplayProductInforProps = {
   warehouseData: TWarehouseResponse;
   productData: TProductByIdResponse;
-  categoryData: TCategoryResponse;
+  categoryData: TCategory;
   brandData: TBrandResponse;
   variantId: string;
   onChangeVariant: (variantId: string) => void;

@@ -86,7 +86,9 @@ const OrderPage = () => {
                         ? 'Pending'
                         : order.status === 1
                         ? 'Accepted'
-                        : 'Cancled'}
+                        : order.status === 2
+                        ? 'Canceled'
+                        : 'Returned'}
                     </p>
                     <p>
                       <strong>Address:</strong>{' '}

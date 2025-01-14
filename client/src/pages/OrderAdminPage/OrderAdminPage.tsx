@@ -1,4 +1,4 @@
-import { Button, Dropdown, Table, Card, Row, Col, Tag, Select } from 'antd';
+import { Button, Dropdown, Table, Tag, Select } from 'antd';
 import { useOrderAdminPage } from './useOrderAdminPage';
 import { formatCurrency } from '../../utils';
 import dayjs from 'dayjs';
@@ -10,29 +10,20 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { MdOutlineLocalShipping } from 'react-icons/md';
-import { GoCheckbox } from 'react-icons/go';
 import { TOrderItem } from './tyings';
 import { OrderDetail } from './components';
-import { FaRegCalendarTimes } from 'react-icons/fa';
-import { IoTimerOutline } from 'react-icons/io5';
-import { AiOutlineFileDone } from 'react-icons/ai';
+import { SpinLoading } from '../../components';
 const { Option } = Select;
 const OrderAdminPage = () => {
-  const {
-    orderData,
-    userData,
-    todayOrders,
-    todayPendingOrders,
-    todayAcceptedOrders,
-    todayRejectedOrders,
-    openModal,
-    orderDetailProps,
-  } = useOrderAdminPage();
+  const { orderData, userData, openModal, orderDetailProps } =
+    useOrderAdminPage();
+  if (!orderData) return <SpinLoading />;
   const emailFilters =
     userData?.map((user) => ({
       label: user.email,
       value: user.email,
     })) || [];
+
   const columns: any = [
     {
       title: 'Order ID',
@@ -200,43 +191,8 @@ const OrderAdminPage = () => {
       },
     },
   ];
-
   return (
-    <div className="pt-[50px]">
-      <Row gutter={16} className="pb-[30px]">
-        <Col span={6}>
-          <Card title="Amount Today" bordered={false}>
-            <div className="flex items-center gap-3">
-              <AiOutlineFileDone size={24} />
-              <p>{todayOrders}</p>
-            </div>
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card title="Pending Today" bordered={false}>
-            <div className="flex items-center gap-3">
-              <IoTimerOutline size={24} />
-              <p>{todayPendingOrders}</p>
-            </div>
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card title="Accepted Today" bordered={false}>
-            <div className="flex items-center gap-3">
-              <GoCheckbox size={24} className="text-green-600" />
-              <p>{todayAcceptedOrders}</p>
-            </div>
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card title="Rejected Today" bordered={false}>
-            <div className="flex items-center gap-3">
-              <FaRegCalendarTimes size={24} className="text-red-600" />
-              <p>{todayRejectedOrders}</p>
-            </div>
-          </Card>
-        </Col>
-      </Row>
+    <div>
       <Table
         columns={columns}
         dataSource={orderData}

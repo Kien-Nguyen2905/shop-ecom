@@ -1,15 +1,14 @@
 import React from 'react';
 import { useCategoryAdminPage } from './useCategoryAdminPage';
 import { TableCategory } from './components';
+import { SpinLoading } from '../../components';
 
 const CategoryAdminPage: React.FC = () => {
   const { handleQueryProps, handleTableProps } = useCategoryAdminPage();
 
-  if (!handleQueryProps.dataCategory) {
-    return <h1>Loading...</h1>;
-  }
+  if (!handleQueryProps.dataCategory) return <SpinLoading />;
   return (
-    <div className="pt-[60px]">
+    <div className="">
       <TableCategory
         handleQueryProps={handleQueryProps}
         handleTableProps={handleTableProps}

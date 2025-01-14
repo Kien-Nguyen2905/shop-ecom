@@ -23,7 +23,7 @@ import { updateWishlist } from '../../store/middlewares/wishlistMiddleWare';
 import { message } from 'antd';
 import { TUpdateWishlistPayload } from '../../services/Wishlist/tyings';
 import { TWarehouseResponse } from '../../services/Warehouse/tyings';
-import { TCategoryResponse } from '../../services/Category/tyings';
+import { TCategory } from '../../services/Category/tyings';
 import { TBrandResponse } from '../../services/Brand/tyings';
 export const useProductDetailPage = () => {
   const { toggleModal: openModal } = useMainContext();
@@ -132,7 +132,7 @@ export const useProductDetailPage = () => {
     variantId,
     onChangeVariant,
     quantityForm,
-    categoryData: categoryData as TCategoryResponse,
+    categoryData: categoryData as TCategory,
     handleAddCart,
     warehouseData: warehouseData as TWarehouseResponse,
     onAddWishlist,

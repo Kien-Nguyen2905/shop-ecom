@@ -1,4 +1,4 @@
 export type TFormValues = {
-  description: string;
-  title: string;
+  name: string;
+  attributes: string;
 };

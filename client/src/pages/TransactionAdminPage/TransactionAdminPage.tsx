@@ -1,4 +1,4 @@
-import { Table, Select, Card, Row, Col, Tag } from 'antd';
+import { Table, Select, Tag } from 'antd';
 import { useTransactionAdminPage } from './useTransactionAdminPage';
 import dayjs from 'dayjs';
 import { formatCurrency } from '../../utils';
@@ -8,24 +8,13 @@ import {
   ClockCircleOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { MdOutlineLocalShipping, MdOutlineAttachMoney } from 'react-icons/md';
-import { GrTransaction } from 'react-icons/gr';
-import { GoCheckbox } from 'react-icons/go';
-import { FaRegCalendarTimes } from 'react-icons/fa';
+import { MdOutlineLocalShipping } from 'react-icons/md';
 
 const { Option } = Select;
 
 const TransactionAdminPage = () => {
-  const {
-    transactionData,
-    userData,
-    todayFailRevenue,
-    todaySuccessRevenue,
-    todaySuccessTransactions,
-    todayFailedTransactions,
-  } = useTransactionAdminPage();
+  const { transactionData, userData } = useTransactionAdminPage();
 
-  // Generate email filter options from userData
   const emailFilters =
     userData?.map((user) => ({
       label: user.email,
@@ -172,43 +161,7 @@ const TransactionAdminPage = () => {
   ];
 
   return (
-    <div className="pt-[50px]">
-      <Row gutter={16} className="pb-[30px]">
-        <Col span={6}>
-          <Card title="Total Successed Today" bordered={false}>
-            <div className="flex items-center gap-3">
-              <MdOutlineAttachMoney size={24} />
-              <p>{formatCurrency(todaySuccessRevenue)}</p>
-            </div>
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card title="Total Failed Today" bordered={false}>
-            <div className="flex items-center gap-3">
-              <GrTransaction size={24} />
-              <p>{formatCurrency(todayFailRevenue)}</p>
-            </div>
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card title="Successful  Today" bordered={false}>
-            <div className="flex items-center gap-3">
-              <GoCheckbox size={24} className="text-green-600" />
-              <p>{todaySuccessTransactions}</p>
-            </div>
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card title="Failed  Today" bordered={false}>
-            <div className="flex items-center gap-3">
-              <FaRegCalendarTimes size={24} className="text-red-600" />
-              <p>{todayFailedTransactions}</p>
-            </div>
-          </Card>
-        </Col>
-      </Row>
-
-      {/* Table section */}
+    <div>
       <Table
         columns={columns}
         dataSource={transactionData}

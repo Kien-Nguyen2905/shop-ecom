@@ -16,7 +16,7 @@ export const useProductQuery = (queryString = '') => {
   });
 };
 
-export const useProductByIdQuery = (id: string | undefined) => {
+export const useProductByIdQuery = (id: string) => {
   return useQuery<TProductByIdResponse>({
     queryKey: ['product', id],
     queryFn: async () => {
@@ -62,6 +62,9 @@ export const useUpadteProductMutation = (id: string) => {
       productServices.updateCategory(id, payload),
 
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['product'],
+      });
       queryClient.invalidateQueries({
         queryKey: ['product', id],
       });

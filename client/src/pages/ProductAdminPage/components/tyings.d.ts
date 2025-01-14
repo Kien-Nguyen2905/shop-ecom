@@ -1,20 +1,45 @@
+import { Dispatch, SetStateAction } from 'react';
 import { TBrandResponse } from '../../../services/Brand/tyings';
 import { TCategoryResponse } from '../../../services/Category/tyings';
 import { TProductByIdResponse } from '../../../services/Product/tyings';
+import {
+  Control,
+  FieldErrors,
+  UseFormSetValue,
+  UseFormWatch,
+} from 'react-hook-form';
+import { UploadFile } from 'antd';
+import { TInformationResponse } from '../../../services/Information/tyings';
 
-export type TViewProductProps = {
+export type TProductProps = {
   isOpen: boolean;
-  closeModalView: () => void;
-  listData: TProductByIdResponse;
-  categoryList: TCategoryResponse[];
+  closeModalAdd: () => void;
   brandList: TBrandResponse;
-};
-
-export type TAddProductProps = {
-  isOpen: boolean; // Determines if the Add Product drawer is open
-  closeModalAdd: () => void; // Function to close the drawer
-  brandList: { _id: string; name: string }[]; // List of brands, each with an id and name
-  categoryList: { _id: string; name: string }[]; // List of categories, each with an id and name
+  categoryList: TCategoryResponse;
+  isView?: boolean;
+  setCategoryId: Dispatch<SetStateAction<string>>;
+  variants: any[];
+  setVariants: Dispatch<SetStateAction<any[]>>;
+  watch: UseFormWatch<FormValues>;
+  handleSaveProduct: () => void;
+  control: Control<FormValues, any>;
+  errors: FieldErrors<FormValues>;
+  onChange: (fileList: newFileList) => void;
+  onPreview: (file: UploadFile) => void;
+  setValue: UseFormSetValue<FormValues>;
+  fileList: UploadFile[];
+  activeKey: string[];
+  handleCollapseChange: (key: string | string[]) => void;
+  onChangeVariant: any;
+  uploadedImages: {
+    [key: number]: any[];
+  };
+  handleRemoveVariant: (index: number) => void;
+  handleAddVariant: () => void;
+  dataInformation: TInformationResponse;
+  showAttributeByCategory: (categoryId: string) => void;
+  productDetails: TProductByIdResponse;
+  productId: string;
 };
 
 export type Variant = {
@@ -25,6 +50,7 @@ export type Variant = {
   discount: number;
   images: string[];
 };
+
 export type TFeatured = {
   isPopular: boolean;
   onSale: boolean;

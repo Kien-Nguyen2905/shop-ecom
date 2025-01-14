@@ -1,4 +1,5 @@
-export type TCategoryResponse = {
+export type TCategoryResponse = TCategory[];
+export type TCategory = {
   _id: string;
   name: string;
   created_at: string;

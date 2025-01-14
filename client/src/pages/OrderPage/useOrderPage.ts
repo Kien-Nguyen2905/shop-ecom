@@ -8,8 +8,7 @@ import { message } from 'antd';
 import { useDispatch } from 'react-redux';
 import { AppDispatch, useSelector } from '../../store/store';
 import { cancleOrder, getOrder } from '../../store/middlewares/orderMiddleWare';
-import { TModalRiewProps } from './components/tyings';
-import { TFormValues } from '../CategoryAdminPage/tyings.';
+import { TFormValues, TModalRiewProps } from './components/tyings';
 import {
   useDistrictsQuery,
   useProvicesQuery,

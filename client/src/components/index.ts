@@ -8,3 +8,4 @@ export { SkeletonCard } from './SkeletonCard';
 export { Loading } from './Loading';
 export { OverPlay } from './OverPlay';
 export { BreadCrumb } from './BreadCrumb';
+export { SpinLoading } from './SpinLoading';

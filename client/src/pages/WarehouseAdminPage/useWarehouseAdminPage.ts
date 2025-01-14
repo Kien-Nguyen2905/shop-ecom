@@ -4,7 +4,6 @@ import {
   useWarehouse,
   useWarehouseByIdQuery,
 } from '../../queries';
-import { useProductAdminPage } from '../ProductAdminPage/useProductAdminPage';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ADMIN_PATHS } from '../../constants';
 import { useForm } from 'react-hook-form';
@@ -35,7 +34,7 @@ export const useWarehouseAdminPage = () => {
       title: 'Date',
       dataIndex: 'shipment_date',
       key: 'shipment_date',
-      render: (text: string) => new Date(text).toLocaleString(), // Format the shipment date
+      render: (text: string) => new Date(text).toLocaleString(),
     },
     {
       title: 'Import',

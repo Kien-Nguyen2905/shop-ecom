@@ -9,10 +9,10 @@ export type THandleTableProps = {
   form: FormInstance;
   editingKey: string;
   isInserting: boolean;
-  isEditing: (record: TBrandResponse) => boolean;
-  editRecord: (record: Partial<TBrandResponse>) => void;
+  isEditing: (record: TBrand) => boolean;
+  editRecord: (record: TBrand) => void;
   cancelRecord: () => void;
-  deleteRecord: (record: Partial<TBrandResponse>) => void;
+  deleteRecord: (record: TBrand) => void;
   saveRecord: (key: string, form: any) => Promise<void>;
   insertRecord: () => void;
 };

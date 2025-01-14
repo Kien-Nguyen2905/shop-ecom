@@ -10,9 +10,12 @@ import {
 import dayjs from 'dayjs';
 import { Form } from 'antd';
 import {
+  TBrand,
   TBrandPayload,
   TBrandResponse,
+  TCreateBrandResponse,
   TUpdateBrandPayload,
+  TUpdateBrandResponse,
 } from '../../services/Brand/tyings';
 
 export const useBrandAdminPage = () => {
@@ -21,30 +24,85 @@ export const useBrandAdminPage = () => {
   const deleteBrand = useDeleteBrandMutation();
   const updateBrand = useUpdateBrandMutation();
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [dataBrand, setDataBrand] = useState<TBrandResponse>(data!);
+  const [dataBrand, setDataBrand] = useState<TBrandResponse>(
+    data as TBrandResponse,
+  );
   const [editingKey, setEditingKey] = useState<string>('');
   const [isInserting, setIsInserting] = useState<boolean>(false);
   const [form] = Form.useForm();
-  useEffect(() => {
-    if (data) {
-      setDataBrand(data);
-    }
-  }, [data]);
-  //NOTE: nếu không có useEffect này thì khi click edit sẽ mấy hết giá trị input
-  //NOTE: không hợp chung được vì khi insert cũng setDataBrand theo cái list mới với 1 item new
-  useEffect(() => {
-    if (editingKey) {
-      // When editing a record, set form values to the record data
-      const record = dataBrand.find((item) => item._id === editingKey);
-      if (record) {
-        form.setFieldsValue({ name: record.name });
+
+  const handleCreate = async (
+    payload: TBrandPayload,
+  ): Promise<TCreateBrandResponse | undefined> => {
+    try {
+      const res = await createBrand.mutateAsync(payload);
+      if (res.data.data._id) {
+        showToast({
+          type: 'success',
+          message: res?.data.message,
+        });
+        return res?.data.data;
       }
+    } catch (error: any) {
+      if (error?.response?.data?.message) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          newItem: error?.response?.data?.message,
+        }));
+      }
+      showToast({
+        type: 'error',
+        message: error?.response?.data?.message,
+      });
     }
-  }, [editingKey, dataBrand, form]);
+  };
 
-  const isEditing = (record: TBrandResponse) => record._id === editingKey;
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await deleteBrand.mutateAsync(id);
+      if (res?.data.message) {
+        showToast({
+          type: 'success',
+          message: res?.data.message,
+        });
+      }
+    } catch (error: any) {
+      showToast({
+        type: 'error',
+        message: error?.response?.data?.message,
+      });
+    }
+  };
 
-  const editRecord = (record: Partial<TBrandResponse>) => {
+  const handleUpdate = async (
+    payload: TUpdateBrandPayload,
+  ): Promise<TUpdateBrandResponse | undefined> => {
+    try {
+      const res = await updateBrand.mutateAsync(payload);
+      if (res?.data.data._id) {
+        showToast({
+          type: 'success',
+          message: res?.data.message,
+        });
+        return res?.data.data;
+      }
+    } catch (error: any) {
+      if (error?.response?.data?.message) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          newItem: error?.response?.data?.message,
+        }));
+      }
+      showToast({
+        type: 'error',
+        message: error?.response?.data?.message,
+      });
+    }
+  };
+
+  const isEditing = (record: TBrand) => record._id === editingKey;
+
+  const editRecord = (record: TBrand) => {
     setEditingKey(record._id!);
   };
 
@@ -55,7 +113,7 @@ export const useBrandAdminPage = () => {
     setErrors({});
   };
 
-  const deleteRecord = async (record: Partial<TBrandResponse>) => {
+  const deleteRecord = async (record: TBrand) => {
     if (record._id) {
       await handleDelete(record._id);
     }
@@ -122,7 +180,7 @@ export const useBrandAdminPage = () => {
         name: '',
         created_at: dayjs().toISOString(),
         updated_at: dayjs().toISOString(),
-      } as TBrandResponse,
+      } as TBrand,
       ...dataBrand,
     ];
     setDataBrand(newData);
@@ -130,75 +188,22 @@ export const useBrandAdminPage = () => {
     setIsInserting(true);
   };
 
-  const handleCreate = async (
-    payload: TBrandPayload,
-  ): Promise<TBrandResponse | undefined> => {
-    try {
-      const res = await createBrand.mutateAsync(payload);
-
-      if (res?.data?.data.name) {
-        showToast({
-          type: 'success',
-          message: res?.data.message,
-        });
-        return res?.data.data as TBrandResponse;
-      }
-    } catch (error: any) {
-      if (error?.response?.data?.message) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          newItem: error?.response?.data?.message,
-        }));
-      }
-      showToast({
-        type: 'error',
-        message: error?.response?.data?.message,
-      });
+  useEffect(() => {
+    if (data) {
+      setDataBrand(data);
     }
-  };
-
-  const handleDelete = async (id: string) => {
-    try {
-      const res = await deleteBrand.mutateAsync(id);
-      if (res?.data.message) {
-        showToast({
-          type: 'success',
-          message: res?.data.message,
-        });
+  }, [data]);
+  //NOTE: nếu không có useEffect này thì khi click edit sẽ mấy hết giá trị input
+  //NOTE: không hợp chung được vì khi insert cũng setDataBrand theo cái list mới với 1 item new
+  useEffect(() => {
+    if (editingKey) {
+      // When editing a record, set form values to the record data
+      const record = dataBrand.find((item) => item._id === editingKey);
+      if (record) {
+        form.setFieldsValue({ name: record.name });
       }
-    } catch (error: any) {
-      showToast({
-        type: 'error',
-        message: error?.response?.data?.message,
-      });
     }
-  };
-
-  const handleUpdate = async (
-    payload: TUpdateBrandPayload,
-  ): Promise<TBrandResponse | undefined> => {
-    try {
-      const res = await updateBrand.mutateAsync(payload);
-      if (res?.data.data.name) {
-        showToast({
-          type: 'success',
-          message: res?.data.message,
-        });
-        return res?.data.data as TBrandResponse;
-      }
-    } catch (error: any) {
-      if (error?.response?.data?.message) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          newItem: error?.response?.data?.message,
-        }));
-      }
-      showToast({
-        type: 'error',
-        message: error?.response?.data?.message,
-      });
-    }
-  };
+  }, [editingKey, dataBrand, form]);
 
   const handleQueryProps = {
     dataBrand,

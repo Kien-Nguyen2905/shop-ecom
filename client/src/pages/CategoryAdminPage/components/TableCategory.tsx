@@ -13,8 +13,8 @@ import { EllipsisOutlined } from '@ant-design/icons';
 import { Controller } from 'react-hook-form';
 import dayjs from 'dayjs';
 import { TEditableTableProps } from './tyings';
-import { TCategoryResponse } from '../../../services/Category/tyings';
-import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { TCategory } from '../../../services/Category/tyings';
+import { CalendarOutlined } from '@ant-design/icons';
 
 const TableCategory: React.FC<TEditableTableProps> = ({
   handleQueryProps,
@@ -49,55 +49,40 @@ const TableCategory: React.FC<TEditableTableProps> = ({
     {
       title: 'Category',
       dataIndex: 'name',
-      width: '35%',
-      sorter: (a: TCategoryResponse, b: TCategoryResponse) =>
-        a.name.localeCompare(b.name),
+      width: '25%',
+      sorter: (a: TCategory, b: TCategory) => a.name.localeCompare(b.name),
     },
     {
       title: 'Created',
       dataIndex: 'created_at',
       width: '25%',
-      editable: false,
       sorter: (a: any, b: any) =>
         dayjs(a.created_at).isBefore(b.created_at) ? -1 : 1,
       render: (text: string) => (
-        <div className="flex gap-2">
-          <span>
-            <CalendarOutlined style={{ marginRight: 4 }} />
-            {dayjs(text).format('DD-MM-YYYY')}
-          </span>
-          <span>
-            <ClockCircleOutlined style={{ marginRight: 4 }} />
-            {dayjs(text).format('HH:mm:ss')}
-          </span>
-        </div>
+        <span>
+          <CalendarOutlined className="mr-[4px]" />
+          {dayjs(text).format('DD-MM-YYYY')}
+        </span>
       ),
     },
     {
       title: 'Updated',
       dataIndex: 'updated_at',
       width: '25%',
-      editable: false,
       sorter: (a: any, b: any) =>
         dayjs(a.created_at).isBefore(b.created_at) ? -1 : 1,
       render: (text: string) => (
-        <div className="flex gap-2">
-          <span>
-            <CalendarOutlined style={{ marginRight: 4 }} />
-            {dayjs(text).format('DD-MM-YYYY')}
-          </span>
-          <span>
-            <ClockCircleOutlined style={{ marginRight: 4 }} />
-            {dayjs(text).format('HH:mm:ss')}
-          </span>
-        </div>
+        <span>
+          <CalendarOutlined className="mr-[4px]" />
+          {dayjs(text).format('DD-MM-YYYY')}
+        </span>
       ),
     },
     {
       title: 'Actions',
       width: '10%',
       dataIndex: 'actions',
-      render: (_: any, record: TCategoryResponse) => {
+      render: (_: any, record: TCategory) => {
         const handleDeleteConfirm = () => {
           Modal.confirm({
             title: 'Are you sure you want to delete this category?',
@@ -148,7 +133,6 @@ const TableCategory: React.FC<TEditableTableProps> = ({
           Insert
         </Button>
       </div>
-
       <Table
         dataSource={dataCategory}
         columns={columns}

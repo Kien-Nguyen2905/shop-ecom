@@ -9,14 +9,11 @@ export const useInformationByIdQuery = (id: string) => {
       const response = await informationServices.getInformation(id);
       return response.data?.data;
     },
-    enabled: !!id, // Chỉ gọi API khi `id` có giá trị
-    refetchOnWindowFocus: false, // Không tự động refetch khi focus vào window
-    staleTime: 0, // Luôn fetch dữ liệu mới nhất
-    retry: false,
+    enabled: !!id,
+    refetchOnWindowFocus: false,
   });
 };
 
-// Create new information
 export const useCreateInformationMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -29,7 +26,6 @@ export const useCreateInformationMutation = () => {
   });
 };
 
-// Update information
 export const useUpdateInformationMutation = () => {
   const queryClient = useQueryClient();
 
@@ -43,7 +39,6 @@ export const useUpdateInformationMutation = () => {
   });
 };
 
-// Delete information
 export const useDeleteInformationMutation = () => {
   const queryClient = useQueryClient();
 

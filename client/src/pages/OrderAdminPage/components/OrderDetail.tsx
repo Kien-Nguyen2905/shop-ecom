@@ -203,6 +203,20 @@ const OrderDetail: React.FC<TOrderDetailProps> = ({
               Return Order
             </Button>
           </div>
+          <div className="flex justify-end mt-5">
+            <Button
+              danger
+              onClick={() => {
+                handleOrder({
+                  order_id: orderDetail._id!,
+                  status: STATUS_ORDER.CANCLE,
+                  user_id: orderDetail.user_id,
+                });
+              }}
+            >
+              Cancle Order
+            </Button>
+          </div>
         </div>
       )}
     </Modal>
