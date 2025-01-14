@@ -1,6 +1,6 @@
 export enum ROLE {
-  Admin,
-  User
+  ADMIN,
+  CUSTOMER
 }
 export enum EVerification {
   ForgotPassword,

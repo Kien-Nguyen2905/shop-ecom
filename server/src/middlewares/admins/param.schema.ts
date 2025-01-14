@@ -16,7 +16,7 @@ export const adminAccessSchema: ParamSchema = {
           token: access_token,
           secretOrPublicKey: env.JWT_SECRET_ACCESS_TOKEN as string
         })
-        if (docode_token.role !== ROLE.Admin) {
+        if (docode_token.role !== ROLE.ADMIN) {
           throw new UnauthorizedError()
         }
       } catch (error) {

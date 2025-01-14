@@ -20,7 +20,7 @@ export default class User {
     this._id = user._id
     this.email = user.email
     this.password = user.password
-    this.role = user.role || ROLE.User
+    this.role = user.role || ROLE.CUSTOMER
     this.full_name = user.full_name || ''
     this.phone = user.phone || ''
     this.address = user.address || {}

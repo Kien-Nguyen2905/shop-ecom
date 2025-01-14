@@ -175,13 +175,14 @@ class UserServices {
     }
     const [access_token, refresh_token] = await this.signAPairToken({
       user_id,
-      role: ROLE.User
+      role: ROLE.CUSTOMER
     })
     const user = new User({
       _id: user_id,
       full_name,
       email,
-      password
+      password,
+      earn_point: 1
     })
     const token = new Token({ user_id, refresh_token: refresh_token })
     const cart = new Cart({ user_id, _id: new ObjectId() })
@@ -196,7 +197,7 @@ class UserServices {
     if (!result) {
       throw new InternalServerError()
     }
-    return { access_token, refresh_token, role: ROLE.User }
+    return { access_token, refresh_token, role: ROLE.CUSTOMER }
   }
 
   async checkEmailExist(email: string) {
@@ -492,7 +493,7 @@ class UserServices {
 
       const [access_token, refresh_token] = await this.signAPairToken({
         user_id,
-        role: ROLE.User
+        role: ROLE.CUSTOMER
       })
       const user = new User({
         _id: user_id,
@@ -512,7 +513,7 @@ class UserServices {
       if (!result) {
         throw new InternalServerError()
       }
-      return { access_token, refresh_token, role: ROLE.User }
+      return { access_token, refresh_token, role: ROLE.CUSTOMER }
     }
   }
 }

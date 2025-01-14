@@ -456,6 +456,7 @@ class OrderService {
     const matchStage = year
       ? {
           $match: {
+            status: STATUS_TRANSACTION.SUCCESS,
             created_at: {
               $gte: new Date(`${year}-01-01T00:00:00.000Z`),
               $lte: new Date(`${year}-12-31T23:59:59.999Z`)
@@ -464,13 +465,13 @@ class OrderService {
         }
       : {}
 
-    const revenueData = await databaseService.orders
+    const revenueData = await databaseService.transactions
       .aggregate([
         matchStage,
         {
           $group: {
             _id: { $month: '$created_at' },
-            totalRevenue: { $sum: '$total' }
+            totalRevenue: { $sum: '$value' }
           }
         },
         { $sort: { _id: 1 } }

@@ -203,14 +203,42 @@ class ProductServices {
           { $limit: limit }
         ])
         .toArray()
+      const totalProductsPipeline = [
+        { $match: query },
+        {
+          $addFields: {
+            firstVariantPrice: {
+              $multiply: [
+                { $arrayElemAt: ['$variants.price', 0] },
+                { $subtract: [1, { $arrayElemAt: ['$variants.discount', 0] }] }
+              ]
+            }
+          }
+        },
+        ...(minPrice || maxPrice
+          ? [
+              {
+                $match: {
+                  firstVariantPrice: {
+                    ...(minPrice !== undefined ? { $gte: minPrice } : {}),
+                    ...(maxPrice !== undefined ? { $lte: maxPrice } : {})
+                  }
+                }
+              }
+            ]
+          : [])
+      ]
+      const totalProducts = await databaseService.products
+        .aggregate([...totalProductsPipeline, { $count: 'count' }])
+        .toArray()
 
-      const totalProducts = await databaseService.products.countDocuments(query)
-      const totalPages = Math.ceil(totalProducts / limit)
+      const totalProductCount = totalProducts[0]?.count || 0
+      const totalPages = Math.ceil(totalProductCount / limit)
 
       return {
         products,
         pagination: {
-          totalProducts,
+          totalProducts: totalProductCount,
           totalPages,
           currentPage: page,
           limit
