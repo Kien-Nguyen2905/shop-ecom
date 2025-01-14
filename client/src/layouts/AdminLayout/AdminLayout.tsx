@@ -3,7 +3,7 @@ import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CUSTOMER_PATHS, LOCAL_STORAGE } from '../../constants';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { profileUser } from '../../store/middlewares/authMiddleWare';
 import { AppDispatch, useSelector } from '../../store/store';
@@ -33,13 +33,14 @@ const AdminLayout = () => {
     navigate(CUSTOMER_PATHS.ROOT);
     return;
   }
+
   return (
     <QueryClientProvider client={queryClient}>
       <div className="w-full h-screen">
         <Header />
         <div className="flex w-full h-full">
           <Sidebar />
-          <div className="flex-1 px-10">
+          <div className="flex-1 px-5 xl:px-10">
             <Outlet />
           </div>
         </div>

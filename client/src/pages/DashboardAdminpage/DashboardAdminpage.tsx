@@ -11,7 +11,6 @@ import { Select } from 'antd';
 import { formatCurrency } from '../../utils';
 import { useDashboardAdminPage } from './useDashboardAdminPage';
 import { YEAR } from '../../constants';
-
 const { Option } = Select;
 
 const DashboardAdminpage = () => {
@@ -37,7 +36,7 @@ const DashboardAdminpage = () => {
           ))}
         </Select>
       </div>
-      <div className="p-6 bg-white rounded-lg shadow-lg">
+      <div className="p-6 bg-white rounded-lg shadow-lg ">
         <ResponsiveContainer width="100%" height={400}>
           <BarChart
             data={revenueData}
@@ -49,7 +48,15 @@ const DashboardAdminpage = () => {
               className="stroke-gray-300"
             />
             <XAxis dataKey="month" className="text-sm text-gray-500" />
-            <YAxis className="text-sm text-gray-500" />
+            <YAxis
+              tickFormatter={(value) => {
+                if (value >= 1000000) return `${value / 1000000}M`;
+                if (value >= 1000) return `${value / 1000}K`;
+                return value;
+              }}
+              className="text-sm text-gray-500"
+            />
+
             <Tooltip
               contentStyle={{
                 backgroundColor: '#f9fafb',
@@ -64,7 +71,7 @@ const DashboardAdminpage = () => {
               dataKey="revenue"
               fill="#4f46e5"
               barSize={20}
-              radius={[5, 5, 0, 0]} // Bo góc cho cột trên đầu
+              radius={[5, 5, 0, 0]}
             />
           </BarChart>
         </ResponsiveContainer>
