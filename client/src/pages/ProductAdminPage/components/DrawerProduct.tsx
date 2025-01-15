@@ -41,7 +41,6 @@ const DrawerProduct: FC<TProductProps> = ({
   dataInformation,
   showAttributeByCategory,
   productDetails,
-  productId,
 }) => {
   const columns = [
     {
@@ -72,13 +71,13 @@ const DrawerProduct: FC<TProductProps> = ({
           disabled={isView}
           onKeyUp={(e) => {
             if (!/^\d$/.test(e.key)) {
-              e.preventDefault(); // Ngăn chặn nhập ký tự không phải số
+              e.preventDefault(); // prevent value not number
             }
           }}
           onChange={(e) => {
             const inputValue = e.target.value;
             if (/^\d*$/.test(inputValue)) {
-              // Kiểm tra chỉ chứa số hoặc rỗng
+              // Check contain number or empty
               const newVariants = [...variants];
               newVariants[record.index].price =
                 inputValue === '' ? '' : Number(inputValue);
@@ -96,19 +95,18 @@ const DrawerProduct: FC<TProductProps> = ({
         return (
           <Input
             value={text}
-            disabled={productId ? true : false}
+            disabled={record._id}
             min={1}
             type="number"
             onKeyUp={(e) => {
-              // Ngăn nhập ký tự không phải số
               if (!/^\d$/.test(e.key)) {
-                e.preventDefault();
+                e.preventDefault(); // prevent value not number
               }
             }}
             onChange={(e) => {
               const inputValue = e.target.value;
               if (/^\d*$/.test(inputValue)) {
-                // Kiểm tra chỉ chứa số hoặc rỗng
+                // Check contain number or empty
                 const newVariants = [...variants];
                 newVariants[record.index].stock =
                   inputValue === '' ? '' : Number(inputValue);
@@ -132,14 +130,14 @@ const DrawerProduct: FC<TProductProps> = ({
           type="number"
           onKeyUp={(e) => {
             if (!/^\d$/.test(e.key)) {
-              e.preventDefault(); // Ngăn chặn nhập ký tự không phải số
+              e.preventDefault(); // prevent value not number
             }
           }}
           onChange={(e) => {
-            const value = Number(e.target.value); // Lấy giá trị nhập vào
+            const value = Number(e.target.value);
             if (value >= 0 && value <= 100) {
               const newVariants = [...variants];
-              newVariants[record.index].discount = value / 100; // Chuyển sang giá trị thập phân
+              newVariants[record.index].discount = value / 100;
               setVariants(newVariants);
             }
           }}
@@ -208,8 +206,8 @@ const DrawerProduct: FC<TProductProps> = ({
                     placeholder="Select category"
                     {...field}
                     onChange={(value) => {
-                      field.onChange(value); // Update the form value
-                      showAttributeByCategory(value); // Trigger your custom logic
+                      field.onChange(value);
+                      showAttributeByCategory(value);
                     }}
                   >
                     {categoryList?.map((category: any) => (
@@ -381,17 +379,16 @@ const DrawerProduct: FC<TProductProps> = ({
                         rules={{
                           required: 'Please choose attribute value',
                         }}
-                        // disabled={isView}
                         render={({ field }) => {
                           const fieldValue = Array.isArray(field.value)
                             ? field.value
-                            : []; // Đảm bảo giá trị là mảng
+                            : [];
                           return (
                             <Checkbox.Group
                               disabled={isView}
                               className="w-full"
                               {...field}
-                              value={fieldValue} // Truyền giá trị đã đảm bảo là mảng
+                              value={fieldValue}
                               options={value.map((option: string) => ({
                                 label: option,
                                 value: option,
@@ -480,7 +477,6 @@ const DrawerProduct: FC<TProductProps> = ({
                                 }}
                                 fileList={uploadedImages[variant.index]}
                               >
-                                {/* Kiểm tra điều kiện nếu uploadedImages[variant.index] chưa có ảnh hoặc ít hơn 3 ảnh */}
                                 {(uploadedImages[variant?.index]?.length ?? 0) <
                                   3 && <IoCloudUploadOutline />}
                               </Upload>

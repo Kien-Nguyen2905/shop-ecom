@@ -39,7 +39,6 @@ export type TProductProps = {
   dataInformation: TInformationResponse;
   showAttributeByCategory: (categoryId: string) => void;
   productDetails: TProductByIdResponse;
-  productId: string;
 };
 
 export type Variant = {
@@ -64,7 +63,7 @@ export type FormValues = {
   description: string;
   featured: TFeatured;
   thumbnail: any;
-  variants: Variant[];
+  variants: TVariant[];
   minimum_stock: number;
   attributes: Record<string, string | []>;
 };

@@ -1,3 +1,11 @@
+type Variant = {
+  index: number;
+  color: string;
+  price: number;
+  stock: number;
+  discount: number;
+  images: string[];
+};
 export type TFeatured = {
   isPopular: boolean;
   onSale: boolean;
@@ -64,7 +72,7 @@ export type TCreateProductPayload = {
   thumbnail: string;
   description: string;
   featured: TFeatured;
-  variants: TVariant[];
+  variants: Variant[];
   minimum_stock: number;
   attributes: Record<string, string | []>;
 };

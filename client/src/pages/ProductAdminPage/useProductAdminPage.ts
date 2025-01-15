@@ -167,7 +167,7 @@ export const useProductAdminPage = () => {
     }
   };
 
-  const handleSaveProduct = async (values: any) => {
+  const handleSaveProduct = async (values: FormValues) => {
     try {
       if (variants.length >= 1) {
         values.variants = variants;
@@ -175,6 +175,7 @@ export const useProductAdminPage = () => {
         values.minimum_stock = +values.minimum_stock;
         const thumbNail = watch('thumbnail');
         if (productId) {
+          console.log(values);
           // UpdateProduct
           if (productDetails?.variants.length !== values.variants.length)
             // đánh dấu lại index theo thứ tự cho trường hợp remove variant
@@ -467,7 +468,6 @@ export const useProductAdminPage = () => {
     dataInformation: dataInformation as TInformationResponse,
     showAttributeByCategory,
     productDetails: productDetails as TProductByIdResponse,
-    productId: productId || '',
   };
 
   const mappedProductData: TProductTableProps[] | undefined =
