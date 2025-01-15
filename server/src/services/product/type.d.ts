@@ -14,16 +14,15 @@ export type TProductPayload = {
 }
 
 export type TUpdateProductPayload = {
-  name?: string
-  category_id?: string
-  brand_id?: string
-  thumbnail?: string
-  description?: string
-  featured?: TFeatured
+  name: string
+  category_id: string
+  brand_id: string
+  thumbnail: string
+  featured: TFeatured
+  minimum_stock: number
+  description: string
   variants: TVariant[]
-  minimum_stock?: number
-  attributes?: Record<string, string | []>
-  rate?: number
+  attributes: Record<string, string | []>
 }
 export type TProductQuery = {
   page?: string

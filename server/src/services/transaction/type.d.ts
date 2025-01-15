@@ -28,17 +28,17 @@ export type TTransaction = {
 }
 
 export type TWebhookData = {
-  gateway: string // Tên cổng thanh toán (ví dụ: MBBank)
-  transactionDate: string // Ngày giờ giao dịch (ISO format hoặc string)
-  accountNumber: string // Số tài khoản
-  subAccount: string | null // Tài khoản phụ (nếu có)
-  code: string | null // Mã giao dịch (nếu có)
-  content: string // Nội dung giao dịch
-  transferType: 'in' | 'out' // Loại giao dịch: nạp tiền ('in') hoặc rút tiền ('out')
-  description: string // Mô tả chi tiết giao dịch
-  transferAmount: number // Số tiền giao dịch
-  referenceCode: string // Mã tham chiếu giao dịch
-  accumulated: number // Số dư tích lũy (nếu có)
-  id: number // ID giao dịch (có thể là từ hệ thống webhook của ngân hàng)
+  gateway: string
+  transactionDate: string
+  accountNumber: string
+  subAccount: string | null
+  code: string | null
+  content: string
+  transferType: 'in' | 'out'
+  description: string
+  transferAmount: number
+  referenceCode: string
+  accumulated: number
+  id: number
 }
 export type TTransactionResponse = TTransaction[]

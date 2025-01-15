@@ -1,6 +1,6 @@
-import { TUpdateWarehousePayload, TWarehousePayload } from '~/services/warehouse/type'
+import { TWarehousePayload } from '~/services/warehouse/type'
 import { ObjectId } from 'mongodb'
-import { BRAND_MESSAGES, CATEGORY_MESSAGES, PRODUCT_MESSAGES } from '~/constants/message'
+import { PRODUCT_MESSAGES } from '~/constants/message'
 import { BadRequestError, ConflictRequestError, InternalServerError, NotFoundError } from '~/models/errors/errors'
 import Product from '~/models/schemas/products/products.schemas'
 import databaseService from '~/services/database/database.services'
@@ -12,6 +12,13 @@ import brandServices from '~/services/brand/brand.services'
 import imagesService from '~/services/images/images.services'
 
 class ProductServices {
+  async checkProductByName(name: string) {
+    const result = await databaseService.products.findOne({ name })
+    if (result) {
+      throw new ConflictRequestError({ message: PRODUCT_MESSAGES.PRODUCT_EXISTS })
+    }
+  }
+
   async createProduct({
     thumbnail,
     description,
@@ -31,6 +38,7 @@ class ProductServices {
     ])
 
     variants.forEach((item) => ((item._id = new ObjectId()), (item.sold = 0)))
+
     const product = new Product({
       _id: product_id,
       name,
@@ -45,8 +53,8 @@ class ProductServices {
       minimum_stock
     })
 
-    const resultInsert = await Promise.all([databaseService.products.insertOne(product)])
-    if (!resultInsert) {
+    const result = await databaseService.products.insertOne(product)
+    if (!result.acknowledged || !result.insertedId) {
       throw new InternalServerError()
     }
 
@@ -280,16 +288,8 @@ class ProductServices {
     }
   }
 
-  async checkProductById(productId: string) {
-    const productExist = await databaseService.products.findOne({ _id: new ObjectId(productId) })
-    if (!productExist) {
-      throw new NotFoundError({ message: PRODUCT_MESSAGES.PRODUCT_NOT_EXISTS })
-    }
-    return productExist
-  }
-
   async checkProductInOrder(productId: string) {
-    //Can not delete product in order pending
+    //Product in order status pending
     const productExist = await databaseService.orders.findOne({
       'products.product_id': new ObjectId(productId),
       status: 0
@@ -320,13 +320,6 @@ class ProductServices {
     return result
   }
 
-  async checkProductByName(name: string) {
-    const result = await databaseService.products.findOne({ name })
-    if (result) {
-      throw new ConflictRequestError({ message: PRODUCT_MESSAGES.PRODUCT_EXISTS })
-    }
-  }
-
   async checkProductByBrand(brandId: string) {
     const productExist = await databaseService.products.findOne({ brand_id: new ObjectId(brandId) })
     if (productExist) {
@@ -345,7 +338,26 @@ class ProductServices {
 
   async updateProduct(productId: string, payload: TUpdateProductPayload) {
     // Check product exist
-    const product = await this.checkProductById(productId)
+    const product = await this.getProductById(productId)
+
+    // Check product exist in order with status pending
+    await this.checkProductInOrder(productId)
+
+    const category_id = new ObjectId(payload.category_id)
+    const brand_id = new ObjectId(payload.brand_id)
+    // Check exist category and brand
+    await Promise.all([
+      categoryServices.getCategoryById(payload.category_id),
+      brandServices.getBrandById(payload.brand_id)
+    ])
+
+    // Check stock variant must be large minimum stock
+    const checkMinimumStock = payload.variants?.some((item) => item.stock <= payload.minimum_stock!)
+    if (checkMinimumStock) {
+      throw new BadRequestError({ message: PRODUCT_MESSAGES.VARIANT_STOCK_MINIMUM_STOCK })
+    }
+
+    // Delete images
     if (product.thumbnail !== payload.thumbnail) {
       await imagesService.deleteImage(product.thumbnail)
     }
@@ -358,8 +370,7 @@ class ProductServices {
         await Promise.all(imagesToDelete.map((image) => imagesService.deleteImage(image)))
       }
     }
-    // Check product exist in order with status pending
-    await this.checkProductInOrder(productId)
+
     // Remove product had been updated in cart users
     await databaseService.carts.updateMany(
       {
@@ -372,67 +383,37 @@ class ProductServices {
       }
     )
 
-    const category_id = new ObjectId(payload.category_id)
-    const brand_id = new ObjectId(payload.brand_id)
-
-    // Check exist category and brand
-    const [categoryExist, brandExist] = await Promise.all([
-      databaseService.categories.findOne({ _id: category_id }),
-      databaseService.brands.findOne({ _id: brand_id })
-    ])
-
-    if (!categoryExist) {
-      throw new NotFoundError({ message: CATEGORY_MESSAGES.CATEGORY_NOT_EXISTS })
-    }
-
-    if (!brandExist) {
-      throw new NotFoundError({ message: BRAND_MESSAGES.BRAND_NOT_EXISTS })
-    }
-
-    // Check stock variant must be large minimum stock
-    const checkMinimumStock = await payload.variants?.some((item) => item.stock <= payload.minimum_stock!)
-    if (checkMinimumStock) {
-      throw new BadRequestError({ message: 'Stock variant must be large minimun stock' })
-    }
-
     // Add field _id for variant item
     payload.variants = payload.variants?.map((variant) => ({
       ...variant,
       _id: new ObjectId(variant._id) || new ObjectId()
     }))
 
-    // Lấy danh sách variant_id trong payload
     const variantIdsInPayload = payload.variants?.map((variant) => new ObjectId(variant._id)) || []
-
-    // Lấy danh sách warehouse hiện tại liên quan đến productId
     const currentWarehouses = await databaseService.warehouse.find({ product_id: new ObjectId(productId) }).toArray()
 
-    // Cập nhật warehouse với variant cũ và nhập kho warehouse nếu có thêm variant
-    for (const variant of payload.variants || []) {
+    for (const variant of payload.variants) {
       const existingWarehouse = currentWarehouses.find((warehouse) =>
         warehouse.variant_id.equals(new ObjectId(variant._id))
       )
       if (existingWarehouse) {
-        // Cập nhật warehouse nếu đã tồn tại
+        // Update with old variant
         await databaseService.warehouse.updateOne(
           { _id: existingWarehouse._id, isDeleted: false },
           {
             $set: {
               minimum_stock: payload.minimum_stock,
-              product_name: payload.name!,
-              stock: variant.stock,
-              import_quantity: variant.stock,
+              product_name: payload.name,
               variant: variant.color,
-              updated_at: new Date(),
-              isDeleted: false
+              updated_at: new Date()
             }
           }
         )
       } else {
-        // Thêm warehouse mới nếu chưa tồn tại
+        //Add with new variant
         const resultInsert = await databaseService.warehouse.insertOne({
           product_id: new ObjectId(productId),
-          product_name: payload.name!,
+          product_name: payload.name,
           variant: variant.color,
           variant_id: new ObjectId(variant._id),
           minimum_stock: payload.minimum_stock!,
@@ -456,12 +437,10 @@ class ProductServices {
       }
     }
 
-    // Đánh dấu isDeleted là true cho những warehouse không có trong payload
+    //Mark isDeleted true for variant had been deleted
     const variantIdsToDelete = currentWarehouses
-      .filter((warehouse) => !variantIdsInPayload.some((id) => id.equals(warehouse.variant_id))) // So sánh đúng kiểu ObjectId
-      // nếu không khớp trả về true lấy phần tử đó
+      .filter((warehouse) => !variantIdsInPayload.some((id) => id.equals(warehouse.variant_id)))
       .map((warehouse) => warehouse._id)
-    // map ra chỉ lấy id của warehouse
 
     if (variantIdsToDelete.length > 0) {
       const resultMarkDeleted = await databaseService.warehouse.updateMany(
@@ -474,13 +453,13 @@ class ProductServices {
       }
     }
 
-    // Cập nhật thông tin sản phẩm
+    // Update product
     const result = await databaseService.products.updateOne(
       { _id: new ObjectId(productId) },
       { $set: { ...payload, category_id, brand_id, updated_at: new Date() } }
     )
 
-    if (!result.acknowledged) {
+    if (!result.acknowledged || !result.modifiedCount) {
       throw new InternalServerError()
     }
 
@@ -488,7 +467,7 @@ class ProductServices {
   }
 
   async updateRateProduct(productId: string, rate: number) {
-    const product = await this.checkProductById(productId)
+    const product = await this.getProductById(productId)
     const calculateRate = Math.round((product.rate + rate) / 2)
     const result = await databaseService.products.updateOne(
       { _id: new ObjectId(productId) },
@@ -502,7 +481,7 @@ class ProductServices {
   }
 
   async deleteProduct(productId: string) {
-    const product = await this.checkProductById(productId)
+    const product = await this.getProductById(productId)
     await this.checkProductInOrder(productId)
     await Promise.all([
       imagesService.deleteImage(product.thumbnail),

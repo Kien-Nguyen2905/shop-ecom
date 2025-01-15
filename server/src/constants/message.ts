@@ -105,6 +105,7 @@ export const PRODUCT_MESSAGES = {
   VARIANT_COLOR_MUST_BE_STRING: 'Variant color must be a string',
   VARIANT_PRICE_POSITIVE: 'Variant price must be a positive number',
   VARIANT_STOCK_POSITIVE_INTEGER: 'Variant stock must be a positive integer',
+
   VARIANT_STOCK_MINIMUM_STOCK: 'Variant stock must be large minimum stock',
 
   VARIANT_RATE_BETWEEN_0_AND_5: 'Variant rate must be an integer between 0 and 5',
