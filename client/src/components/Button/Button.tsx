@@ -1,6 +1,6 @@
 import React from 'react';
 import { IoIosArrowRoundForward } from 'react-icons/io';
-import { Spin } from 'antd'; // Import the Spin component
+import { Spin } from 'antd';
 import { TButtonProps } from './typings';
 
 const Button: React.FC<TButtonProps> = ({

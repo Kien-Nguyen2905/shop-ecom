@@ -25,5 +25,5 @@ export type TInputProps = {
       onBlur: () => void;
     },
     error?: FieldError,
-  ) => React.ReactNode; // Custom render function for advanced use cases
+  ) => React.ReactNode;
 };

@@ -27,16 +27,15 @@ export const useNavigation = () => {
   let searchValue = watch('search');
 
   const onSearch = debounce((value: string) => {
-    // Chuyển đổi query string hiện tại thành object
+    // parse to object
     const currentParams = queryString.parse(search) as Record<
       string,
       string | string[]
     >;
 
-    // Thêm hoặc cập nhật trường search
+    // update field search in object
     currentParams.search = value;
 
-    // Thêm các query mặc định nếu chưa tồn tại
     if (!currentParams.limit) {
       currentParams.limit = '6';
     }
@@ -44,10 +43,9 @@ export const useNavigation = () => {
       currentParams.page = '1';
     }
 
-    // Chuyển đổi object thành query string
+    // convert object to query string
     const newQueryString = queryString.stringify(currentParams);
 
-    // Điều hướng với `/product` và các query
     navigate(`${CUSTOMER_PATHS.PRODUCT}?${newQueryString}`);
   }, 700);
 

@@ -73,7 +73,6 @@ export const useVerifyEmailPage = () => {
     }
   };
 
-  // Sử dụng useEffect để giảm giá trị time mỗi giây
   useEffect(() => {
     let timer: number | undefined;
     if (time > 0) {
@@ -81,10 +80,10 @@ export const useVerifyEmailPage = () => {
         setTime((prev) => prev - 1);
       }, 1000);
     } else {
-      clearInterval(timer); // Dừng bộ đếm khi thời gian hết
+      clearInterval(timer);
     }
 
-    return () => clearInterval(timer); // Dọn dẹp interval khi component unmount
+    return () => clearInterval(timer);
   }, [time]);
   return {
     handleRegisterByEmail,

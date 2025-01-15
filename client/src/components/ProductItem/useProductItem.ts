@@ -1,10 +1,9 @@
 import { useDispatch } from 'react-redux';
-import { THUNK_STATUS } from '../../constants';
 import { useMainContext } from '../../context/MainContextProvider';
 import { AppDispatch, useSelector } from '../../store/store';
 import { addToCart } from '../../store/middlewares/cartMiddleware';
 import { TAddcartPayload } from './tyings';
-import { TAddWishlistPayload } from '../../services/Wishlist/tyings';
+import { TUpdateWishlistPayload } from '../../services/Wishlist/tyings';
 import { updateWishlist } from '../../store/middlewares/wishlistMiddleWare';
 import { handleError } from '../../libs';
 
@@ -12,7 +11,6 @@ export const useProductItem = () => {
   const { toggleModal: openModal } = useMainContext();
   const dispatch = useDispatch<AppDispatch>();
   const { profile } = useSelector((state) => state.auth);
-  // const { updateStatus } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
 
   const onAddToCart = async (payload: TAddcartPayload) => {
@@ -29,7 +27,7 @@ export const useProductItem = () => {
     }
   };
 
-  const onAddWishlist = async (payload: TAddWishlistPayload) => {
+  const onAddWishlist = async (payload: TUpdateWishlistPayload) => {
     if (!profile) {
       openModal();
     } else if (payload) {

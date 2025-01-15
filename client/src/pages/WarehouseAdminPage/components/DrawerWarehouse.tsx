@@ -183,15 +183,15 @@ const DrawerWarehouse: FC<TDrawerWarehouseProps> = ({
               accordion={false}
               items={[
                 {
-                  key: '1', // Unique key for the panel
-                  label: 'Shipments', // The header for the panel
+                  key: '1',
+                  label: 'Shipments',
                   children: (
                     <Table
                       bordered
                       columns={shipmentColumns}
-                      dataSource={warehouseDetail?.shipments} // Pass all shipments data as dataSource
-                      pagination={false} // Disable pagination if not needed
-                      rowKey="shipment_date" // Use shipment_date as the unique row key
+                      dataSource={warehouseDetail?.shipments}
+                      pagination={false}
+                      rowKey="shipment_date"
                       size="small"
                     />
                   ),

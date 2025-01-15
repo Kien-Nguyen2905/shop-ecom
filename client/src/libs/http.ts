@@ -14,7 +14,7 @@ type ErrorPayload = {
   status: number;
 };
 
-// Lớp cơ bản xử lý lỗi HTTP chung
+// Handle HTTP
 export class HttpError extends Error {
   status: number;
   payload: {
@@ -25,7 +25,7 @@ export class HttpError extends Error {
   constructor({
     status,
     payload,
-    message = 'Lỗi HTTP',
+    message = 'HTTP Error',
   }: {
     status: number;
     payload: any;
@@ -37,7 +37,7 @@ export class HttpError extends Error {
   }
 }
 
-// Lớp xử lý lỗi thực thể từ Axios
+// Handle Axios
 export class EntityError extends HttpError {
   status: typeof ENTITY_ERROR_STATUS;
   payload: EntityErrorPayload;
@@ -49,13 +49,12 @@ export class EntityError extends HttpError {
     status: typeof ENTITY_ERROR_STATUS;
     payload: EntityErrorPayload;
   }) {
-    super({ status, payload, message: 'Lỗi thực thể' });
+    super({ status, payload, message: 'Entity Error' });
     this.status = status;
     this.payload = payload;
   }
 }
 
-// Tạo một hàm để xử lý lỗi từ AxiosError và chuyển thành EntityError nếu cần
 export function handleAxiosError(error: AxiosError): HttpError {
   if (error.response?.status === ENTITY_ERROR_STATUS) {
     const { message, errors } = error.response.data as EntityErrorPayload;
@@ -64,9 +63,8 @@ export function handleAxiosError(error: AxiosError): HttpError {
       payload: { message, errors },
     });
   } else {
-    // Sử dụng toán tử optional chaining và kiểm tra kiểu dữ liệu
     const data = error.response?.data as Partial<ErrorPayload>;
-    const message = data?.message || error.message || 'Lỗi không xác định';
+    const message = data?.message || error.message || 'Entity Error';
     const status = error.response?.status || 500;
 
     return new HttpError({

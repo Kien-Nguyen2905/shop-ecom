@@ -1,4 +1,3 @@
-// Define the TCusomterResponse type
 export type TUserAllResponse = {
   _id: string;
   email: string;
@@ -7,12 +6,12 @@ export type TUserAllResponse = {
   forgot_password: string;
   full_name: string;
   phone: string;
-  address: Record<string, unknown>; // Generic object for address
+  address: Record<string, unknown>;
   earn_point: number;
   total_order: number;
   total_paid: number;
-  created_at: string; // ISO date string
-  updated_at: string; // ISO date string
+  created_at: string;
+  updated_at: string;
 };
 
 export type TUserByIdResponse = {
@@ -21,15 +20,15 @@ export type TUserByIdResponse = {
   role: number;
   full_name: string;
   phone: string;
-  address: Record<string, string>; // Vì address là object, ta có thể dùng kiểu linh hoạt
+  address: Record<string, string>;
   earn_point: number;
   total_paid: number;
 };
 
 export type TUserDetail = {
-  _id: string; // MongoDB ObjectId or a string ID
+  _id: string;
   email: string;
-  role: number; // Assuming role is a numeric value
+  role: number;
   full_name: string;
   phone: string;
   address: {
@@ -38,6 +37,6 @@ export type TUserDetail = {
     ward: string;
     street_address: string;
   };
-  earn_point: number; // Points earned by the user
-  total_paid: number; // Total amount paid by the user
+  earn_point: number;
+  total_paid: number;
 };

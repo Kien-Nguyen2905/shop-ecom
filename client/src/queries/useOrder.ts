@@ -9,7 +9,7 @@ export const useOrderAllQuery = () => {
       const response = await orderServices.getAllOrder();
       return Array.isArray(response.data?.data) ? response.data?.data : [];
     },
-    refetchOnWindowFocus: false, // Không tự động refetch khi focus vào window
+    refetchOnWindowFocus: false,
   });
 };
 
@@ -28,7 +28,6 @@ export const useUpdateStatusOrderMutation = ({
       if (onSuccess) {
         onSuccess(data);
       }
-      // Mặc định: invalidate cache
       queryClient.invalidateQueries({
         queryKey: ['orders'],
         exact: true,

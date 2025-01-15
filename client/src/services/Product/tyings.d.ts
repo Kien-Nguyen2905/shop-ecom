@@ -53,8 +53,8 @@ export type TProductByIdResponse = {
   variants: TVariant[];
   attributes: Record<string, string | []>;
   rate: number;
-  created_at: string; // ISO date string
-  updated_at: string; // ISO date string
+  created_at: string;
+  updated_at: string;
 };
 
 export type TCreateProductPayload = {

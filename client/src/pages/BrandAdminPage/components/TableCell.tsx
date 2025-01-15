@@ -25,8 +25,8 @@ const TableCell: React.FC<TEditableCellProps> = ({
               message: `Please type input ${title}`,
             },
           ]}
-          validateStatus={error ? 'error' : ''} // Apply error style if error is true
-          help={error ? errorText : ''} // Optional help text
+          validateStatus={error ? 'error' : ''}
+          help={error ? errorText : ''}
         >
           {inputNode}
         </Form.Item>

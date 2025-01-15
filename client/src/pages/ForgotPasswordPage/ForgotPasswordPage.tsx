@@ -51,14 +51,13 @@ const ForgotPasswordPage = () => {
             }`}
             text={
               token
-                ? 'Reset' // Hiển thị "Reset" nếu có token
+                ? 'Reset'
                 : time > 0
                 ? `Resend Email (${time}s)`
                 : isFirstTimeSend
                 ? 'Send'
                 : 'Resend Email'
             }
-            // disabled={isLoadding || (time > 0 && !token)}
             loading={isLoadding}
           ></Button>
         </form>

@@ -1,12 +1,12 @@
 import { instance } from '../Interceptor';
 import { SuccessResponse } from '../tyings';
-import { TAddWishlistPayload, TWishlistResponse } from './tyings';
+import { TUpdateWishlistPayload, TWishlistResponse } from './tyings';
 
 const wishlistServices = {
   getWishlist: () => {
     return instance.get<SuccessResponse<TWishlistResponse>>(`/wishlist`);
   },
-  updateWishlist: (payload: TAddWishlistPayload) => {
+  updateWishlist: (payload: TUpdateWishlistPayload) => {
     return instance.put<SuccessResponse<TWishlistResponse>>(
       `/wishlist`,
       payload,

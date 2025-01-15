@@ -145,7 +145,6 @@ export const useBrandAdminPage = () => {
         }
 
         if (result) {
-          // Use a setter to properly update the state
           setDataBrand((prevData) =>
             prevData.map((d) => (d._id === key ? { ...d, name: row.name } : d)),
           );
@@ -197,7 +196,6 @@ export const useBrandAdminPage = () => {
   //NOTE: không hợp chung được vì khi insert cũng setDataBrand theo cái list mới với 1 item new
   useEffect(() => {
     if (editingKey) {
-      // When editing a record, set form values to the record data
       const record = dataBrand.find((item) => item._id === editingKey);
       if (record) {
         form.setFieldsValue({ name: record.name });

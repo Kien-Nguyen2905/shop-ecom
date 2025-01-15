@@ -22,6 +22,5 @@ export const useUserByIdQuery = (id: string = '') => {
     },
     enabled: !!id,
     refetchOnWindowFocus: false,
-    staleTime: 0,
   });
 };

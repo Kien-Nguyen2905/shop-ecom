@@ -119,10 +119,8 @@ export const useForgotPasswordPage = () => {
       await handleResetPassword(payloadReset as TResetPasswordPayload);
     } else {
       if (isFirstTimeSend) {
-        // Nếu là lần đầu, gửi forgot password
         await handlForgotPassword(payload as TForgotPasswordPayload);
       } else {
-        // Nếu không phải lần đầu, gửi resend forgot password
         await handleResendForgotPassword(payload as TForgotPasswordPayload);
       }
     }
@@ -135,10 +133,10 @@ export const useForgotPasswordPage = () => {
         setTime((prev) => prev - 1);
       }, 1000);
     } else {
-      clearInterval(timer); // Dừng bộ đếm khi thời gian hết
+      clearInterval(timer);
     }
 
-    return () => clearInterval(timer); // Dọn dẹp interval khi component unmount
+    return () => clearInterval(timer);
   }, [time]);
   return {
     time,
