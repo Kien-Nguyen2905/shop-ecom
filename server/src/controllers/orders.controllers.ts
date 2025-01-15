@@ -10,7 +10,7 @@ export const createOrderController = async (
   next: NextFunction
 ) => {
   return new SuccessResponse({
-    data: await orderServices.createOrder({ user_id: req.decoded_token?.user_id!, ...req.body })
+    data: await orderServices.createOrder({ user_id: req.decoded_token?.user_id as string, ...req.body })
   }).send(res)
 }
 
@@ -54,15 +54,6 @@ export const getOrderController = async (
   }).send(res)
 }
 
-export const getRevenueOrderController = async (
-  req: Request<ParamsDictionary, any, any>,
-  res: Response,
-  next: NextFunction
-) => {
-  return new SuccessResponse({
-    data: await orderServices.getRevenueOrder(req.query.year as string)
-  }).send(res)
-}
 export const checkStockController = async (
   req: Request<ParamsDictionary, any, any>,
   res: Response,

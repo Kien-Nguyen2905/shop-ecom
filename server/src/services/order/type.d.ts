@@ -12,10 +12,11 @@ export type TProductOrder = {
   discount: number
   quantity: number
 }
+
 export type TCreateOrderPayload = {
   user_id: string
   products: TProductOrder[]
-  type_payment?: TYPE_PAYMENT
+  type_payment: TYPE_PAYMENT
   note?: string
   address?: TAddress
   earn_point?: number

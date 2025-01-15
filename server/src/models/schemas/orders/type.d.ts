@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb'
 import { STATUS_ORDER, TYPE_PAYMENT } from '~/constants/enum'
 import { TAddessProps } from '~/models/schemas/users/type'
 
-export type TProductOrder = {
+export type TProductOrderProps = {
   product_id: ObjectId
   variant_id: ObjectId
   image: string
@@ -16,7 +16,7 @@ export type TProductOrder = {
 export type TOrderProps = {
   _id?: ObjectId
   user_id: ObjectId
-  products: TProductOrder[]
+  products: TProductOrderProps[]
   total: number
   earn_point: number
   type_payment: TYPE_PAYMENT

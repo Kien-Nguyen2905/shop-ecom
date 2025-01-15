@@ -88,7 +88,7 @@ class ReviewServices {
       throw new NotFoundError({ message: 'Product not exist!' })
     }
     // check review
-    await orderServices.findVariantUnreview({ order_id, variant_id })
+    await orderServices.checkOrderUnreview({ order_id, variant_id })
 
     await userServices.updateProfile({ user_id, earn_point: 1 })
     const _id = new ObjectId()
@@ -106,7 +106,7 @@ class ReviewServices {
     if (!result.acknowledged || !result.insertedId) {
       throw new InternalServerError()
     }
-    await orderServices.updateIsReviewed(order_id, variant_id)
+    await orderServices.updateOrderReviewed(order_id, variant_id)
     await productServices.updateRateProduct(product_id, rate)
     return this.getReviewById(_id.toString())
   }

@@ -8,6 +8,15 @@ import databaseService from '~/services/database/database.services'
 import productServices from '~/services/product/product.services'
 
 class CategoryServices {
+  async checkCategoryExist(name: string) {
+    const result = await databaseService.categories.findOne({ name: name })
+    if (result) {
+      throw new ConflictRequestError({
+        message: CATEGORY_MESSAGES.CATEGORY_NAME_EXISTS
+      })
+    }
+  }
+
   async createCategory(name: string) {
     await this.checkCategoryExist(name)
 
@@ -26,13 +35,10 @@ class CategoryServices {
   async updateCategory({ _id, name }: TCategoryPayload) {
     const categoryUpdate = await this.getCategoryById(_id)
 
-    // Check if the new name is the same as the current one
     if (categoryUpdate.name === name) {
-      // If the name is the same, just return the existing category without updating
       return categoryUpdate
     }
 
-    // Check if the new name already exists
     await this.checkCategoryExist(name)
 
     const result = await databaseService.categories.updateOne(
@@ -75,15 +81,6 @@ class CategoryServices {
     ])
     if (!result) {
       throw new InternalServerError()
-    }
-  }
-
-  async checkCategoryExist(name: string) {
-    const result = await databaseService.categories.findOne({ name: name })
-    if (result) {
-      throw new ConflictRequestError({
-        message: CATEGORY_MESSAGES.CATEGORY_NAME_EXISTS
-      })
     }
   }
 

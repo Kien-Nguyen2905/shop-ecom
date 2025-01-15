@@ -18,7 +18,6 @@ import userServices from '~/services/user/users.services'
 class OrderService {
   async checkStockAvailability(products: TProductOrder[]) {
     for (let product of products) {
-      // Find warehouse
       const warehouseItem = await databaseService.warehouse.findOne({
         product_id: new ObjectId(product.product_id),
         variant_id: new ObjectId(product.variant_id)
@@ -27,13 +26,112 @@ class OrderService {
         throw new BadRequestError()
       }
 
-      // Check quantity
       if (product.quantity > warehouseItem.stock!) {
         throw new BadRequestError({
           message: `Insufficient stock for product "${warehouseItem.product_name}" with variant "${warehouseItem.variant}" Available: ${warehouseItem.stock}.`
         })
       }
     }
+  }
+
+  private calculateTotal(products: any[], earn_point?: number) {
+    let total = products.reduce((total, item) => {
+      const currentPrice = item.price * item.quantity
+      const discount = currentPrice * (1 - item.discount)
+      return total + discount
+    }, 0)
+
+    // Subtract earned points
+    if (earn_point) {
+      total -= earn_point * 1000
+    }
+
+    return total
+  }
+
+  private createProductEntities(products: any[]) {
+    return products.map((product) => ({
+      ...product,
+      _id: new ObjectId(),
+      product_id: new ObjectId(product.product_id),
+      variant_id: new ObjectId(product.variant_id),
+      isReviewed: false
+    }))
+  }
+
+  private createTransaction(
+    orderId: ObjectId,
+    user_id: string,
+    total: number,
+    type_payment: TYPE_PAYMENT,
+    content?: string
+  ) {
+    const method_payment = type_payment === TYPE_PAYMENT.COD ? 'COD' : 'BANKING'
+    const transactionData: any = {
+      order_id: orderId,
+      user_id: new ObjectId(user_id),
+      method_payment,
+      status: STATUS_TRANSACTION.PENDING,
+      type_payment,
+      value: total
+    }
+
+    if (type_payment !== TYPE_PAYMENT.COD) {
+      transactionData.content = content
+    }
+
+    return new Transaction(transactionData)
+  }
+
+  private async updateWarehouseStock(products: any[], accepted: boolean = false) {
+    await Promise.all(
+      products.map(async (product) => {
+        const variantId = product.variant_id
+        const quantitySold = accepted ? product.quantity : -product.quantity
+        const warehouseItem = await databaseService.warehouse.findOne({ variant_id: new ObjectId(variantId) })
+
+        if (warehouseItem) {
+          const updatedSold = warehouseItem.sold! + quantitySold
+          const updatedStock = warehouseItem.stock! - quantitySold
+
+          await databaseService.warehouse.updateOne(
+            { variant_id: new ObjectId(variantId) },
+            { $set: { sold: updatedSold, stock: updatedStock, updated_at: new Date() } }
+          )
+        }
+      })
+    )
+  }
+
+  private async updateUserCart(user_id: string, orderedProducts: any[]) {
+    const cart = await cartServices.getCart(user_id)
+    if (!cart) throw new NotFoundError()
+
+    const productNotOrder = cart.products?.filter(
+      (item) =>
+        !orderedProducts.some(
+          (orderItem) =>
+            item.product_id.toString() === orderItem.product_id && item.variant_id.toString() === orderItem.variant_id
+        )
+    )
+
+    const result = await databaseService.carts.updateOne(
+      { user_id: new ObjectId(user_id) },
+      { $set: { products: productNotOrder, updated_at: new Date() } }
+    )
+
+    if (!result.acknowledged || !result.modifiedCount) {
+      throw new InternalServerError()
+    }
+  }
+
+  private async updateUserProfile(user_id: string, earn_point: number) {
+    const resultOrder = await this.getOrderByUser(user_id)
+    await userServices.updateProfile({
+      user_id,
+      earn_point: -earn_point!,
+      total_order: resultOrder.length
+    })
   }
 
   async updateStockandSoldProduct({ products, reject = false }: { products: any; reject?: boolean }) {
@@ -71,146 +169,54 @@ class OrderService {
   }: TCreateOrderPayload) {
     // Check quantity in stock
     await this.checkStockAvailability(products)
+
     // Check product_id and variant_id exist
     await Promise.all(products.map((item) => productServices.checkProductandVariant(item.product_id, item.variant_id)))
-    // Calculate total order
-    let total = products.reduce((total, item) => {
-      const currentPrice = item.price * item.quantity
-      const discount = currentPrice * (1 - item.discount)
-      return total + discount
-    }, 0)
-    // Subtract earpoint applied
-    if (earn_point) {
-      total = total - earn_point * 1000
-    }
-    // Declare productEntity
-    const productEntity = products.map((product) => ({
-      ...product,
-      _id: new ObjectId(),
-      product_id: new ObjectId(product.product_id),
-      variant_id: new ObjectId(product.variant_id),
-      isReviewed: false
-    }))
-    const orderId = new ObjectId()
 
-    let order: any = {}
-    if (type_payment === TYPE_PAYMENT.COD) {
-      order = new Order({
-        _id: orderId,
-        user_id: new ObjectId(user_id),
-        products: productEntity,
-        address: address!,
-        note,
-        total,
-        earn_point: earn_point || 0,
-        phone,
-        status: STATUS_ORDER.PENDING,
-        type_payment
-      })
-    } else {
-      order = new Order({
-        _id: orderId,
-        user_id: new ObjectId(user_id),
-        products: productEntity,
-        address: address!,
-        note,
-        phone,
-        total,
-        earn_point: earn_point || 0,
-        status: STATUS_ORDER.PENDING,
-        type_payment: type_payment!
-      })
-    }
-    const result = await databaseService.orders.insertOne(order)
-    if (!result.acknowledged || !result.insertedId) {
+    // Calculate total order amount
+    let total = this.calculateTotal(products, earn_point)
+
+    // Declare product entity with necessary mappings
+    const productEntity = this.createProductEntities(products)
+
+    // Create order
+    const orderId = new ObjectId()
+    const order = new Order({
+      _id: orderId,
+      user_id: new ObjectId(user_id),
+      products: productEntity,
+      address: address!,
+      note,
+      total,
+      earn_point: earn_point || 0,
+      phone,
+      status: STATUS_ORDER.PENDING,
+      type_payment
+    })
+
+    const resultOrder = await databaseService.orders.insertOne(order)
+    if (!resultOrder.acknowledged || !resultOrder.insertedId) {
       throw new InternalServerError()
     }
 
-    let transaction: any = {}
-    if (type_payment === TYPE_PAYMENT.COD) {
-      transaction = new Transaction({
-        order_id: orderId,
-        user_id: new ObjectId(user_id),
-        method_payment: 'COD',
-        status: STATUS_TRANSACTION.PENDING,
-        type_payment: TYPE_PAYMENT.COD,
-        value: total
-      })
-    } else {
-      transaction = new Transaction({
-        order_id: orderId,
-        user_id: new ObjectId(user_id),
-        method_payment: 'BANKING',
-        status: STATUS_TRANSACTION.PENDING,
-        type_payment: TYPE_PAYMENT.BANKING,
-        value: total,
-        content
-      })
+    // Create transaction
+    const transaction = this.createTransaction(orderId, user_id, total, type_payment, content)
+    const resultTransaction = await databaseService.transactions.insertOne(transaction)
+    if (!resultTransaction.acknowledged || !resultTransaction.insertedId) {
+      throw new InternalServerError()
     }
-    await databaseService.transactions.insertOne(transaction)
-    // Update sold and stock in warehouse
-    await Promise.all(
-      products.map(async (result) => {
-        const variantId = result.variant_id
-        const totalQuantitySold = result.quantity
 
-        const warehouseItem = await databaseService.warehouse.findOne({ variant_id: new ObjectId(variantId) })
-
-        if (warehouseItem) {
-          const updatedSold = warehouseItem.sold! + totalQuantitySold
-          const updatedStock = warehouseItem.stock! - totalQuantitySold
-
-          await databaseService.warehouse.updateOne(
-            { variant_id: new ObjectId(variantId) },
-            {
-              $set: {
-                sold: updatedSold,
-                stock: updatedStock,
-                updated_at: new Date()
-              }
-            }
-          )
-        }
-      })
-    )
+    // Update warehouse stock and sold quantities
+    await this.updateWarehouseStock(products, true)
 
     // Update stock product
     await this.updateStockandSoldProduct({ products })
-    // Remove product had been ordered in cart
-    const cart = await cartServices.getCart(user_id)
-    if (!cart) {
-      throw new NotFoundError()
-    }
-    // Product not in order
-    const productNotOrder = cart?.products?.filter(
-      (item) =>
-        !products.some(
-          (filterItem) =>
-            item.product_id.toString() === filterItem.product_id && item.variant_id.toString() === filterItem.variant_id
-        )
-    )
-    // Update cart with product not in order
-    const productStillInCart = await databaseService.carts.updateOne(
-      {
-        user_id: new ObjectId(user_id)
-      },
-      {
-        $set: {
-          products: productNotOrder,
-          updated_at: new Date()
-        }
-      }
-    )
-    if (!productStillInCart.acknowledged || !productStillInCart.modifiedCount) {
-      throw new InternalServerError()
-    }
-    // Update amount order and earn point in profile user
-    const resultOrder = await this.getOrderByUser(user_id)
-    await userServices.updateProfile({
-      user_id,
-      earn_point: -earn_point!,
-      total_order: resultOrder.length
-    })
+
+    // Remove ordered products from the user's cart
+    await this.updateUserCart(user_id, products)
+
+    // Update user's profile with total order count and earned points
+    await this.updateUserProfile(user_id, earn_point || 0)
 
     return (await databaseService.orders.findOne({ _id: orderId })) || {}
   }
@@ -246,16 +252,16 @@ class OrderService {
     )
   }
 
-  async getOrderDetail(orderId: string) {
-    return ((await databaseService.orders.findOne({ _id: new ObjectId(orderId) })) as TOrderProps) || {}
+  async getOrderById(order_id: string) {
+    const order = (await databaseService.orders.findOne({ _id: new ObjectId(order_id) })) as TOrderProps
+    if (!order) {
+      throw new NotFoundError()
+    }
+    return order
   }
 
   async updateOrder({ order_id, status }: TUpdateStatusOrderPayload) {
-    const order = await this.getOrderDetail(order_id)
-
-    if (!order) {
-      throw new BadRequestError()
-    }
+    const order = await this.getOrderById(order_id)
 
     const resultUpdateOrder = await databaseService.orders.updateOne(
       { _id: new ObjectId(order_id) },
@@ -269,8 +275,8 @@ class OrderService {
     if (!resultUpdateOrder.acknowledged || !resultUpdateOrder.modifiedCount) {
       throw new InternalServerError()
     }
+    const user = await databaseService.users.findOne({ _id: order.user_id })
     if (status === STATUS_ORDER.ACCEPT) {
-      const user = await databaseService.users.findOne({ _id: order.user_id })
       if (user) {
         const newTotalPaid = (user.total_paid || 0) + order.total
         await databaseService.users.updateOne(
@@ -286,6 +292,17 @@ class OrderService {
     }
     // CANCLE AND RETURN FOR COD
     if (status === STATUS_ORDER.CANCLE || status === STATUS_ORDER.RETURN) {
+      if (user) {
+        await databaseService.users.updateOne(
+          { _id: order.user_id },
+          {
+            $set: {
+              total_order: (user.total_order || 0) - 1,
+              updated_at: new Date()
+            }
+          }
+        )
+      }
       await databaseService.transactions.updateOne(
         { order_id: new ObjectId(order._id), type_payment: TYPE_PAYMENT.COD },
         {
@@ -295,33 +312,12 @@ class OrderService {
           }
         }
       )
-      // Cập nhật warehouse với số lượng sold và stock mới
-      await Promise.all(
-        order.products.map(async (result) => {
-          const variantId = result.variant_id
-          const totalQuantitySold = result.quantity
+      // Cập nhật warehouse với sold và stock
+      this.updateWarehouseStock(order.products)
 
-          const warehouseItem = await databaseService.warehouse.findOne({ variant_id: new ObjectId(variantId) })
-
-          if (warehouseItem) {
-            const updatedSold = warehouseItem.sold! - totalQuantitySold
-            const updatedStock = warehouseItem.stock! + totalQuantitySold
-
-            await databaseService.warehouse.updateOne(
-              { variant_id: new ObjectId(variantId) },
-              {
-                $set: {
-                  sold: updatedSold,
-                  stock: updatedStock,
-                  updated_at: new Date()
-                }
-              }
-            )
-          }
-        })
-      )
-      // Cập nhật stock ở product
+      // Cập nhật variant ở product với sold và stock
       await this.updateStockandSoldProduct({ products: order.products, reject: true })
+
       if (order.earn_point > 0) {
         await userServices.updateProfile({
           user_id: order.user_id.toString(),
@@ -330,7 +326,7 @@ class OrderService {
       }
     }
 
-    return (await this.getOrderDetail(order_id)) || {}
+    return (await this.getOrderById(order_id)) || {}
   }
 
   async getOrderByUser(user_id: string) {
@@ -360,7 +356,7 @@ class OrderService {
     )
   }
 
-  async findVariantUnreview({ order_id, variant_id }: TFindVariantUnreview) {
+  async checkOrderUnreview({ order_id, variant_id }: TFindVariantUnreview) {
     const variantInOrder = await databaseService.orders.findOne({
       _id: new ObjectId(order_id),
       products: {
@@ -374,14 +370,11 @@ class OrderService {
     if (!variantInOrder) {
       throw new NotFoundError()
     }
-    return variantInOrder
   }
 
-  async updateIsReviewed(order_id: string, variant_id: string) {
-    const order = await this.getOrderDetail(order_id)
-    if (!order) {
-      throw new NotFoundError()
-    }
+  async updateOrderReviewed(order_id: string, variant_id: string) {
+    await this.getOrderById(order_id)
+
     const result = await databaseService.orders.updateOne(
       {
         _id: new ObjectId(order_id),
@@ -399,44 +392,23 @@ class OrderService {
         }
       }
     )
+
     if (!result.acknowledged || !result.modifiedCount) {
       throw new InternalServerError()
     }
   }
 
+  // For customer
   async cancleOrder(order_id: string) {
-    const order = await this.getOrderDetail(order_id)
+    const order = await this.getOrderById(order_id)
     if (!order) {
       throw new BadRequestError()
     }
     if (order.status === STATUS_ORDER.PENDING) {
-      // Cập nhật warehouse với số lượng sold và stock mới
-      await Promise.all(
-        order.products.map(async (result) => {
-          const variantId = result.variant_id
-          const totalQuantitySold = result.quantity
+      this.updateWarehouseStock(order.products)
 
-          const warehouseItem = await databaseService.warehouse.findOne({ variant_id: new ObjectId(variantId) })
-
-          if (warehouseItem) {
-            const updatedSold = warehouseItem.sold! - totalQuantitySold
-            const updatedStock = warehouseItem.stock! + totalQuantitySold
-
-            await databaseService.warehouse.updateOne(
-              { variant_id: new ObjectId(variantId) },
-              {
-                $set: {
-                  sold: updatedSold,
-                  stock: updatedStock,
-                  updated_at: new Date()
-                }
-              }
-            )
-          }
-        })
-      )
-      // Cập nhật stock ở product
       await this.updateStockandSoldProduct({ products: order.products, reject: true })
+
       if (order.earn_point > 0) {
         await userServices.updateProfile({
           user_id: order.user_id.toString(),
@@ -450,37 +422,6 @@ class OrderService {
     } else {
       throw new BadRequestError({ message: 'Order have been accepted' })
     }
-  }
-
-  async getRevenueOrder(year: string) {
-    const matchStage = year
-      ? {
-          $match: {
-            status: STATUS_TRANSACTION.SUCCESS,
-            created_at: {
-              $gte: new Date(`${year}-01-01T00:00:00.000Z`),
-              $lte: new Date(`${year}-12-31T23:59:59.999Z`)
-            }
-          }
-        }
-      : {}
-
-    const revenueData = await databaseService.transactions
-      .aggregate([
-        matchStage,
-        {
-          $group: {
-            _id: { $month: '$created_at' },
-            totalRevenue: { $sum: '$value' }
-          }
-        },
-        { $sort: { _id: 1 } }
-      ])
-      .toArray()
-    return revenueData.map((item) => ({
-      month: new Date(0, item._id - 1).toLocaleString('en-US', { month: 'long' }),
-      revenue: item.totalRevenue
-    }))
   }
 }
 

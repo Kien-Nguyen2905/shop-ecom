@@ -1,12 +1,12 @@
 import { ObjectId } from 'mongodb'
 import { STATUS_ORDER, TYPE_PAYMENT } from '~/constants/enum'
-import { TOrderProps, TProductOrder } from '~/models/schemas/orders/type'
+import { TOrderProps, TProductOrderProps } from '~/models/schemas/orders/type'
 import { TAddessProps } from '~/models/schemas/users/type'
 
 export default class Order {
   _id?: ObjectId
   user_id: ObjectId
-  products: TProductOrder[]
+  products: TProductOrderProps[]
   total: number
   earn_point?: number
   type_payment: TYPE_PAYMENT

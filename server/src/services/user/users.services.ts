@@ -466,9 +466,7 @@ class UserServices {
     const { id_token, access_token } = await this.getOauthGoogleToken(code)
     const userInfo = await this.getGoogleUserInfo(access_token, id_token)
 
-    // Kiểm tra email đã được đăng ký chưa
     const user = await databaseService.users.findOne({ email: userInfo.email })
-    // Nếu tồn tại thì cho login vào
     if (user) {
       const [access_token, refresh_token] = await this.signAPairToken({
         user_id: user?._id,
@@ -486,9 +484,7 @@ class UserServices {
         role: user?.role
       }
     } else {
-      // random string password
       const password = Math.random().toString(36).substring(2, 15)
-      // không thì đăng ký
       const user_id = new ObjectId()
 
       const [access_token, refresh_token] = await this.signAPairToken({

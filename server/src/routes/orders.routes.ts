@@ -7,7 +7,6 @@ import {
   createOrderController,
   getOrderByUserController,
   getOrderController,
-  getRevenueOrderController,
   updateOrderController
 } from '~/controllers/orders.controllers'
 import { accessTokenValidator } from '~/middlewares/users/users.middlwares'
@@ -25,7 +24,5 @@ orderRoute.put('/', updateOrderValidator, adminAccessValidator, wrapRequestHandl
 orderRoute.get('/', accessTokenValidator, wrapRequestHandler(getOrderByUserController))
 
 orderRoute.get('/all', accessTokenValidator, adminAccessValidator, wrapRequestHandler(getOrderController))
-
-orderRoute.get('/revenue', adminAccessValidator, wrapRequestHandler(getRevenueOrderController))
 
 export default orderRoute
