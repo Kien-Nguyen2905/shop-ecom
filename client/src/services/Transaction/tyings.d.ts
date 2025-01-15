@@ -18,5 +18,8 @@ export type TCreateTransactionPayload = {
   value: number;
   content?: string;
 };
-
+export type TRevenue = {
+  month: string;
+  revenue: number;
+};
 export type TTransactionAllResponse = TTransactionResponse[];

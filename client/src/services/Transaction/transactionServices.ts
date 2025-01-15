@@ -2,6 +2,7 @@ import { instance } from '../Interceptor';
 import { SuccessResponse } from '../tyings';
 import {
   TCreateTransactionPayload,
+  TRevenue,
   TTransactionAllResponse,
   TTransactionResponse,
 } from './tyings';
@@ -22,6 +23,11 @@ const transactionServices = {
   getTransactionByOrder: (query: string) => {
     return instance.get<SuccessResponse<TTransactionResponse>>(
       `/transaction/order${query ? `/${query}` : ''}`,
+    );
+  },
+  getRevenue: (year: string) => {
+    return instance.get<SuccessResponse<TRevenue[]>>(
+      `/transaction/revenue${year ? `?year=${year}` : ''}`,
     );
   },
 };

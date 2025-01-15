@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
-import { TRevenueOrder } from '../../services/Order/tyings';
 import { handleError } from '../../libs';
-import orderServices from '../../services/Order/orderServices';
+import { transactionServices } from '../../services/Transaction';
+import { TRevenue } from '../../services/Transaction/tyings';
 
 export const useDashboardAdminPage = () => {
-  const [revenueData, setRevenueData] = useState<TRevenueOrder[]>([]);
+  const [revenueData, setRevenueData] = useState<TRevenue[]>([]);
   const [selectedYear, setSelectedYear] = useState<number>(
     new Date().getFullYear(),
   );
 
   const fetchRevenueData = async (year: number) => {
     try {
-      const res = await orderServices.getRevenueOrder(year.toString());
+      const res = await transactionServices.getRevenue(year.toString());
       setRevenueData(res.data.data);
     } catch (error) {
       handleError({

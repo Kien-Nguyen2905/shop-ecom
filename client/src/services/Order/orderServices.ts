@@ -5,7 +5,6 @@ import {
   TCreateOrderResponse,
   TOrderAllResponse,
   TOrderResponse,
-  TRevenueOrder,
   TUpdateStatusOrder,
   TUpdateStatusOrderDetail,
 } from './tyings';
@@ -32,11 +31,6 @@ const orderServices = {
   cancelOrder: (query: string) => {
     return instance.put<SuccessResponse<TCreateOrderResponse>>(
       `/order${query ? `/${query}` : ''}`,
-    );
-  },
-  getRevenueOrder: (year: string) => {
-    return instance.get<SuccessResponse<TRevenueOrder[]>>(
-      `/order/revenue${year ? `?year=${year}` : ''}`,
     );
   },
 };
