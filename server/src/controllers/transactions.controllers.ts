@@ -59,3 +59,13 @@ export const getTransactionController = async (
     data: await transactionServices.getTransaction()
   }).send(res)
 }
+
+export const getRevenueController = async (
+  req: Request<ParamsDictionary, any, any>,
+  res: Response,
+  next: NextFunction
+) => {
+  return new SuccessResponse({
+    data: await transactionServices.getRevenue(req.query.year as string)
+  }).send(res)
+}

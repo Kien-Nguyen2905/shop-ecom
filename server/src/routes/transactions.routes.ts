@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import {
   createTransactionController,
+  getRevenueController,
   getTransactionByOrderController,
   getTransactionController,
   handleSePayWebhookController
@@ -17,5 +18,7 @@ transactionRoute.get('/', adminAccessValidator, wrapRequestHandler(getTransactio
 transactionRoute.get('/order/:id', accessTokenValidator, wrapRequestHandler(getTransactionByOrderController))
 
 transactionRoute.post('/', accessTokenValidator, wrapRequestHandler(createTransactionController))
+
+transactionRoute.get('/revenue', adminAccessValidator, wrapRequestHandler(getRevenueController))
 
 export default transactionRoute
