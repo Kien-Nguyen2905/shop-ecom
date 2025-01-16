@@ -1,6 +1,5 @@
 import express from 'express'
-import cors from 'cors'
-import { env } from '~/configs/environment'
+import cors, { CorsOptions } from 'cors'
 import { defaultErrorHandler } from '~/middlewares/error.middlewares'
 import addressRoute from '~/routes/address.routes'
 import brandRoute from '~/routes/brands.routes'
@@ -18,16 +17,32 @@ import { initFolder } from '~/utils/file'
 import transactionRoute from '~/routes/transactions.routes'
 import reviewRoute from '~/routes/reviews.routes'
 import informationRoute from '~/routes/information.routes'
+import { env, isProduction } from '~/constants/config'
+import helmet from 'helmet'
+import rateLimit from 'express-rate-limit'
 
 const app = express()
+
 const port = env.PORT || 8080
 app.use(
-  cors({
-    origin: `${env.CORS_ORIGIN}`, // Cho phép FE từ CORS_ORIGIN
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Các phương thức được phép
-    allowedHeaders: ['Content-Type', 'Authorization'] // Các header được phép
+  helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' }
   })
 )
+app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false // Disable the `X-RateLimit-*` headers
+  })
+)
+app.use(
+  cors({
+    origin: isProduction ? env.CLIENT_URL : '*'
+  })
+)
+
 databaseService.connect()
 app.use(express.json())
 initFolder()

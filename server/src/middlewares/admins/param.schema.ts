@@ -1,6 +1,6 @@
 import { ParamSchema } from 'express-validator'
 import { JsonWebTokenError } from 'jsonwebtoken'
-import { env } from '~/configs/environment'
+import { env } from '~/constants/config'
 import { ROLE } from '~/constants/enum'
 import { HTTP_STATUS } from '~/constants/httpStatus'
 import { ErrorWithStatus, UnauthorizedError } from '~/models/errors/errors'

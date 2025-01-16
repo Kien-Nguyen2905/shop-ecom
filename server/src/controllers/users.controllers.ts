@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
-import { env } from '~/configs/environment'
+import { env } from '~/constants/config'
 import { USERS_MESSAGES } from '~/constants/message'
 import { CREATED, SuccessResponse } from '~/models/success/success.response'
 import { TTokenPayload } from '~/services/user/type'

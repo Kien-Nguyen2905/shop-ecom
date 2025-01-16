@@ -1,5 +1,6 @@
 import nodemailer, { SentMessageInfo } from 'nodemailer'
-import { env } from '~/configs/environment'
+import { env } from '~/constants/config'
+
 import { EVerification } from '~/constants/enum'
 import { BadRequestError } from '~/models/errors/errors'
 

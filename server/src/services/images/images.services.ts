@@ -4,9 +4,8 @@ import sharp from 'sharp'
 import fs from 'fs'
 import path from 'path'
 // import fsPromise from 'fs/promises'
-import { isProduction } from '~/constants/config'
+import { env, isProduction } from '~/constants/config'
 import { UPLOAD_IMAGE_DIR } from '~/constants/dir'
-import { env } from '~/configs/environment'
 import { deleteFileFromS3, uploadFileToS3 } from '~/utils/s3'
 class ImagesService {
   async uploadImage(req: Request) {

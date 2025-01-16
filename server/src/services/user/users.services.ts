@@ -1,5 +1,4 @@
 import { ObjectId } from 'mongodb'
-import { env } from '~/configs/environment'
 import { EVerification, ROLE } from '~/constants/enum'
 import Token from '~/models/schemas/tokens/tokens.schemas'
 import User from '~/models/schemas/users/users.schemas'
@@ -28,6 +27,7 @@ import Wishlist from '~/models/schemas/wishlists/wishlists.schemas'
 import { USERS_MESSAGES } from '~/constants/message'
 import axios from 'axios'
 import { sendVerification } from '~/utils/sendmail'
+import { env } from '~/constants/config'
 
 class UserServices {
   async signAccessToken({ user_id, role }: IAccessToken) {

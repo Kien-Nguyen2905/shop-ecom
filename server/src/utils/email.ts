@@ -1,15 +1,14 @@
 import { SendEmailCommand, SESClient } from '@aws-sdk/client-ses'
-import { config } from 'dotenv'
+import { env } from 'process'
 import { EVerification } from '~/constants/enum'
 import { BadRequestError } from '~/models/errors/errors'
 
-config()
 // Create SES service object.
 const sesClient = new SESClient({
-  region: process.env.AWS_REGION as string,
+  region: env.AWS_REGION as string,
   credentials: {
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID as string
+    secretAccessKey: env.AWS_SECRET_ACCESS_KEY as string,
+    accessKeyId: env.AWS_ACCESS_KEY_ID as string
   }
 })
 

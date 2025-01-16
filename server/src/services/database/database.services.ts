@@ -2,7 +2,6 @@ import { MongoClient, Db, Collection } from 'mongodb'
 import { config } from 'dotenv'
 import User from '~/models/schemas/users/users.schemas'
 import Token from '~/models/schemas/tokens/tokens.schemas'
-import { env } from '~/configs/environment'
 import Verification from '~/models/schemas/verifications/verifications.schemas'
 import PasswordReset from '~/models/schemas/password-resets/password-resets.schemas'
 import Province from '~/models/schemas/provinces/provinces.schemas'
@@ -18,6 +17,7 @@ import Wishlist from '~/models/schemas/wishlists/wishlists.schemas'
 import Order from '~/models/schemas/orders/orders.schemas'
 import Transaction from '~/models/schemas/transactions/transactions.schemas'
 import Review from '~/models/schemas/reviews/reviews.schemas'
+import { env } from '~/constants/config'
 config()
 
 class DatabaseService {
