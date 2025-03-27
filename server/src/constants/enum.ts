@@ -9,7 +9,7 @@ export enum EVerification {
 export enum STATUS_ORDER {
   PENDING,
   ACCEPT,
-  CANCLE,
+  CANCEL,
   RETURN
 }
 export enum TYPE_PAYMENT {

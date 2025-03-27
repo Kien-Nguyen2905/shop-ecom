@@ -13,7 +13,7 @@ export const initFolder = () => {
 
 export const handleImage = async (req: Request) => {
   const formidable = (await import('formidable')).default
-  // formidable hanlde upload file image
+  // formidable handle upload file image
   const form = formidable({
     uploadDir: UPLOAD_IMAGE_TEMP_DIR,
     maxFiles: 4,

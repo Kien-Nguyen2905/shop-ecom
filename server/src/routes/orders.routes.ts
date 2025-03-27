@@ -2,7 +2,7 @@ import { adminAccessValidator } from '~/middlewares/admins/admins.middlewares'
 import { Router } from 'express'
 
 import {
-  cancleOrderController,
+  cancelOrderController,
   checkStockController,
   createOrderController,
   getOrderByUserController,
@@ -17,7 +17,7 @@ const orderRoute = Router()
 
 orderRoute.post('/', createOrderValidator, accessTokenValidator, wrapRequestHandler(createOrderController))
 
-orderRoute.put('/:id', accessTokenValidator, wrapRequestHandler(cancleOrderController))
+orderRoute.put('/:id', accessTokenValidator, wrapRequestHandler(cancelOrderController))
 
 orderRoute.put('/', updateOrderValidator, adminAccessValidator, wrapRequestHandler(updateOrderController))
 

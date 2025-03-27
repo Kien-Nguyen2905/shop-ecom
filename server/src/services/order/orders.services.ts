@@ -290,8 +290,8 @@ class OrderService {
         )
       }
     }
-    // CANCLE AND RETURN FOR COD
-    if (status === STATUS_ORDER.CANCLE || status === STATUS_ORDER.RETURN) {
+    // CANCEL AND RETURN FOR COD
+    if (status === STATUS_ORDER.CANCEL || status === STATUS_ORDER.RETURN) {
       if (user) {
         await databaseService.users.updateOne(
           { _id: order.user_id },
@@ -399,7 +399,7 @@ class OrderService {
   }
 
   // For customer
-  async cancleOrder(order_id: string) {
+  async cancelOrder(order_id: string) {
     const order = await this.getOrderById(order_id)
     if (!order) {
       throw new BadRequestError()

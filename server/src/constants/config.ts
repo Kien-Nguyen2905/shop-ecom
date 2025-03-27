@@ -1,11 +1,10 @@
-import dotenv from 'dotenv'
-
-import argv from 'minimist'
-const options = argv(process.argv.slice(2))
-export const isProduction = options.env === 'production'
-dotenv.config({
-  path: options.env ? `.env.${options.env}` : '.env'
+import { config } from 'dotenv'
+const envName = process.env.NODE_ENV
+const envFilename = `.env.${envName}`
+config({
+  path: envFilename
 })
+export const isProduction = envName === 'production'
 export const env = {
   CORS_ORIGIN: process.env.CORS_ORIGIN as string,
   PORT: process.env.PORT as string,
