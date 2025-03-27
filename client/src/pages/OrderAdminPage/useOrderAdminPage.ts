@@ -1,8 +1,5 @@
-import {
-  useOrderAllQuery,
-  useUpdateStatusOrderMutation,
-} from '../../queries/useOrder';
-import { useUserAllQuery } from '../../queries/useUser';
+import { useOrderAllQuery, useUpdateStatusOrderMutation } from '../../queries';
+import { useUserAllQuery } from '../../queries';
 import { useState } from 'react';
 import { TOrderItem } from './tyings';
 import { TUserAllResponse } from '../../services/User/tyings';
@@ -44,7 +41,7 @@ export const useOrderAdminPage = () => {
     (product: TProductOrder) => ({
       key: product.product_id,
       name: product.name,
-      vairant: product.color,
+      variant: product.color,
       image: product.image,
       price: product.price * (1 - product.discount),
       quantity: product.quantity,

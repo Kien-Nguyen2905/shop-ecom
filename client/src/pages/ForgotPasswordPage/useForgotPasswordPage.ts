@@ -19,7 +19,7 @@ export const useForgotPasswordPage = () => {
   const resendForgotPassword = useResendForgotPasswordMutation();
   const resetPassword = useResetPasswordMutation();
   const [time, setTime] = useState(0);
-  const [isLoadding, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [isFirstTimeSend, setIsFirstTimeSend] = useState(true);
   const { setError, control, handleSubmit } = useForm<
     TForgotPasswordPayload | Omit<TResetPasswordPayload, 'password_token'>
@@ -141,7 +141,7 @@ export const useForgotPasswordPage = () => {
   return {
     time,
     control,
-    isLoadding,
+    isLoading,
     handleSubmit,
     handleSendOrResend,
     isFirstTimeSend,

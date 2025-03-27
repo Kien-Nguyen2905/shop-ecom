@@ -20,7 +20,6 @@ export const useCategoryByIdQuery = (id: string = '') => {
       return response.data?.data;
     },
     enabled: !!id,
-    refetchOnWindowFocus: false,
   });
 };
 

@@ -13,6 +13,7 @@ export const useProductQuery = (queryString = '') => {
       const response = await productServices.getProduct(queryString);
       return response?.data?.data || [];
     },
+    staleTime: 60 * 1000,
   });
 };
 
@@ -24,7 +25,6 @@ export const useProductByIdQuery = (id: string) => {
       return response?.data?.data || {};
     },
     enabled: !!id,
-    refetchOnWindowFocus: false,
   });
 };
 
@@ -54,7 +54,7 @@ export const useCreateProductMutation = () => {
   });
 };
 
-export const useUpadteProductMutation = (id: string) => {
+export const useUpdateProductMutation = (id: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -64,9 +64,6 @@ export const useUpadteProductMutation = (id: string) => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['product'],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['product', id],
       });
     },
   });

@@ -3,7 +3,7 @@ import { TCheckoutInforProps } from './tyings';
 import Input from '../../../components/Input/Input';
 import { Select } from 'antd';
 
-const CheckoutInfor: FC<TCheckoutInforProps> = ({
+const CheckoutInfo: FC<TCheckoutInforProps> = ({
   control,
   dataDistrict,
   dataProvince,
@@ -21,18 +21,18 @@ const CheckoutInfor: FC<TCheckoutInforProps> = ({
         <div className="flex flex-col xl:flex-row gap-5">
           <Input
             name="full_name"
-            lable="Full name"
+            label="Full name"
             required
             control={control}
           ></Input>
           <Input
             name="email"
-            lable="Email"
+            label="Email"
             disabled
             required
             control={control}
           ></Input>
-          <Input name="phone" lable="Phone" required control={control}></Input>
+          <Input name="phone" label="Phone" required control={control}></Input>
         </div>
         <div className="flex gap-5">
           <Input
@@ -61,7 +61,7 @@ const CheckoutInfor: FC<TCheckoutInforProps> = ({
                   value={valueProvince || null}
                   options={dataProvince}
                   disabled={!dataProvince || dataProvince.length === 0}
-                  className={`w-full custome-select py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
+                  className={`w-full custom-select py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
                     invalid ? 'border-red-600' : ''
                   }`}
                   onChange={(value) => {
@@ -102,7 +102,7 @@ const CheckoutInfor: FC<TCheckoutInforProps> = ({
                   value={valueDistrict || null}
                   options={dataDistrict}
                   disabled={!dataDistrict || dataDistrict.length === 0}
-                  className={`w-full custome-select py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
+                  className={`w-full custom-select py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
                     invalid ? 'border-red-600' : ''
                   }`}
                   onChange={(value) => {
@@ -143,7 +143,7 @@ const CheckoutInfor: FC<TCheckoutInforProps> = ({
                   value={valueWard || null}
                   options={dataWard}
                   disabled={!dataWard || dataWard.length === 0}
-                  className={`w-full custome-select py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
+                  className={`w-full custom-select py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
                     invalid ? 'border-red-600' : ''
                   }`}
                   onChange={(value) => {
@@ -161,20 +161,20 @@ const CheckoutInfor: FC<TCheckoutInforProps> = ({
         </div>
         <Input
           name="street_address"
-          lable="Street Address"
+          label="Street Address"
           required
           control={control}
         ></Input>
         <Input
           name="note"
-          lable="Note"
+          label="Note"
           required
           control={control}
           renderProp={(props, invalid, field) => (
             <>
               <label>Order notes (optional)</label>
               <textarea
-                className={`w-full py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
+                className={`w-full resize-none py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
                   invalid ? 'border-red-600' : ''
                 }`}
                 cols={30}
@@ -191,4 +191,4 @@ const CheckoutInfor: FC<TCheckoutInforProps> = ({
   );
 };
 
-export default CheckoutInfor;
+export default CheckoutInfo;

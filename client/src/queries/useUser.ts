@@ -9,7 +9,6 @@ export const useUserAllQuery = () => {
       const response = await userServices.getAllUser();
       return Array.isArray(response.data?.data) ? response.data?.data : [];
     },
-    refetchOnWindowFocus: false,
   });
 };
 
@@ -21,6 +20,5 @@ export const useUserByIdQuery = (id: string = '') => {
       return response.data?.data || {};
     },
     enabled: !!id,
-    refetchOnWindowFocus: false,
   });
 };

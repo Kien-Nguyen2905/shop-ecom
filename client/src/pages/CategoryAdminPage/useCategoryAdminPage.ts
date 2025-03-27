@@ -1,4 +1,3 @@
-import { TCategoryResponse } from './../../services/Category/tyings.d';
 import { useEffect, useState } from 'react';
 import { handleError, showToast } from '../../libs';
 import {
@@ -10,19 +9,20 @@ import {
 } from '../../queries';
 import {
   TCategoryPayload,
+  TCategoryResponse,
   TUpdateCategoryPayload,
 } from '../../services/Category/tyings';
 import {
   useCreateInformationMutation,
   useInformationByIdQuery,
   useUpdateInformationMutation,
-} from '../../queries/useInformation';
+} from '../../queries';
 import { useForm } from 'react-hook-form';
-import { TFormValues } from './tyings.';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ADMIN_PATHS } from '../../constants';
 import { removeAccents } from '../../utils';
 import { TUpdateInformationPayload } from '../../services/Information/tyings';
+import { TFormValues } from './tyings';
 
 export const useCategoryAdminPage = () => {
   const navigate = useNavigate();
@@ -36,7 +36,7 @@ export const useCategoryAdminPage = () => {
   const createInformation = useCreateInformationMutation();
   const deleteCategory = useDeleteCategoryMutation();
   const updateCategory = useUpdateCategoryMutation();
-  const updadetInformation = useUpdateInformationMutation();
+  const updateInformation = useUpdateInformationMutation();
 
   const { control, handleSubmit, reset, setValue, setError } =
     useForm<TFormValues>({
@@ -133,7 +133,7 @@ export const useCategoryAdminPage = () => {
     }
   };
 
-  const handleUpdateCatgory = async (payload: TUpdateCategoryPayload) => {
+  const handleUpdateCategory = async (payload: TUpdateCategoryPayload) => {
     try {
       const res = await updateCategory.mutateAsync(payload);
       if (res?.data.data.name) {
@@ -155,7 +155,7 @@ export const useCategoryAdminPage = () => {
     payload: TUpdateInformationPayload,
   ) => {
     try {
-      await updadetInformation.mutateAsync(payload);
+      await updateInformation.mutateAsync(payload);
     } catch (error: any) {
       handleError({
         error,
@@ -199,7 +199,7 @@ export const useCategoryAdminPage = () => {
       return acc;
     }, {} as Record<string, any>);
     if (isEdit) {
-      await handleUpdateCatgory({
+      await handleUpdateCategory({
         id: categoryId,
         payload: { name: data.name },
       });
@@ -220,8 +220,8 @@ export const useCategoryAdminPage = () => {
   };
 
   const handleRemoveInput = (index: number) => {
-    const newAttibute = fieldValues?.filter((_, i) => i != index);
-    setFieldValues(newAttibute);
+    const newAttribute = fieldValues?.filter((_, i) => i != index);
+    setFieldValues(newAttribute);
   };
 
   useEffect(() => {

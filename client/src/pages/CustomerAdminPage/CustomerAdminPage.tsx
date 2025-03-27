@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { CalendarOutlined, UserOutlined } from '@ant-design/icons';
 import { formatCurrency } from '../../utils';
 import { CiPhone } from 'react-icons/ci';
-import { useUserAllQuery } from '../../queries/useUser';
+import { useUserAllQuery } from '../../queries';
 const { Option } = Select;
 
 const CustomerAdminPage = () => {

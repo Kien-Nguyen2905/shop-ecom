@@ -4,7 +4,7 @@ import { TInputProps } from './typings';
 import { RULES } from '../../constants';
 
 const Input: React.FC<TInputProps> = ({
-  lable,
+  label,
   required,
   onChange,
   control,
@@ -30,12 +30,12 @@ const Input: React.FC<TInputProps> = ({
       renderProp(props, invalid, field, error)
     ) : (
       <div className={`${className} flex flex-col w-full`}>
-        {lable && (
+        {label && (
           <label
             htmlFor={name}
             className="w-full mb-2 font-light text-textGrey font-PpLight"
           >
-            {lable}
+            {label}
             {required ? ' *' : ''}
           </label>
         )}
@@ -60,12 +60,12 @@ const Input: React.FC<TInputProps> = ({
       renderProp()
     ) : (
       <div className={`${className} flex flex-col w-full`}>
-        {lable && (
+        {label && (
           <label
             htmlFor={name}
             className="w-full mb-2 font-light text-textGrey font-PpLight"
           >
-            {lable}
+            {label}
             {required ? ' *' : ''}
           </label>
         )}

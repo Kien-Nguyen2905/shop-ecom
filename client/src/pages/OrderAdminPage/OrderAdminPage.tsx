@@ -113,7 +113,7 @@ const OrderAdminPage = () => {
       filters: [
         { text: 'PENDING', value: 0 },
         { text: 'ACCEPTED', value: 1 },
-        { text: 'CANCLED', value: 2 },
+        { text: 'CANCELED', value: 2 },
         { text: 'RETURNED', value: 3 },
       ],
       filterMultiple: false,
@@ -129,7 +129,7 @@ const OrderAdminPage = () => {
           text = 'ACCEPTED';
         } else if (status === 2) {
           color = 'red';
-          text = 'CANCLED';
+          text = 'CANCELED';
         } else if (status === 3) {
           color = 'orange';
           text = 'RETURNED';

@@ -1,16 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import {
   TDistrictsResponse,
-  TProvicesResponse,
+  TProvincesResponse,
   TWardsResponse,
 } from '../services/Address/tyings';
 import { addressServices } from '../services/Address';
 
-export const useProvicesQuery = () => {
-  return useQuery<TProvicesResponse[]>({
-    queryKey: ['provices'],
+export const useProvincesQuery = () => {
+  return useQuery<TProvincesResponse[]>({
+    queryKey: ['provinces'],
     queryFn: async () => {
-      const response = await addressServices.getProvices();
+      const response = await addressServices.getProvinces();
       return Array.isArray(response.data?.data) ? response.data?.data : [];
     },
   });

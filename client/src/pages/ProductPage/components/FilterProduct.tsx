@@ -44,7 +44,6 @@ const FilterProduct: FC<TFilterProductProps> = ({
         <Button
           className="px-[20px] py-[7px]"
           onClick={handleCleanAll}
-          type
           text="Clear all"
         />
       </div>

@@ -1,1 +1,1 @@
-export { default as DashboardAdminpage } from './DashboardAdminpage';
+export { default as DashboardAdminPage } from './DashboardAdminPage';

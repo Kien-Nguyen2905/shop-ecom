@@ -17,7 +17,7 @@ const Modal = () => {
     isOpenModal,
     closeModal,
     control,
-    isLoadingResgiter,
+    isLoadingRegister,
     googleOAuthUrl,
     isLoadingLogin,
   } = useModal();
@@ -56,14 +56,14 @@ const Modal = () => {
           {activeTab === MODAL_TABS.SIGN_UP && (
             <Input
               required
-              lable="Full name"
+              label="Full name"
               control={control}
               name="full_name"
             ></Input>
           )}
           <Input
             required
-            lable={`${
+            label={`${
               activeTab === MODAL_TABS.SIGN_IN
                 ? 'Email address'
                 : 'Your email address'
@@ -74,7 +74,7 @@ const Modal = () => {
           <Input
             type="password"
             required
-            lable="Password"
+            label="Password"
             control={control}
             name="password"
           ></Input>
@@ -82,7 +82,7 @@ const Modal = () => {
             <Input
               type="password"
               required
-              lable="Confirm password"
+              label="Confirm password"
               control={control}
               name="confirm_password"
             />
@@ -96,7 +96,7 @@ const Modal = () => {
               Forgot Your Password?
             </Link>
             <Button
-              loading={isLoadingLogin || isLoadingResgiter}
+              loading={isLoadingLogin || isLoadingRegister}
               className="ml-auto"
               text={`${
                 activeTab === MODAL_TABS.SIGN_IN ? 'LOG IN' : 'REGISTER'

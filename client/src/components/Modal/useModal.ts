@@ -50,7 +50,7 @@ export const useModal = () => {
     setActiveTab(MODAL_TABS.SIGN_UP);
   };
 
-  const hanldeLogin = async (values: TLoginPayload) => {
+  const handleLogin = async (values: TLoginPayload) => {
     try {
       setIsLoading(true);
       const res = await dispatch(login(values));
@@ -77,7 +77,7 @@ export const useModal = () => {
     }
   };
 
-  const hanldeRegister = async (values: TVerifyEmailPayload) => {
+  const handleRegister = async (values: TVerifyEmailPayload) => {
     try {
       const res = await verifyEmail.mutateAsync(values);
       if (res?.data.data?.email_token) {
@@ -95,9 +95,9 @@ export const useModal = () => {
 
   const onSubmit = (values: TVerifyEmailPayload) => {
     if (activeTab === MODAL_TABS.SIGN_IN) {
-      hanldeLogin?.(values);
+      handleLogin?.(values);
     } else {
-      hanldeRegister?.(values);
+      handleRegister?.(values);
     }
   };
 
@@ -105,10 +105,10 @@ export const useModal = () => {
     activeTab,
     handleSignInClick,
     handleSignUpClick,
-    hanldeRegister,
-    hanldeLogin,
+    handleRegister,
+    handleLogin,
     closeModal,
-    isLoadingResgiter: verifyEmail.isPending,
+    isLoadingRegister: verifyEmail.isPending,
     isLoadingLogin: isLoading,
     isOpenModal,
     onSubmit: handleSubmit(onSubmit),

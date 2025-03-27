@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { getCart } from './cartMiddleware';
 import orderServices from '../../services/Order/orderServices';
-import { TActionCancleOrderPayload, TActionOrderPayload } from './tyings';
+import { TActionCancelOrderPayload, TActionOrderPayload } from './tyings';
 
 export const getOrder = createAsyncThunk('order/get', async (_, thunkAPI) => {
   try {
@@ -32,9 +32,9 @@ export const createOrder = createAsyncThunk(
   },
 );
 
-export const cancleOrder = createAsyncThunk(
+export const cancelOrder = createAsyncThunk(
   'order/cancle',
-  async (actionPayload: TActionCancleOrderPayload, thunkAPI) => {
+  async (actionPayload: TActionCancelOrderPayload, thunkAPI) => {
     try {
       const res = await orderServices.cancelOrder(actionPayload);
       thunkAPI.dispatch(getOrder());

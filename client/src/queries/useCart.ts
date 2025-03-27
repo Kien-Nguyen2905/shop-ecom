@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { TGetCartResponse } from '../services/Cart/tyings';
-import cartServices from '../services/Cart/cartServics';
+import cartServices from '../services/Cart/cartServices';
 
 export const useCartQuery = () => {
   return useQuery<TGetCartResponse>({

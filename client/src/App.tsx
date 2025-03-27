@@ -6,8 +6,8 @@ import { Loading } from './components';
 const MainLayout = lazy(() => import('./layouts/MainLayout/MainLayout'));
 const AdminLayout = lazy(() => import('./layouts/AdminLayout/AdminLayout'));
 const OauthPage = lazy(() => import('./pages/OauthPage/OauthPage'));
-const DashboardAdminpage = lazy(
-  () => import('./pages/DashboardAdminpage/DashboardAdminpage'),
+const DashboardAdminPage = lazy(
+  () => import('./pages/DashboardAdminPage/DashboardAdminPage'),
 );
 const CustomerRoute = lazy(
   () => import('./components/CustomerRoute/CustomerRoute'),
@@ -71,7 +71,7 @@ function App() {
           />
           <Route path={CUSTOMER_PATHS.ROOT} element={<HomePage />} />
           <Route path={CUSTOMER_PATHS.PRODUCT} element={<ProductPage />} />
-          <Route path={CUSTOMER_PATHS.ABOUTUS} element={<AboutUsPage />} />
+          <Route path={CUSTOMER_PATHS.ABOUT_US} element={<AboutUsPage />} />
           <Route path={CUSTOMER_PATHS.CONTACTUS} element={<ContactUsPage />} />
           <Route
             path={CUSTOMER_PATHS.PRODUCT_DETAIL}
@@ -107,7 +107,7 @@ function App() {
           </Route>
         </Route>
         <Route path={ADMIN_PATHS.ROOT} element={<AdminLayout />}>
-          <Route path={ADMIN_PATHS.ROOT} element={<DashboardAdminpage />} />
+          <Route path={ADMIN_PATHS.ROOT} element={<DashboardAdminPage />} />
 
           <Route path={ADMIN_PATHS.CATEGORY} element={<CategoryAdminPage />} />
           <Route path={ADMIN_PATHS.BRAND} element={<BrandAdminPage />} />

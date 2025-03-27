@@ -89,7 +89,7 @@ const ContactUsPage = () => {
                   renderProp={(props, invalid, field, error) => (
                     <div>
                       <textarea
-                        className={`w-full py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
+                        className={`w-full py-[8.5px] resize-none px-3 bg-bgInPut border outline-none focus:border-primary ${
                           invalid ? 'border-red-600' : ''
                         }`}
                         cols={30}

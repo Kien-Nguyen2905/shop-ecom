@@ -3,7 +3,7 @@ import { FieldError } from 'react-hook-form';
 export type TInputProps = {
   className?: string;
   classNameInput?: string;
-  lable?: string;
+  label?: string;
   required?: boolean;
   control?: any;
   name?: string;

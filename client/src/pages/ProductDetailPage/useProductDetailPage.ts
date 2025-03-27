@@ -16,7 +16,7 @@ import { handleError } from '../../libs';
 import { useDispatch } from 'react-redux';
 import { AppDispatch, useSelector } from '../../store/store';
 import { addToCart } from '../../store/middlewares/cartMiddleware';
-import { useReviewByProductIdQuery } from '../../queries/useReview';
+import { useReviewByProductIdQuery } from '../../queries';
 import { useMainContext } from '../../context/MainContextProvider';
 import { THUNK_STATUS } from '../../constants';
 import { updateWishlist } from '../../store/middlewares/wishlistMiddleWare';
@@ -38,7 +38,7 @@ export const useProductDetailPage = () => {
   const [variantId, setVariantId] = useState<string>(
     new URLSearchParams(search).get('variant') as string,
   );
-  const { data: productData, isLoading } = useProductByIdQuery(id);
+  const { data: productData, isLoading } = useProductByIdQuery(id as string);
   const { data: categoryData } = useCategoryByIdQuery(productData?.category_id);
   const { data: brandData } = useBrandQuery();
   const { data: reviewData } = useReviewByProductIdQuery(id!);

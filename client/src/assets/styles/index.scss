@@ -303,7 +303,7 @@ input[type='number'] {
   scrollbar-width: none; /* Firefox */
 }
 // --------------CUSTOME-SELECT PROFILE--------------
-.custome-select-product {
+.custom-select-product {
   height: 30px !important;
   width: 180px !important;
   @media (min-width: 1537px) {
@@ -316,7 +316,7 @@ input[type='number'] {
     box-shadow: none !important;
   }
 }
-.custome-select {
+.custom-select {
   height: 40px !important;
   & .ant-select-selector {
     padding: 8.5px 12px !important;

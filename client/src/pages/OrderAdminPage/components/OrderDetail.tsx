@@ -4,9 +4,9 @@ import { TOrderDetailProps, TProductRecord } from './tyings';
 import { formatCurrency } from '../../../utils';
 import {
   useDistrictsQuery,
-  useProvicesQuery,
+  useProvincesQuery,
   useWardsQuery,
-} from '../../../queries/useAddress';
+} from '../../../queries';
 import { STATUS_ORDER } from '../../../constants/enum';
 const OrderDetail: React.FC<TOrderDetailProps> = ({
   isOpenModal,
@@ -17,7 +17,7 @@ const OrderDetail: React.FC<TOrderDetailProps> = ({
   handleOrder,
 }) => {
   if (!userDetail || !orderDetail) return null;
-  const { data: provinceData } = useProvicesQuery();
+  const { data: provinceData } = useProvincesQuery();
   const { data: districtData } = useDistrictsQuery(
     orderDetail?.address?.province,
   );
@@ -42,7 +42,7 @@ const OrderDetail: React.FC<TOrderDetailProps> = ({
           <img src={record.image} className="w-10 h-10" alt="" />
           <div className="flex flex-col items-start flex-1">
             <span className="text-[12px]">{name}</span>
-            <span>{record.vairant}</span>
+            <span>{record.variant}</span>
           </div>
         </div>
       ),
@@ -142,7 +142,7 @@ const OrderDetail: React.FC<TOrderDetailProps> = ({
                   <strong>Street:</strong> {orderDetail.address.street_address}
                 </p>
                 <p>
-                  <strong>Citye/Province:</strong> {province}
+                  <strong>City/Province:</strong> {province}
                 </p>
                 <p>
                   <strong>District</strong> {district}
@@ -177,12 +177,12 @@ const OrderDetail: React.FC<TOrderDetailProps> = ({
               onClick={() => {
                 handleOrder({
                   order_id: orderDetail._id!,
-                  status: STATUS_ORDER.CANCLE,
+                  status: STATUS_ORDER.CANCEL,
                   user_id: orderDetail.user_id,
                 });
               }}
             >
-              Cancle Order
+              Cancel Order
             </Button>
           </div>
         </div>
@@ -209,12 +209,12 @@ const OrderDetail: React.FC<TOrderDetailProps> = ({
               onClick={() => {
                 handleOrder({
                   order_id: orderDetail._id!,
-                  status: STATUS_ORDER.CANCLE,
+                  status: STATUS_ORDER.CANCEL,
                   user_id: orderDetail.user_id,
                 });
               }}
             >
-              Cancle Order
+              Cancel Order
             </Button>
           </div>
         </div>

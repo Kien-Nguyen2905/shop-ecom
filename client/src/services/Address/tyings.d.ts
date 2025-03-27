@@ -1,4 +1,4 @@
-export type TProvicesResponse = {
+export type TProvincesResponse = {
   _id: sting;
   name: string;
   code: number;
@@ -7,10 +7,10 @@ export type TProvicesResponse = {
   phone_code: number;
 };
 
-export type TDistrictsResponse = Omit<TProvicesResponse, 'phone_code'> & {
+export type TDistrictsResponse = Omit<TProvincesResponse, 'phone_code'> & {
   province_code: number;
 };
 
-export type TWardsResponse = Omit<TProvicesResponse, 'phone_code'> & {
+export type TWardsResponse = Omit<TProvincesResponse, 'phone_code'> & {
   district_code: number;
 };

@@ -11,7 +11,7 @@ const ProductPage = () => {
     isLoadingCate,
     onSortChange,
     sortValue,
-    paniprops,
+    pagiProps,
     filterProductProps,
     onPageChange,
   } = useProductPage();
@@ -40,7 +40,7 @@ const ProductPage = () => {
                   value={sortValue || null}
                   options={SORT_OPTIONS}
                   disabled={!SORT_OPTIONS || SORT_OPTIONS.length === 0}
-                  className={`w-full custome-select-product bg-bgInPut border outline-none focus:border-primary`}
+                  className={`w-full custom-select-product bg-bgInPut border outline-none focus:border-primary`}
                   onChange={(value) => {
                     onSortChange(value);
                   }}
@@ -57,9 +57,9 @@ const ProductPage = () => {
           <div className="flex justify-center py-[25px] md:py-[30px]">
             <Pagination
               className="panigation-product-page"
-              current={paniprops.current}
-              total={paniprops.total}
-              pageSize={paniprops.pageSize}
+              current={pagiProps.current}
+              total={pagiProps.total}
+              pageSize={pagiProps.pageSize}
               onChange={onPageChange}
             />
           </div>

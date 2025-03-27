@@ -1,5 +1,5 @@
-import { CheckoutEarnPoint, CheckoutInfor } from './components';
-import { useCheckoutPage } from './useChecoutPage';
+import { CheckoutEarnPoint, CheckoutInfo } from './components';
+import { useCheckoutPage } from './useCheckoutPage';
 import SummaryCheckout from './components/SummaryCheckout';
 import { BreadCrumb, Button } from '../../components';
 import Input from '../../components/Input/Input';
@@ -9,13 +9,13 @@ import { TCart } from '../../store/reducers/tyings';
 
 const CheckoutPage = () => {
   const {
-    checkoutInforProps,
+    checkoutInfoProps,
     cart,
     applyEarnPoint,
     appliedPoints,
     availablePoints,
     control,
-    handlCheckout,
+    handleCheckout,
   } = useCheckoutPage();
   if (cart?.products?.length! <= 0)
     return <Navigate to={CUSTOMER_PATHS.ROOT} />;
@@ -28,7 +28,7 @@ const CheckoutPage = () => {
         ]}
       />
       <form
-        onSubmit={handlCheckout}
+        onSubmit={handleCheckout}
         className="flex flex-col xl:flex-row gap-12 pb-[30px]"
       >
         <div className="flex-1">
@@ -39,7 +39,7 @@ const CheckoutPage = () => {
               appliedPoints={appliedPoints}
             />
           )}
-          <CheckoutInfor {...checkoutInforProps} />
+          <CheckoutInfo {...checkoutInfoProps} />
         </div>
         <div>
           <SummaryCheckout {...(cart as TCart)} />

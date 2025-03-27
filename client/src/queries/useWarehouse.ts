@@ -12,7 +12,6 @@ export const useWarehouse = (query?: string) => {
       const response = await warehouseServices.getWarehouse(query);
       return response.data?.data || [];
     },
-    refetchOnWindowFocus: false,
   });
 };
 
@@ -24,7 +23,6 @@ export const useWarehouseByIdQuery = (id: string) => {
       return response.data?.data;
     },
     enabled: !!id,
-    refetchOnWindowFocus: false,
   });
 };
 

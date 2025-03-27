@@ -2,13 +2,13 @@ import { instance } from '../Interceptor';
 import { SuccessResponse } from '../tyings';
 import {
   TDistrictsResponse,
-  TProvicesResponse,
+  TProvincesResponse,
   TWardsResponse,
 } from './tyings';
 
 const addressServices = {
-  getProvices: () => {
-    return instance.get<SuccessResponse<TProvicesResponse[]>>(
+  getProvinces: () => {
+    return instance.get<SuccessResponse<TProvincesResponse[]>>(
       `/address/provinces`,
     );
   },

@@ -24,7 +24,7 @@ const informationServices = {
       `/information/${id}`,
     );
   },
-  deletInformation: (id: string) => {
+  deleteInformation: (id: string) => {
     return instance.delete<SuccessResponse>(`/information/${id}`);
   },
 };

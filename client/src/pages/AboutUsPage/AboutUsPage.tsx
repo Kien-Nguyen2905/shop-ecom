@@ -9,7 +9,7 @@ const AboutUsPage = () => {
         <BreadCrumb
           items={[
             { name: 'Home', path: CUSTOMER_PATHS.ROOT },
-            { name: 'About Us', path: CUSTOMER_PATHS.ABOUTUS },
+            { name: 'About Us', path: CUSTOMER_PATHS.ABOUT_US },
           ]}
         />
       </div>

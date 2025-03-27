@@ -1,6 +1,5 @@
 import { useSpring } from '@react-spring/web';
 import { useNavigate } from 'react-router-dom';
-import { QueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { ADMIN_PATHS, LOCAL_STORAGE } from '../../constants';
 import { profileUser } from '../../store/middlewares/authMiddleWare';
@@ -11,7 +10,6 @@ import { getWishlist } from '../../store/middlewares/wishlistMiddleWare';
 import { getOrder } from '../../store/middlewares/orderMiddleWare';
 import { handleError } from '../../libs';
 export const useMainLayout = () => {
-  const queryClient = new QueryClient();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch<AppDispatch>();
@@ -35,7 +33,7 @@ export const useMainLayout = () => {
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 450);
-    if (!!localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)) {
+    if (localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)) {
       handleNavigateAdmin();
       dispatch(getCart());
       dispatch(getWishlist());
@@ -45,5 +43,5 @@ export const useMainLayout = () => {
       clearTimeout(timer);
     };
   }, []);
-  return { queryClient, springProps };
+  return { springProps };
 };

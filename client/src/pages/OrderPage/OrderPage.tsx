@@ -24,7 +24,7 @@ const OrderPage = () => {
     orderInfo,
     modalProps,
     openModal,
-    handleCancleOrder,
+    handleCancelOrder,
   } = useOrderPage();
 
   return (
@@ -157,9 +157,9 @@ const OrderPage = () => {
                             <Button
                               variant="delete"
                               className="w-[107.59px]"
-                              text="Cancle"
+                              text="Cancel"
                               onClick={() =>
-                                handleCancleOrder(order._id as string)
+                                handleCancelOrder(order._id as string)
                               }
                             >
                               <IoTrashBinOutline size={20} />

@@ -13,7 +13,7 @@ import { useDashboardAdminPage } from './useDashboardAdminPage';
 import { YEAR } from '../../constants';
 const { Option } = Select;
 
-const DashboardAdminpage = () => {
+const DashboardAdminPage = () => {
   const { handleYearChange, revenueData, selectedYear } =
     useDashboardAdminPage();
 
@@ -80,4 +80,4 @@ const DashboardAdminpage = () => {
   );
 };
 
-export default DashboardAdminpage;
+export default DashboardAdminPage;

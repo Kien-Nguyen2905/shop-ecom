@@ -2,9 +2,9 @@ import { Modal, Rate } from 'antd';
 import { FC } from 'react';
 import Input from '../../../components/Input/Input';
 import { Button } from '../../../components';
-import { TModalRiewProps } from './tyings';
+import { TModalViewProps } from './tyings';
 
-const ModalReview: FC<TModalRiewProps> = ({
+const ModalReview: FC<TModalViewProps> = ({
   closeModal,
   isModalOpen,
   control,
@@ -22,9 +22,9 @@ const ModalReview: FC<TModalRiewProps> = ({
         <Rate onChange={(valueRate) => onChangeRate(valueRate)} />
       </div>
       <form onSubmit={handlePostReview}>
-        <Input lable="Title review" name="title" required control={control} />
+        <Input label="Title review" name="title" required control={control} />
         <Input
-          lable="Description review"
+          label="Description review"
           name="description"
           required
           control={control}

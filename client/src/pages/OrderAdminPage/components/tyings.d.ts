@@ -14,7 +14,7 @@ export type TOrderDetailProps = {
 export type TProductRecord = {
   key: string;
   name: string;
-  vairant: string;
+  variant: string;
   image: string;
   price: number;
   quantity: number;

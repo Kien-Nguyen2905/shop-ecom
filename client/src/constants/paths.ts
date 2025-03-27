@@ -1,6 +1,6 @@
 export const CUSTOMER_PATHS = {
   ROOT: '/',
-  ABOUTUS: '/about-us',
+  ABOUT_US: '/about-us',
   VERIFY_EMAIL: '/verify-email',
   OAUTH: '/oauth',
   FORGOT_PASSWORD: '/forgot-password',

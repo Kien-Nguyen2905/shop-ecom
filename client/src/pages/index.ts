@@ -20,5 +20,5 @@ export { CheckoutSuccessPage } from './CheckoutSuccessPage';
 export { OrderAdminPage } from './OrderAdminPage';
 export { TransactionAdminPage } from './TransactionAdminPage';
 export { WishlistPage } from './WishlistPage';
-export { DashboardAdminpage } from './DashboardAdminpage';
+export { DashboardAdminPage } from './DashboardAdminPage';
 export { ContactUsPage } from './ContactUsPage';

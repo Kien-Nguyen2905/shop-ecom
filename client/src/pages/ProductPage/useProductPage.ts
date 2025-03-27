@@ -7,7 +7,7 @@ import { SORT_OPTIONS } from '../../constants';
 import useBreakpoint from '../../hooks/useBreakPoint';
 
 export const useProductPage = () => {
-  let LIMITS = 6;
+  const LIMITS = 6;
   const isXlScreen = useBreakpoint('xl');
   const { search } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -47,7 +47,7 @@ export const useProductPage = () => {
     isLoadingProduct,
     listProduct: productData?.products || [],
   };
-  const paniprops = {
+  const pagiProps = {
     current: productData?.pagination?.currentPage,
     total: cachedTotalProducts || 0,
     pageSize: 6,
@@ -202,7 +202,7 @@ export const useProductPage = () => {
     categories,
     isLoadingCate,
     onSortChange,
-    paniprops,
+    pagiProps,
     filterProductProps,
   };
 };

@@ -9,7 +9,6 @@ export const useOrderAllQuery = () => {
       const response = await orderServices.getAllOrder();
       return Array.isArray(response.data?.data) ? response.data?.data : [];
     },
-    refetchOnWindowFocus: false,
   });
 };
 

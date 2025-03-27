@@ -1,5 +1,5 @@
-import { useTransactionAllQuery } from '../../queries/useTransaction';
-import { useUserAllQuery } from '../../queries/useUser';
+import { useTransactionAllQuery } from '../../queries';
+import { useUserAllQuery } from '../../queries';
 
 export const useTransactionAdminPage = () => {
   const { data: transactionData } = useTransactionAllQuery();

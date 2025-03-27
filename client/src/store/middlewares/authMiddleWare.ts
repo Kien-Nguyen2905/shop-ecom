@@ -22,7 +22,7 @@ export const login = createAsyncThunk<
   try {
     const res = await authServices.login(payload);
     const { access_token, refresh_token, role } = res.data.data;
-    if (access_token && refresh_token && role) {
+    if (access_token && refresh_token) {
       setLocalStorage({
         [LOCAL_STORAGE.ACCESS_TOKEN]: access_token,
         [LOCAL_STORAGE.REFRESH_TOKEN]: refresh_token,

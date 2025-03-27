@@ -1,4 +1,4 @@
-export type TModalRiewProps = {
+export type TModalViewProps = {
   closeModal: () => void;
   isModalOpen: boolean;
   control: any;

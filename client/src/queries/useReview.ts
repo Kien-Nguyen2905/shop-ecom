@@ -23,6 +23,5 @@ export const useReviewByProductIdQuery = (productId: string = '') => {
       return response.data.data || [];
     },
     enabled: !!productId,
-    refetchOnWindowFocus: false,
   });
 };

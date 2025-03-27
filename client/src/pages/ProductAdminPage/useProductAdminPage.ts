@@ -6,15 +6,15 @@ import {
   useDeleteProductMutation,
   useProductByIdQuery,
   useProductQuery,
-  useUpadteProductMutation,
+  useUpdateProductMutation,
+  useUploadImageMutation,
 } from '../../queries';
 import { debounce, isObject } from 'lodash';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ADMIN_PATHS } from '../../constants';
 import { handleError, showToast } from '../../libs';
 import { UploadFile, UploadProps } from 'antd';
-import { useUploadImageMutation } from '../../queries/useImage';
-import { useInformationByIdQuery } from '../../queries/useInformation';
+import { useInformationByIdQuery } from '../../queries';
 import { FormValues } from './components/tyings';
 import { useForm } from 'react-hook-form';
 import { TCategoryResponse } from '../../services/Category/tyings';
@@ -43,7 +43,7 @@ export const useProductAdminPage = () => {
   const { data: productDetails } = useProductByIdQuery(productId as string);
   const uploadImage = useUploadImageMutation();
   const createProduct = useCreateProductMutation();
-  const updateProduct = useUpadteProductMutation(productId as string);
+  const updateProduct = useUpdateProductMutation(productId as string);
   const deleteProduct = useDeleteProductMutation();
   const [activeKey, setActiveKey] = useState<string[]>(['0']);
   const [categoryId, setCategoryId] = useState<string>('');
@@ -175,7 +175,6 @@ export const useProductAdminPage = () => {
         values.minimum_stock = +values.minimum_stock;
         const thumbNail = watch('thumbnail');
         if (productId) {
-          console.log(values);
           // UpdateProduct
           if (productDetails?.variants.length !== values.variants.length)
             // đánh dấu lại index theo thứ tự cho trường hợp remove variant

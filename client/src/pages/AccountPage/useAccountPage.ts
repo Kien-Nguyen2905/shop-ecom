@@ -23,12 +23,12 @@ export const useAccountPage = () => {
   const [dataDistrict, setDataDistrict] = useState<TDistrictsCustom>([]);
   const [dataWard, setDataWard] = useState<TWardsCustom>([]);
   const [valueProvince, setValueProvince] = useState<string>('');
-  const [valueDistrict, setValueDistrcit] = useState<string>('');
+  const [valueDistrict, setValueDistrict] = useState<string>('');
   const [valueWard, setValueWard] = useState<string>('');
 
   const getDataProvince = async () => {
     try {
-      const response = await addressServices.getProvices();
+      const response = await addressServices.getProvinces();
       if (response.data.data) {
         const province = response.data.data.map((e) => {
           return {
@@ -89,11 +89,11 @@ export const useAccountPage = () => {
     setValue('district', '');
     setValue('ward', '');
     setValueWard('');
-    setValueDistrcit('');
+    setValueDistrict('');
   };
   const handleChangeDistrict = (idDistrict: string) => {
     getDataWard(idDistrict);
-    setValueDistrcit(idDistrict);
+    setValueDistrict(idDistrict);
     setValue('ward', '');
     setValueWard('');
   };
@@ -133,7 +133,7 @@ export const useAccountPage = () => {
       getDataDistrict(profile.address.province || '');
       getDataWard(profile.address.district || '');
       setValueProvince(profile.address.province);
-      setValueDistrcit(profile.address.district || '');
+      setValueDistrict(profile.address.district || '');
       setValueWard(profile.address.ward || '');
     }
     if (profile) {

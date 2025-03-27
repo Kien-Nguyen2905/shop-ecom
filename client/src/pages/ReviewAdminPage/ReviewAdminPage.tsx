@@ -6,8 +6,8 @@ import {
   ClockCircleOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { useReviewQuery } from '../../queries/useReview';
-import { useUserAllQuery } from '../../queries/useUser';
+import { useReviewQuery } from '../../queries';
+import { useUserAllQuery } from '../../queries';
 const { Option } = Select;
 
 const ReviewAdminPage = () => {

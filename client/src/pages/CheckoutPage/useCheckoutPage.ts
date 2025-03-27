@@ -34,11 +34,11 @@ export const useCheckoutPage = () => {
   const [dataDistrict, setDataDistrict] = useState<TDistrictsCustom>([]);
   const [dataWard, setDataWard] = useState<TWardsCustom>([]);
   const [valueProvince, setValueProvince] = useState<string>('');
-  const [valueDistrict, setValueDistrcit] = useState<string>('');
+  const [valueDistrict, setValueDistrict] = useState<string>('');
   const [valueWard, setValueWard] = useState<string>('');
   const getDataProvince = async () => {
     try {
-      const response = await addressServices.getProvices();
+      const response = await addressServices.getProvinces();
       if (response.data.data) {
         const province = response.data.data.map((e) => {
           return {
@@ -99,11 +99,11 @@ export const useCheckoutPage = () => {
     setValue('district', '');
     setValue('ward', '');
     setValueWard('');
-    setValueDistrcit('');
+    setValueDistrict('');
   };
   const handleChangeDistrict = (idDistrict: string) => {
     getDataWard(idDistrict);
-    setValueDistrcit(idDistrict);
+    setValueDistrict(idDistrict);
     setValue('ward', '');
     setValueWard('');
   };
@@ -139,7 +139,7 @@ export const useCheckoutPage = () => {
     }
   };
 
-  const handlCheckout = async (value: TCheckoutForm) => {
+  const handleCheckout = async (value: TCheckoutForm) => {
     try {
       if (!value.type_payment) {
         message.error('Please choose method payment');
@@ -178,7 +178,7 @@ export const useCheckoutPage = () => {
     }
   };
 
-  const checkoutInforProps = {
+  const checkoutInfoProps = {
     control,
     dataDistrict,
     dataProvince,
@@ -207,7 +207,7 @@ export const useCheckoutPage = () => {
       getDataDistrict(profile.address.province || '');
       getDataWard(profile.address.district || '');
       setValueProvince(profile.address.province || '');
-      setValueDistrcit(profile.address.district || '');
+      setValueDistrict(profile.address.district || '');
       setValueWard(profile.address.ward || '');
     }
     if (profile) {
@@ -225,13 +225,13 @@ export const useCheckoutPage = () => {
     getDataProvince();
   }, [reset, profile]);
   return {
-    checkoutInforProps,
+    checkoutInfoProps,
     paymentQrProps,
     applyEarnPoint,
     appliedPoints,
     availablePoints: profile?.earn_point,
     cart,
     control,
-    handlCheckout: handleSubmit(handlCheckout),
+    handleCheckout: handleSubmit(handleCheckout),
   };
 };

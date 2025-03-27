@@ -16,7 +16,6 @@ export type TProfile = {
 
 export type TAuthState = {
   profile?: TProfile;
-  listOrder?: any;
 };
 
 export type TCart = TGetCartResponse & {

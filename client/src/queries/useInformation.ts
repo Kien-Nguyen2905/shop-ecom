@@ -10,7 +10,6 @@ export const useInformationByIdQuery = (id: string) => {
       return response.data?.data;
     },
     enabled: !!id,
-    refetchOnWindowFocus: false,
   });
 };
 
@@ -43,7 +42,7 @@ export const useDeleteInformationMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: informationServices.deletInformation,
+    mutationFn: informationServices.deleteInformation,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['information'],

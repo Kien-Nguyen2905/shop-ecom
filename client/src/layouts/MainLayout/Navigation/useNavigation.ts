@@ -24,7 +24,7 @@ export const useNavigation = () => {
     },
   });
 
-  let searchValue = watch('search');
+  const searchValue = watch('search');
 
   const onSearch = debounce((value: string) => {
     // parse to object

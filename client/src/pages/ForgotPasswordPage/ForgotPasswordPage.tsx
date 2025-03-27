@@ -9,7 +9,7 @@ const ForgotPasswordPage = () => {
     isFirstTimeSend,
     time,
     control,
-    isLoadding,
+    isLoading,
     token,
   } = useForgotPasswordPage();
 
@@ -26,7 +26,7 @@ const ForgotPasswordPage = () => {
           onSubmit={handleSubmit(handleSendOrResend)}
         >
           {!token ? (
-            <Input control={control} required name="email" lable="Email" />
+            <Input control={control} required name="email" label="Email" />
           ) : (
             <>
               <Input
@@ -34,20 +34,20 @@ const ForgotPasswordPage = () => {
                 control={control}
                 required
                 name="password"
-                lable="New password"
+                label="New password"
               />
               <Input
                 type="password"
                 control={control}
                 required
                 name="confirm_password"
-                lable="New confirm password"
+                label="New confirm password"
               />
             </>
           )}
           <Button
             className={`w-[165px] block ml-auto ${
-              time > 0 || isLoadding ? ' cursor-not-allowed opacity-50' : ''
+              time > 0 || isLoading ? ' cursor-not-allowed opacity-50' : ''
             }`}
             text={
               token
@@ -58,7 +58,7 @@ const ForgotPasswordPage = () => {
                 ? 'Send'
                 : 'Resend Email'
             }
-            loading={isLoadding}
+            loading={isLoading}
           ></Button>
         </form>
       </div>

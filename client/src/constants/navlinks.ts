@@ -2,7 +2,7 @@ import { CUSTOMER_PATHS } from './paths';
 
 export const CUSOTMER_NAV_LINKS = [
   { name: 'Home', path: CUSTOMER_PATHS.ROOT },
-  { name: 'About Us', path: CUSTOMER_PATHS.ABOUTUS },
+  { name: 'About Us', path: CUSTOMER_PATHS.ABOUT_US },
   { name: 'Product', path: CUSTOMER_PATHS.PRODUCT },
   { name: 'Contact Us', path: CUSTOMER_PATHS.CONTACTUS },
 ];

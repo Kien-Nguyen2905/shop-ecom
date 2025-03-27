@@ -23,18 +23,18 @@ const AccountPage = () => {
       <div className="flex flex-col xl:flex-row gap-5">
         <Input
           name="full_name"
-          lable="Full name"
+          label="Full name"
           required
           control={control}
         ></Input>
         <Input
           name="email"
-          lable="Email"
+          label="Email"
           disabled
           required
           control={control}
         ></Input>
-        <Input name="phone" lable="Phone" required control={control}></Input>
+        <Input name="phone" label="Phone" required control={control}></Input>
       </div>
       <div className="flex flex-col xl:flex-row gap-5">
         <Input
@@ -63,7 +63,7 @@ const AccountPage = () => {
                 value={valueProvince || null}
                 options={dataProvince}
                 disabled={!dataProvince || dataProvince.length === 0}
-                className={`w-full custome-select py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
+                className={`w-full custom-select py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
                   invalid ? 'border-red-600' : ''
                 }`}
                 onChange={(value) => {
@@ -103,7 +103,7 @@ const AccountPage = () => {
                 value={valueDistrict || null}
                 options={dataDistrict}
                 disabled={!dataDistrict || dataDistrict.length === 0}
-                className={`w-full custome-select py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
+                className={`w-full custom-select py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
                   invalid ? 'border-red-600' : ''
                 }`}
                 onChange={(value) => {
@@ -145,7 +145,7 @@ const AccountPage = () => {
                 }
                 options={dataWard}
                 disabled={!dataWard || dataWard.length === 0}
-                className={`w-full custome-select py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
+                className={`w-full custom-select py-[8.5px] px-3 bg-bgInPut border outline-none focus:border-primary ${
                   invalid ? 'border-red-600' : ''
                 }`}
                 onChange={(value) => {
@@ -163,7 +163,7 @@ const AccountPage = () => {
       <div className="flex gap-5">
         <Input
           name="street_address"
-          lable="Street Address"
+          label="Street Address"
           required
           control={control}
         ></Input>

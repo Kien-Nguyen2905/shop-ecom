@@ -7,7 +7,7 @@ export type TProductListProps = {
 };
 
 export type TFilterProductProps = {
-  categories: TCategoryResponse[];
+  categories: TCategoryResponse;
   onCategoryChange: (field: string, value: string) => void;
   handlePriceChange: (value: number[]) => void;
   selectedFilters: Record<string, boolean>;

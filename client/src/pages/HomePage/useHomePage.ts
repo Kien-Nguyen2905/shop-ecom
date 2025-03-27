@@ -6,7 +6,7 @@ import { TProductItem } from '../../services/Product/tyings';
 export const useHomePage = () => {
   const { data, isLoading } = useProductQuery();
   const products = data?.products || [];
-  const [selectTab, setSelectTab] = useState<String>(VALUE_TABS.POPULAR);
+  const [selectTab, setSelectTab] = useState<string>(VALUE_TABS.POPULAR);
   // using useMemo handle out list matching for tab and return selectTab
   const hotProduct = useMemo(() => {
     let productList: TProductItem[] = [];

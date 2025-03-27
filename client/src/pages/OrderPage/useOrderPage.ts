@@ -7,18 +7,18 @@ import { TCreateReviewPayload } from '../../services/Review/tyings';
 import { message } from 'antd';
 import { useDispatch } from 'react-redux';
 import { AppDispatch, useSelector } from '../../store/store';
-import { cancleOrder, getOrder } from '../../store/middlewares/orderMiddleWare';
-import { TFormValues, TModalRiewProps } from './components/tyings';
+import { cancelOrder, getOrder } from '../../store/middlewares/orderMiddleWare';
+import { TFormValues, TModalViewProps } from './components/tyings';
 import {
   useDistrictsQuery,
-  useProvicesQuery,
+  useProvincesQuery,
   useWardsQuery,
-} from '../../queries/useAddress';
+} from '../../queries';
 
 export const useOrderPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { orderInfo } = useSelector((state) => state.order);
-  const { data: provinceData } = useProvicesQuery();
+  const { data: provinceData } = useProvincesQuery();
   const { data: districtData } = useDistrictsQuery();
   const { data: wardData } = useWardsQuery();
   const { control, handleSubmit, setError, reset } = useForm<TFormValues>();
@@ -67,9 +67,9 @@ export const useOrderPage = () => {
       });
     }
   };
-  const handleCancleOrder = async (orderId: string) => {
+  const handleCancelOrder = async (orderId: string) => {
     try {
-      const res = await dispatch(cancleOrder(orderId)).unwrap();
+      const res = await dispatch(cancelOrder(orderId)).unwrap();
       message.success(res.message);
     } catch (error) {
       handleError({ error });
@@ -79,7 +79,7 @@ export const useOrderPage = () => {
     dispatch(getOrder());
   }, []);
 
-  const modalProps: TModalRiewProps = {
+  const modalProps: TModalViewProps = {
     closeModal,
     isModalOpen,
     control,
@@ -94,6 +94,6 @@ export const useOrderPage = () => {
     orderInfo,
     modalProps,
     openModal,
-    handleCancleOrder,
+    handleCancelOrder,
   };
 };
